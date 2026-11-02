@@ -18,9 +18,7 @@
             --radius: 14px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -40,7 +38,6 @@
             position: relative;
         }
 
-        /* Header & Shortcut Spreadsheet */
         .header-top {
             display: flex;
             justify-content: space-between;
@@ -73,15 +70,9 @@
             box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
         }
 
-        .btn-sheet-link:hover {
-            background-color: #059669;
-        }
+        .btn-sheet-link:hover { background-color: #059669; }
+        .btn-sheet-link:active { transform: scale(0.97); }
 
-        .btn-sheet-link:active {
-            transform: scale(0.97);
-        }
-
-        /* Modern Tab Navigation */
         .tab-container {
             display: flex;
             justify-content: center;
@@ -112,21 +103,14 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .active-tab {
-            display: block;
-        }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .active-tab { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Form Grid Layout */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -134,21 +118,10 @@
             margin-bottom: 20px;
         }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .full-width { grid-column: span 2; }
 
-        .full-width {
-            grid-column: span 2;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #334155;
-        }
+        label { font-weight: 600; font-size: 0.85rem; color: #334155; }
 
         select, input[type="text"], textarea, input[type="file"] {
             padding: 10px 12px;
@@ -177,7 +150,6 @@
             color: #334155;
         }
 
-        /* Responsive Table Container */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -201,17 +173,9 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        th {
-            background-color: #f8fafc;
-            font-weight: 600;
-            color: #475569;
-        }
+        th { background-color: #f8fafc; font-weight: 600; color: #475569; }
+        tr:last-child td { border-bottom: none; }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* Action Buttons */
         .btn-hadir {
             background-color: #0ea5e9;
             color: white;
@@ -225,10 +189,7 @@
             width: 100%;
             margin-top: 5px;
         }
-
-        .btn-hadir:hover {
-            background-color: #0284c7;
-        }
+        .btn-hadir:hover { background-color: #0284c7; }
 
         .btn-action {
             background-color: var(--primary);
@@ -243,21 +204,10 @@
             margin-top: 20px;
             transition: background 0.2s, transform 0.1s;
         }
+        .btn-action:hover { background-color: var(--primary-hover); }
+        .btn-action:active { transform: scale(0.99); }
+        .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; }
 
-        .btn-action:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-action:active {
-            transform: scale(0.99);
-        }
-
-        .btn-action:disabled {
-            background-color: #94a3b8;
-            cursor: not-allowed;
-        }
-
-        /* Footer Credit */
         .footer-credit {
             text-align: center;
             margin-top: 30px;
@@ -266,39 +216,20 @@
             font-style: italic;
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 768px) {
-            body {
-                padding: 8px;
-            }
-            .container {
-                padding: 16px;
-            }
-            .header-top {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-            .btn-sheet-link {
-                justify-content: center;
-            }
-            .form-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            .full-width {
-                grid-column: span 1;
-            }
-            h1 {
-                font-size: 1.15rem;
-            }
+            body { padding: 8px; }
+            .container { padding: 16px; }
+            .header-top { flex-direction: column; align-items: stretch; text-align: center; }
+            .btn-sheet-link { justify-content: center; }
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            .full-width { grid-column: span 1; }
+            h1 { font-size: 1.15rem; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Header dengan Tombol Pintasan Spreadsheet -->
         <div class="header-top">
             <h1>Project Jurnal Harian Digital SRT 3</h1>
             <a href="https://docs.google.com/spreadsheets/d/1lC0IUTgLyI-mlk_Ft-poQVM8b3gnv8tjXox7op7MG9k/edit" target="_blank" class="btn-sheet-link">
@@ -386,7 +317,7 @@
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL -->
+        <!-- TAB JURNAL APEL (PER KELAS) -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -666,9 +597,10 @@
 
             let absensiApel = [];
             let barisSiswaApel = document.querySelectorAll('#tabelSiswaApel tr');
-            barisSisselApel = barisSiswaApel.forEach(tr => {
+            barisSiswaApel.forEach(tr => {
+                let nama = tr.querySelector('.nama-siswa-apel').innerText;
                 let status = tr.querySelector('.status-kehadiran-apel').value;
-                absensiApel.push({ status: status });
+                absensiApel.push({ nama: nama, status: status });
             });
 
             let payload = {

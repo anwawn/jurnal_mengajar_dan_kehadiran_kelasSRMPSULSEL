@@ -289,9 +289,10 @@
                     <label>Deskripsi Materi (Kompetensi Dasar)</label>
                     <textarea id="deskripsiMateri" rows="2" placeholder="Ketik materi yang diajarkan..."></textarea>
                 </div>
+                <!-- BAGIAN YANG DIPERBAIKI: Hapus atribut capture agar bisa buka galeri di iPhone -->
                 <div class="form-group full-width">
                     <label>Ambil Bukti Foto Kelas</label>
-                    <input type="file" id="fotoKelas" accept="image/*" capture="environment">
+                    <input type="file" id="fotoKelas" accept="image/*">
                     <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 10px; border-radius:8px;"></canvas>
                 </div>
             </div>
@@ -553,6 +554,14 @@
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
 
+            // Validasi Ketersediaan Foto
+            if (!base64Foto || base64Foto === "") {
+                let konfirmasiFoto = confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nApakah Anda yakin ingin tetap mengirim laporan absen ini TANPA menyertakan bukti foto?");
+                if (!konfirmasiFoto) {
+                    return; // Membatalkan pengiriman jika user memilih "Cancel" / "Batal"
+                }
+            }
+
             let absensi = [];
             let nonHadir = [];
             let barisSiswa = document.querySelectorAll('#tabelSiswa tr');
@@ -566,14 +575,14 @@
                 }
             });
 
-            // Pop-up Konfirmasi
+            // Pop-up Konfirmasi Absensi Siswa
             let confirmMsg = "";
             if (nonHadir.length > 0) {
                 confirmMsg = "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nApakah data absensi ini sudah benar? Klik 'OK' untuk mengirim, atau 'Batal' untuk merevisi.";
             } else {
                 confirmMsg = "Semua siswa berstatus HADIR.\n\nApakah data sudah benar? Klik 'OK' untuk mengirim.";
             }
-            if (!confirm(confirmMsg)) return; // Batal kirim jika user klik Cancel
+            if (!confirm(confirmMsg)) return;
 
             let payload = {
                 tipe: "jurnal_kelas",
@@ -631,7 +640,7 @@
             } else {
                 confirmMsg = "Semua siswa berstatus HADIR saat Apel.\n\nApakah data sudah benar? Klik 'OK' untuk mengirim.";
             }
-            if (!confirm(confirmMsg)) return; // Batal kirim jika user klik Cancel
+            if (!confirm(confirmMsg)) return;
 
             let payload = {
                 tipe: "jurnal_apel",

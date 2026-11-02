@@ -25,76 +25,71 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 12px;
         }
 
         .container {
             max-width: 900px;
             margin: auto;
             background: var(--card-bg);
-            padding: 24px;
+            padding: 18px;
             border-radius: var(--radius);
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-            position: relative;
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         h1 {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: #0f172a;
             margin: 0;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .btn-sheet-link {
             background-color: #10b981;
             color: white;
             text-decoration: none;
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 8px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            transition: background 0.2s, transform 0.1s;
             box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
         }
-
-        .btn-sheet-link:hover { background-color: #059669; }
-        .btn-sheet-link:active { transform: scale(0.97); }
 
         .tab-container {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 25px;
+            gap: 6px;
+            margin-bottom: 20px;
             background: #f1f5f9;
-            padding: 6px;
+            padding: 5px;
             border-radius: var(--radius);
         }
 
         .tab-btn {
             flex: 1;
-            padding: 10px;
+            padding: 9px;
             cursor: pointer;
             border: none;
             background: transparent;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-muted);
             border-radius: 8px;
-            transition: all 0.3s ease;
             text-align: center;
+            transition: all 0.2s;
         }
 
         .tab-btn.active {
@@ -114,24 +109,23 @@
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
         .full-width { grid-column: span 2; }
 
-        label { font-weight: 600; font-size: 0.85rem; color: #334155; }
+        label { font-weight: 600; font-size: 0.8rem; color: #334155; }
 
         select, input[type="text"], textarea, input[type="file"] {
-            padding: 10px 12px;
-            font-size: 0.9rem;
+            padding: 9px 10px;
+            font-size: 0.85rem;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             background: #fff;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-family: 'Inter', sans-serif;
             width: 100%;
+            font-family: 'Inter', sans-serif;
         }
 
         select:focus, input:focus, textarea:focus {
@@ -143,87 +137,124 @@
         #infoMapel {
             background: #f8fafc;
             border: 1px dashed var(--border-color);
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-align: center;
             color: #334155;
         }
-
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            margin-top: 15px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            text-align: left;
-            min-width: 450px;
-        }
-
-        th, td {
-            padding: 10px 12px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th { background-color: #f8fafc; font-weight: 600; color: #475569; }
-        tr:last-child td { border-bottom: none; }
 
         .btn-hadir {
             background-color: #0ea5e9;
             color: white;
             border: none;
-            padding: 10px 14px;
-            font-size: 0.9rem;
+            padding: 10px;
+            font-size: 0.85rem;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
             width: 100%;
-            margin-top: 5px;
+            margin-bottom: 12px;
         }
-        .btn-hadir:hover { background-color: #0284c7; }
+
+        /* PERBAIKAN UTAMA TAMPILAN HP: LIST CARD BERKELOMPOK */
+        .siswa-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
+
+        .siswa-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            border-radius: 10px;
+            gap: 10px;
+        }
+
+        .siswa-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .siswa-no {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            min-width: 20px;
+        }
+
+        .siswa-nama-lp {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .siswa-nama {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e293b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .siswa-lp {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .status-dropdown {
+            padding: 7px 10px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #fff;
+            font-weight: 600;
+            color: var(--primary);
+            width: 105px;
+            flex-shrink: 0;
+        }
 
         .btn-action {
             background-color: var(--primary);
             color: white;
             border: none;
             padding: 12px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
-            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+            transition: background 0.2s;
         }
         .btn-action:hover { background-color: var(--primary-hover); }
-        .btn-action:active { transform: scale(0.99); }
         .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; }
 
         .footer-credit {
             text-align: center;
-            margin-top: 30px;
-            font-size: 0.75rem;
+            margin-top: 20px;
+            font-size: 0.7rem;
             color: #94a3b8;
             font-style: italic;
         }
 
-        @media (max-width: 768px) {
-            body { padding: 8px; }
-            .container { padding: 16px; }
-            .header-top { flex-direction: column; align-items: stretch; text-align: center; }
-            .btn-sheet-link { justify-content: center; }
-            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+        @media (max-width: 480px) {
+            body { padding: 6px; }
+            .container { padding: 12px; }
+            .form-grid { grid-template-columns: 1fr; gap: 10px; }
             .full-width { grid-column: span 1; }
-            h1 { font-size: 1.15rem; }
         }
     </style>
 </head>
@@ -231,9 +262,9 @@
 
     <div class="container">
         <div class="header-top">
-            <h1>Project Jurnal Harian Digital SRT 3</h1>
+            <h1>Jurnal Harian Digital SRT 3</h1>
             <a href="https://docs.google.com/spreadsheets/d/1lC0IUTgLyI-mlk_Ft-poQVM8b3gnv8tjXox7op7MG9k/edit" target="_blank" class="btn-sheet-link">
-                📊 Buka Spreadsheet
+                📊 Spreadsheet
             </a>
         </div>
         
@@ -268,7 +299,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Jam Mulai (JP Ke-)</label>
+                    <label>Jam Mulai (JP)</label>
                     <select id="jamMulai" onchange="updateRoster()">
                         <option value="1">1</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
@@ -276,49 +307,38 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Jam Selesai (JP Ke-)</label>
+                    <label>Jam Selesai (JP)</label>
                     <select id="jamSelesai">
                         <option value="1">1</option><option value="2">2</option><option value="3">3</option>
                         <option value="4">4</option><option value="5">5</option><option value="6">6</option>
                         <option value="7">7</option><option value="8">8</option><option value="9">9</option>
                     </select>
                 </div>
-                <div id="infoMapel" class="full-width">Mata Pelajaran & Guru akan muncul otomatis di sini</div>
+                <div id="infoMapel" class="full-width">Mata Pelajaran & Guru akan muncul otomatis</div>
                 
                 <div class="form-group full-width">
                     <label>Deskripsi Materi (Kompetensi Dasar)</label>
                     <textarea id="deskripsiMateri" rows="2" placeholder="Ketik materi yang diajarkan..."></textarea>
                 </div>
-                <!-- BAGIAN YANG DIPERBAIKI: Hapus atribut capture agar bisa buka galeri di iPhone -->
+                
                 <div class="form-group full-width">
                     <label>Ambil Bukti Foto Kelas</label>
                     <input type="file" id="fotoKelas" accept="image/*">
-                    <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 10px; border-radius:8px;"></canvas>
+                    <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
                 </div>
             </div>
 
             <button class="btn-hadir" onclick="hadirSemua()">⚡ Set Semua Hadir</button>
             
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 45px;">No</th>
-                            <th>Nama Siswa</th>
-                            <th style="width: 55px;">L/P</th>
-                            <th style="width: 130px;">Kehadiran</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelSiswa">
-                        <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Pilih kelas terlebih dahulu</td></tr>
-                    </tbody>
-                </table>
+            <!-- TAMPILAN CARD RAMAH HP -->
+            <div class="siswa-list-container" id="tabelSiswa">
+                <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
 
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL (PER KELAS) -->
+        <!-- TAB JURNAL APEL -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -346,32 +366,20 @@
                 </div>
                 <div class="form-group full-width">
                     <label>Laporan / Catatan Apel</label>
-                    <textarea id="catatanApel" rows="3" placeholder="Ketik laporan kehadiran apel..."></textarea>
+                    <textarea id="catatanApel" rows="2" placeholder="Ketik laporan kehadiran apel..."></textarea>
                 </div>
             </div>
 
             <button class="btn-hadir" onclick="hadirSemuaApel()">⚡ Set Semua Hadir (Apel)</button>
             
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 45px;">No</th>
-                            <th>Nama Siswa</th>
-                            <th style="width: 55px;">L/P</th>
-                            <th style="width: 130px;">Kehadiran</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelSiswaApel">
-                        <tr><td colspan="4" style="text-align:center; color: var(--text-muted);">Pilih kelas terlebih dahulu</td></tr>
-                    </tbody>
-                </table>
+            <!-- TAMPILAN CARD RAMAH HP APEL -->
+            <div class="siswa-list-container" id="tabelSiswaApel">
+                <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
 
             <button id="btnSimpanApel" class="btn-action" onclick="simpanJurnalApel()">Simpan Jurnal Apel</button>
         </div>
 
-        <!-- Credit Footer -->
         <div class="footer-credit">
             Developer : Nur Darmawansyah | NIP 199709012026211033
         </div>
@@ -482,32 +490,35 @@
 
         function tampilkanSiswa() {
             let kelas = document.getElementById('pilihKelas').value;
-            let tbody = document.getElementById('tabelSiswa');
-            tbody.innerHTML = "";
+            let container = document.getElementById('tabelSiswa');
+            container.innerHTML = "";
 
             if (!kelas) {
-                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; color: var(--text-muted);'>Pilih kelas terlebih dahulu</td></tr>";
+                container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>";
                 return;
             }
 
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
             filterMurid.forEach(m => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${m.No}</td>
-                    <td class="nama-siswa">${m.Nama}</td>
-                    <td>${m["L/P"]}</td>
-                    <td>
-                        <select class="status-kehadiran">
-                            <option value="Hadir">Hadir</option>
-                            <option value="Izin">Izin</option>
-                            <option value="Sakit">Sakit</option>
-                            <option value="Bolos">Bolos</option>
-                            <option value="Keluar">Keluar</option>
-                        </select>
-                    </td>
+                let card = document.createElement('div');
+                card.className = 'siswa-card';
+                card.innerHTML = `
+                    <div class="siswa-info">
+                        <span class="siswa-no">${m.No}.</span>
+                        <div class="siswa-nama-lp">
+                            <span class="nama-siswa">${m.Nama}</span>
+                            <span class="siswa-lp">Kelamin: ${m["L/P"]}</span>
+                        </div>
+                    </div>
+                    <select class="status-dropdown status-kehadiran">
+                        <option value="Hadir">Hadir</option>
+                        <option value="Izin">Izin</option>
+                        <option value="Sakit">Sakit</option>
+                        <option value="Bolos">Bolos</option>
+                        <option value="Keluar">Keluar</option>
+                    </select>
                 `;
-                tbody.appendChild(tr);
+                container.appendChild(card);
             });
         }
 
@@ -517,32 +528,35 @@
 
         function tampilkanSiswaApel() {
             let kelas = document.getElementById('pilihKelasApel').value;
-            let tbody = document.getElementById('tabelSiswaApel');
-            tbody.innerHTML = "";
+            let container = document.getElementById('tabelSiswaApel');
+            container.innerHTML = "";
 
             if (!kelas) {
-                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; color: var(--text-muted);'>Pilih kelas terlebih dahulu</td></tr>";
+                container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>";
                 return;
             }
 
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
             filterMurid.forEach(m => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${m.No}</td>
-                    <td class="nama-siswa-apel">${m.Nama}</td>
-                    <td>${m["L/P"]}</td>
-                    <td>
-                        <select class="status-kehadiran-apel">
-                            <option value="Hadir">Hadir</option>
-                            <option value="Izin">Izin</option>
-                            <option value="Sakit">Sakit</option>
-                            <option value="Bolos">Bolos</option>
-                            <option value="Keluar">Keluar</option>
-                        </select>
-                    </td>
+                let card = document.createElement('div');
+                card.className = 'siswa-card';
+                card.innerHTML = `
+                    <div class="siswa-info">
+                        <span class="siswa-no">${m.No}.</span>
+                        <div class="siswa-nama-lp">
+                            <span class="nama-siswa nama-siswa-apel">${m.Nama}</span>
+                            <span class="siswa-lp">Kelamin: ${m["L/P"]}</span>
+                        </div>
+                    </div>
+                    <select class="status-dropdown status-kehadiran-apel">
+                        <option value="Hadir">Hadir</option>
+                        <option value="Izin">Izin</option>
+                        <option value="Sakit">Sakit</option>
+                        <option value="Bolos">Bolos</option>
+                        <option value="Keluar">Keluar</option>
+                    </select>
                 `;
-                tbody.appendChild(tr);
+                container.appendChild(card);
             });
         }
 
@@ -554,20 +568,16 @@
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
 
-            // Validasi Ketersediaan Foto
             if (!base64Foto || base64Foto === "") {
-                let konfirmasiFoto = confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nApakah Anda yakin ingin tetap mengirim laporan absen ini TANPA menyertakan bukti foto?");
-                if (!konfirmasiFoto) {
-                    return; // Membatalkan pengiriman jika user memilih "Cancel" / "Batal"
-                }
+                if (!confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nKirim laporan tanpa foto?")) return;
             }
 
             let absensi = [];
             let nonHadir = [];
-            let barisSiswa = document.querySelectorAll('#tabelSiswa tr');
-            barisSiswa.forEach(tr => {
-                let nama = tr.querySelector('.nama-siswa').innerText;
-                let status = tr.querySelector('.status-kehadiran').value;
+            let cards = document.querySelectorAll('#tabelSiswa .siswa-card');
+            cards.forEach(card => {
+                let nama = card.querySelector('.nama-siswa').innerText;
+                let status = card.querySelector('.status-kehadiran').value;
                 absensi.push({ nama: nama, status: status });
                 
                 if (status !== "Hadir") {
@@ -575,13 +585,9 @@
                 }
             });
 
-            // Pop-up Konfirmasi Absensi Siswa
-            let confirmMsg = "";
-            if (nonHadir.length > 0) {
-                confirmMsg = "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nApakah data absensi ini sudah benar? Klik 'OK' untuk mengirim, atau 'Batal' untuk merevisi.";
-            } else {
-                confirmMsg = "Semua siswa berstatus HADIR.\n\nApakah data sudah benar? Klik 'OK' untuk mengirim.";
-            }
+            let confirmMsg = nonHadir.length > 0 
+                ? "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nKirim data absensi ini?" 
+                : "Semua siswa berstatus HADIR. Kirim data?";
             if (!confirm(confirmMsg)) return;
 
             let payload = {
@@ -597,20 +603,20 @@
             };
 
             let btn = document.getElementById('btnSimpanKelas');
-            btn.innerText = "Mengirim Data..."; btn.disabled = true;
+            btn.innerText = "Mengirim..."; btn.disabled = true;
 
             fetch(WEB_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(payload)
             }).then(() => {
-                alert("Jurnal Harian Digital SRT 3: Data Kelas " + kelas + " Berhasil Disimpan!");
+                alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
                 document.getElementById('deskripsiMateri').value = "";
                 document.getElementById('fotoKelas').value = "";
                 document.getElementById('canvasPreview').style.display = "none";
                 base64Foto = "";
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
-            }).catch(error => {
+            }).catch(() => {
                 alert("Gagal mengirim data.");
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             });
@@ -622,10 +628,11 @@
 
             let absensiApel = [];
             let nonHadirApel = [];
-            let barisSiswaApel = document.querySelectorAll('#tabelSiswaApel tr');
-            barisSiswaApel.forEach(tr => {
-                let nama = tr.querySelector('.nama-siswa-apel').innerText;
-                let status = tr.querySelector('.status-kehadiran-apel').value;
+            let cards = document.querySelectorAll('#tabelSiswaApel .siswa-card');
+            cards.forEach(card => {
+                let nama = card.querySelector('.nama-siswa-apel').innerText;
+                let status = card.querySelector('.status-kehadiran-apel').value;
+                absensiAppel = { nama: nama, status: status };
                 absensiApel.push({ nama: nama, status: status });
 
                 if (status !== "Hadir") {
@@ -633,13 +640,9 @@
                 }
             });
 
-            // Pop-up Konfirmasi Apel
-            let confirmMsg = "";
-            if (nonHadirApel.length > 0) {
-                confirmMsg = "DAFTAR SISWA TIDAK HADIR (APEL):\n" + nonHadirApel.join("\n") + "\n\nApakah data absensi ini sudah benar? Klik 'OK' untuk mengirim, atau 'Batal' untuk merevisi.";
-            } else {
-                confirmMsg = "Semua siswa berstatus HADIR saat Apel.\n\nApakah data sudah benar? Klik 'OK' untuk mengirim.";
-            }
+            let confirmMsg = nonHadirApel.length > 0 
+                ? "SISWA TIDAK HADIR (APEL):\n" + nonHadirApel.join("\n") + "\n\nKirim data apel?" 
+                : "Semua siswa hadir saat Apel. Kirim data?";
             if (!confirm(confirmMsg)) return;
 
             let payload = {
@@ -652,7 +655,7 @@
             };
 
             let btn = document.getElementById('btnSimpanApel');
-            btn.innerText = "Mengirim Data..."; btn.disabled = true;
+            btn.innerText = "Mengirim..."; btn.disabled = true;
 
             fetch(WEB_APP_URL, {
                 method: 'POST',
@@ -663,7 +666,7 @@
                 document.getElementById('guruPiket').value = "";
                 document.getElementById('catatanApel').value = "";
                 btn.innerText = "Simpan Jurnal Apel"; btn.disabled = false;
-            }).catch(error => {
+            }).catch(() => {
                 alert("Gagal mengirim data.");
                 btn.innerText = "Simpan Jurnal Apel"; btn.disabled = false;
             });

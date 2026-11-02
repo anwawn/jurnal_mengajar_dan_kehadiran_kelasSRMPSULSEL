@@ -502,6 +502,7 @@
                             <option value="Izin">Izin</option>
                             <option value="Sakit">Sakit</option>
                             <option value="Bolos">Bolos</option>
+                            <option value="Keluar">Keluar</option>
                         </select>
                     </td>
                 `;
@@ -536,6 +537,7 @@
                             <option value="Izin">Izin</option>
                             <option value="Sakit">Sakit</option>
                             <option value="Bolos">Bolos</option>
+                            <option value="Keluar">Keluar</option>
                         </select>
                     </td>
                 `;
@@ -552,12 +554,26 @@
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
 
             let absensi = [];
+            let nonHadir = [];
             let barisSiswa = document.querySelectorAll('#tabelSiswa tr');
             barisSiswa.forEach(tr => {
                 let nama = tr.querySelector('.nama-siswa').innerText;
                 let status = tr.querySelector('.status-kehadiran').value;
                 absensi.push({ nama: nama, status: status });
+                
+                if (status !== "Hadir") {
+                    nonHadir.push(`- ${nama} (${status})`);
+                }
             });
+
+            // Pop-up Konfirmasi
+            let confirmMsg = "";
+            if (nonHadir.length > 0) {
+                confirmMsg = "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nApakah data absensi ini sudah benar? Klik 'OK' untuk mengirim, atau 'Batal' untuk merevisi.";
+            } else {
+                confirmMsg = "Semua siswa berstatus HADIR.\n\nApakah data sudah benar? Klik 'OK' untuk mengirim.";
+            }
+            if (!confirm(confirmMsg)) return; // Batal kirim jika user klik Cancel
 
             let payload = {
                 tipe: "jurnal_kelas",
@@ -596,12 +612,26 @@
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
 
             let absensiApel = [];
+            let nonHadirApel = [];
             let barisSiswaApel = document.querySelectorAll('#tabelSiswaApel tr');
             barisSiswaApel.forEach(tr => {
                 let nama = tr.querySelector('.nama-siswa-apel').innerText;
                 let status = tr.querySelector('.status-kehadiran-apel').value;
                 absensiApel.push({ nama: nama, status: status });
+
+                if (status !== "Hadir") {
+                    nonHadirApel.push(`- ${nama} (${status})`);
+                }
             });
+
+            // Pop-up Konfirmasi Apel
+            let confirmMsg = "";
+            if (nonHadirApel.length > 0) {
+                confirmMsg = "DAFTAR SISWA TIDAK HADIR (APEL):\n" + nonHadirApel.join("\n") + "\n\nApakah data absensi ini sudah benar? Klik 'OK' untuk mengirim, atau 'Batal' untuk merevisi.";
+            } else {
+                confirmMsg = "Semua siswa berstatus HADIR saat Apel.\n\nApakah data sudah benar? Klik 'OK' untuk mengirim.";
+            }
+            if (!confirm(confirmMsg)) return; // Batal kirim jika user klik Cancel
 
             let payload = {
                 tipe: "jurnal_apel",

@@ -129,8 +129,8 @@
     </div>
 
     <script>
-        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI BAWAH INI
-        const WEB_APP_URL = "PASTE_URL_APPS_SCRIPT_ANDA_DI_SINI";
+        // URL Google Apps Script yang telah dikemas kini
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykyATd6xpFu55wbcWvvV3aM7JJT2sHhOmW9F-C03X2-OqUoxP0nfyqgJL0F01AIS_j/exec";
 
         // Otentikasi Sederhana
         window.onload = async function() {
@@ -195,7 +195,7 @@
                 dataGuru = parseCSV(await resGuru.text());
                 dataRoster = parseCSV(await resRoster.text());
             } catch (err) {
-                alert("Gagal memuat database CSV. Pastikan dijalankan di server lokal atau GitHub Pages.");
+                alert("Gagal memuat fail pangkalan data CSV. Pastikan ia dijalankan di pelayan setempat atau GitHub Pages.");
             }
         }
 
@@ -277,8 +277,8 @@
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
 
-            if(WEB_APP_URL === "PASTE_URL_APPS_SCRIPT_ANDA_DI_SINI") {
-                return alert("Anda belum memasukkan URL Google Apps Script di dalam kode!");
+            if(!WEB_APP_URL || WEB_APP_URL.includes("PASTE_URL")) {
+                return alert("Anda belum memasukkan URL Google Apps Script di dalam kod!");
             }
 
             let absensi = [];
@@ -321,15 +321,15 @@
                 btn.innerText = "Simpan Jurnal Kelas"; 
                 btn.disabled = false;
             }).catch(error => {
-                alert("Gagal mengirim data. Periksa koneksi internet.");
+                alert("Gagal mengirim data. Periksa sambungan internet.");
                 btn.innerText = "Simpan Jurnal Kelas"; 
                 btn.disabled = false;
             });
         }
 
         function simpanJurnalApel() {
-            if(WEB_APP_URL === "PASTE_URL_APPS_SCRIPT_ANDA_DI_SINI") {
-                return alert("Anda belum memasukkan URL Google Apps Script di dalam kode!");
+            if(!WEB_APP_URL || WEB_APP_URL.includes("PASTE_URL")) {
+                return alert("Anda belum memasukkan URL Google Apps Script di dalam kod!");
             }
 
             let payload = {
@@ -354,7 +354,7 @@
                 btn.innerText = "Simpan Jurnal Apel"; 
                 btn.disabled = false;
             }).catch(error => {
-                alert("Gagal mengirim data. Periksa koneksi internet.");
+                alert("Gagal mengirim data. Periksa sambungan internet.");
                 btn.innerText = "Simpan Jurnal Apel"; 
                 btn.disabled = false;
             });

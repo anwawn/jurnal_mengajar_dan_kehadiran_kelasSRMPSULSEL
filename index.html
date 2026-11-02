@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Jurnal Harian Digital SRT 3 Provinsi Sul-Sel</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 900px; margin: auto; }
+        h1, h3 { text-align: center; }
+        .tab-container { display: flex; justify-content: center; margin-bottom: 20px; }
+        .tab-btn { padding: 10px 20px; margin: 0 5px; cursor: pointer; border: 1px solid #ccc; background: #f9f9f9; }
+        .tab-btn.active { background: #007bff; color: white; border-color: #007bff; }
+        .tab-content { display: none; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .active-tab { display: block; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        label { font-weight: bold; margin-bottom: 5px; }
+        select, input, textarea, button { padding: 8px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .btn-action { background-color: #28a745; color: white; border: none; padding: 10px; cursor: pointer; width: 100%; font-weight: bold; margin-top: 15px;}
+        .btn-action:disabled { background-color: #6c757d; cursor: not-allowed; }
+        .btn-hadir { background-color: #17a2b8; color: white; border: none; padding: 8px; cursor: pointer; margin-bottom: 10px; width: 100%; }
+        #infoMapel { background: #e9ecef; padding: 10px; border-radius: 4px; font-weight: bold; grid-column: span 2; text-align: center;}
+    </style>
+</head>
+<body>
+
+    <h1>Project Jurnal Harian Digital SRT 3 Provinsi Sul-Sel</h1>
+    
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="switchTab('jurnalKelas', this)">Jurnal Mengajar</button>
+        <button class="tab-btn" onclick="switchTab('jurnalApel', this)">Jurnal Apel</button>
+    </div>
+
+    <!-- TAB JURNAL KELAS -->
+    <div id="jurnalKelas" class="tab-content active-tab">
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Hari</label>
+                <select id="pilihHari" onchange="updateRoster()">
+                    <option value="">-- Pilih Hari --</option>
+                    <option value="Senin">Senin</option>
+                    <option value="Selasa">Selasa</option>
+                    <option value="Rabu">Rabu</option>
+                    <option value="Kamis">Kamis</option>
+                    <option value="Jumat">Jumat</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Kelas</label>
+                <select id="pilihKelas" onchange="updateSemua()">
+                    <option value="">-- Pilih Kelas --</option>
+                    <option value="VII-1">VII-1</option>
+                    <option value="VII-2">VII-2</option>
+                    <option value="VII-3">VII-3</option>
+                    <option value="VII-4">VII-4</option>
+                    <option value="VII-5">VII-5</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Jam Mulai (JP Ke-)</label>
+                <select id="jamMulai" onchange="updateRoster()">
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                    <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                    <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Jam Selesai (JP Ke-)</label>
+                <select id="jamSelesai">
+                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                    <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                    <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                </select>
+            </div>
+            <div id="infoMapel">Mata Pelajaran & Guru akan muncul otomatis di sini</div>
+            
+            <div class="form-group" style="grid-column: span 2; margin-top: 5px;">
+                <label>Deskripsi Materi (Kompetensi Dasar)</label>
+                <textarea id="deskripsiMateri" rows="2" placeholder="Ketik materi yang diajarkan pada jam ini..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column: span 2; margin-top: 5px;">
+                <label>Ambil Bukti Foto Kelas (Otomatis Kompres)</label>
+                <input type="file" id="fotoKelas" accept="image/*" capture="environment">
+                <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 10px; border-radius:5px;"></canvas>
+            </div>
+        </div>
+
+        <button class="btn-hadir" onclick="hadirSemua()">Set Semua Hadir</button>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>L/P</th>
+                    <th>Kehadiran</th>
+                </tr>
+            </thead>
+            <tbody id="tabelSiswa">
+                <tr><td colspan="4" style="text-align:center;">Pilih kelas terlebih dahulu</td></tr>
+            </tbody>
+        </table>
+
+        <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
+    </div>
+
+    <!-- TAB JURNAL APEL -->
+    <div id="jurnalApel" class="tab-content">
+        <div class="form-group">
+            <label>Jenis Apel</label>
+            <select id="jenisApel">
+                <option value="Pagi">Apel Pagi</option>
+                <option value="Siang">Apel Siang</option>
+                <option value="Sore">Apel Sore</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-top:15px;">
+            <label>Nama Guru Piket</label>
+            <input type="text" id="guruPiket" placeholder="Masukkan Nama Guru Piket">
+        </div>
+        <div class="form-group" style="margin-top:15px;">
+            <label>Laporan / Catatan Apel</label>
+            <textarea id="catatanApel" rows="4" placeholder="Ketik laporan kehadiran apel..."></textarea>
+        </div>
+        <button id="btnSimpanApel" class="btn-action" onclick="simpanJurnalApel()">Simpan Jurnal Apel</button>
+    </div>
+
+    <script>
+        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI BAWAH INI
+        const WEB_APP_URL = "PASTE_URL_APPS_SCRIPT_ANDA_DI_SINI";
+
+        // Otentikasi Sederhana
+        window.onload = async function() {
+            let kode = prompt("Masukkan Kode Akses Jurnal:");
+            if (kode !== "SRMPSULSEL") {
+                document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top:50px;'>Akses Ditolak. Kode Salah.</h2>";
+                return;
+            }
+            await loadCSVData();
+        };
+
+        let dataMurid = [];
+        let dataGuru = [];
+        let dataRoster = [];
+        let base64Foto = "";
+
+        // Skrip Kompresi Gambar Canvas
+        document.getElementById('fotoKelas').addEventListener('change', function(event) {
+            let file = event.target.files[0];
+            if(!file) return;
+
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let img = new Image();
+                img.onload = function() {
+                    let canvas = document.getElementById('canvasPreview');
+                    let ctx = canvas.getContext('2d');
+                    
+                    let MAX_WIDTH = 800; // Maksimal lebar 800px agar ringan
+                    let scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    base64Foto = canvas.toDataURL('image/jpeg', 0.6); // Kualitas 60%
+                    canvas.style.display = "block";
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // Parsing CSV manual
+        function parseCSV(text) {
+            let lines = text.trim().split('\n');
+            let headers = lines[0].trim().split(',');
+            return lines.slice(1).map(line => {
+                let values = line.split(',');
+                let obj = {};
+                headers.forEach((h, i) => obj[h.trim()] = values[i] ? values[i].trim() : "");
+                return obj;
+            });
+        }
+
+        async function loadCSVData() {
+            try {
+                const [resMurid, resGuru, resRoster] = await Promise.all([
+                    fetch('murid.csv'), fetch('guru.csv'), fetch('roster.csv')
+                ]);
+                dataMurid = parseCSV(await resMurid.text());
+                dataGuru = parseCSV(await resGuru.text());
+                dataRoster = parseCSV(await resRoster.text());
+            } catch (err) {
+                alert("Gagal memuat database CSV. Pastikan dijalankan di server lokal atau GitHub Pages.");
+            }
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-tab'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active-tab');
+            btn.classList.add('active');
+        }
+
+        function updateSemua() {
+            updateRoster();
+            tampilkanSiswa();
+        }
+
+        function updateRoster() {
+            let hari = document.getElementById('pilihHari').value;
+            let kelas = document.getElementById('pilihKelas').value;
+            let jam = document.getElementById('jamMulai').value;
+            let infoBox = document.getElementById('infoMapel');
+
+            if(!hari || !kelas || !jam) {
+                infoBox.innerHTML = "Mata Pelajaran & Guru akan muncul otomatis di sini";
+                return;
+            }
+
+            let jadwal = dataRoster.find(r => r.Hari === hari && r.Jam === jam);
+            let kodeMapel = jadwal ? jadwal[kelas] : "";
+
+            if(!kodeMapel) {
+                infoBox.innerHTML = "Tidak ada jadwal pada jam tersebut.";
+                return;
+            }
+
+            let detail = dataGuru.find(g => g.Kode === kodeMapel);
+            if(detail) {
+                let namaGuru = detail["Nama Guru"] || "Kosong/Guru Pengganti";
+                infoBox.innerHTML = `Mapel: <b>${detail["Mata Pelajaran"]}</b> | Guru: <b>${namaGuru}</b>`;
+                infoBox.dataset.mapel = detail["Mata Pelajaran"];
+                infoBox.dataset.guru = namaGuru;
+            }
+        }
+
+        function tampilkanSiswa() {
+            let kelas = document.getElementById('pilihKelas').value;
+            let tbody = document.getElementById('tabelSiswa');
+            tbody.innerHTML = "";
+
+            if (!kelas) {
+                tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Pilih kelas terlebih dahulu</td></tr>";
+                return;
+            }
+
+            let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
+            filterMurid.forEach(m => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${m.No}</td>
+                    <td class="nama-siswa">${m.Nama}</td>
+                    <td>${m["L/P"]}</td>
+                    <td>
+                        <select class="status-kehadiran">
+                            <option value="Hadir">Hadir</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Sakit">Sakit</option>
+                            <option value="Bolos">Bolos</option>
+                        </select>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function hadirSemua() {
+            document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir");
+        }
+
+        function simpanJurnalKelas() {
+            let kelas = document.getElementById('pilihKelas').value;
+            if(!kelas) return alert("Pilih kelas terlebih dahulu!");
+
+            if(WEB_APP_URL === "PASTE_URL_APPS_SCRIPT_ANDA_DI_SINI") {
+                return alert("Anda belum memasukkan URL Google Apps Script di dalam kode!");
+            }
+
+            let absensi = [];
+            let barisSiswa = document.querySelectorAll('#tabelSiswa tr');
+            barisSiswa.forEach(tr => {
+                let nama = tr.querySelector('.nama-siswa').innerText;
+                let status = tr.querySelector('.status-kehadiran').value;
+                absensi.push({ nama: nama, status: status });
+            });
+
+            let payload = {
+                tipe: "jurnal_kelas",
+                hari: document.getElementById('pilihHari').value,
+                kelas: kelas,
+                rentang_jp: `${document.getElementById('jamMulai').value} - ${document.getElementById('jamSelesai').value}`,
+                mapel: document.getElementById('infoMapel').dataset.mapel || "-",
+                guru: document.getElementById('infoMapel').dataset.guru || "-",
+                materi: document.getElementById('deskripsiMateri').value,
+                fotoBase64: base64Foto,
+                kehadiran: absensi
+            };
+
+            let btn = document.getElementById('btnSimpanKelas');
+            btn.innerText = "Mengirim Data..."; 
+            btn.disabled = true;
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            }).then(() => {
+                alert("Jurnal Harian Digital SRT 3: Data Kelas " + kelas + " Berhasil Disimpan!");
+                
+                // Reset form input setelah sukses
+                document.getElementById('deskripsiMateri').value = "";
+                document.getElementById('fotoKelas').value = "";
+                document.getElementById('canvasPreview').style.display = "none";
+                base64Foto = "";
+                
+                btn.innerText = "Simpan Jurnal Kelas"; 
+                btn.disabled = false;
+            }).catch(error => {
+                alert("Gagal mengirim data. Periksa koneksi internet.");
+                btn.innerText = "Simpan Jurnal Kelas"; 
+                btn.disabled = false;
+            });
+        }
+
+        function simpanJurnalApel() {
+            if(WEB_APP_URL === "PASTE_URL_APPS_SCRIPT_ANDA_DI_SINI") {
+                return alert("Anda belum memasukkan URL Google Apps Script di dalam kode!");
+            }
+
+            let payload = {
+                tipe: "jurnal_apel",
+                jenis_apel: document.getElementById('jenisApel').value,
+                guru_piket: document.getElementById('guruPiket').value,
+                laporan: document.getElementById('catatanApel').value
+            };
+
+            let btn = document.getElementById('btnSimpanApel');
+            btn.innerText = "Mengirim Data..."; 
+            btn.disabled = true;
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            }).then(() => {
+                alert("Jurnal Harian Digital SRT 3: Data Jurnal Apel Berhasil Disimpan!");
+                document.getElementById('guruPiket').value = "";
+                document.getElementById('catatanApel').value = "";
+                btn.innerText = "Simpan Jurnal Apel"; 
+                btn.disabled = false;
+            }).catch(error => {
+                alert("Gagal mengirim data. Periksa koneksi internet.");
+                btn.innerText = "Simpan Jurnal Apel"; 
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

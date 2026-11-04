@@ -335,7 +335,7 @@
             padding: 20px;
             border-radius: 14px;
             width: 90%;
-            max-width: 350px;
+            max-width: 360px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
         .modal-header {
@@ -516,10 +516,10 @@
             <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">1. Rekap Kelas Hari Ini</button>
             <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">2. Rekap Apel Hari Ini</button>
             
-            <hr style="margin:15px 0; border: 0; border-top: 1px solid var(--border-color);">
-            <p style="font-size:0.8rem; font-weight:bold; margin-bottom:8px; color:#334155;">Rekap Custom (Pilih Tanggal):</p>
+            <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <p style="font-size:0.8rem; font-weight:bold; margin-bottom:8px; color:#334155;">Rekap Custom Periode (Pilih Tanggal):</p>
             
-            <div style="display:flex; gap:10px; margin-bottom:12px;">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <div style="flex:1;">
                     <label style="font-size:0.7rem;">Mulai:</label>
                     <input type="date" id="tglMulai" style="padding:6px; font-size:0.8rem;">
@@ -532,6 +532,11 @@
             
             <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('kelas', 'custom', this)">3. Rekap Custom Kelas</button>
             <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('apel', 'custom', this)">4. Rekap Custom Apel</button>
+            
+            <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <p style="font-size:0.8rem; font-weight:bold; margin-bottom:6px; color:#334155;">Rekap Custom per Mapel Spesifik:</p>
+            <input type="text" id="inputMapelRekap" placeholder="Ketik nama mapel (misal: Agama)" style="width:100%; padding:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:8px;">
+            <button class="btn-rekap" style="background:#8b5cf6;" onclick="kirimRequestRekap('mapel', 'custom', this)">5. Rekap Custom Mapel</button>
         </div>
     </div>
 
@@ -931,10 +936,17 @@
         // FUNGSI REQUEST REKAP PDF
         function kirimRequestRekap(jenis, rentang, btnContext) {
             let payload = { tipe: "request_rekap", jenis: jenis, rentang: rentang };
+            
             if (rentang === 'custom') {
                 payload.startDate = document.getElementById('tglMulai').value;
                 payload.endDate = document.getElementById('tglSampai').value;
-                if(!payload.startDate || !payload.endDate) return alert("Pilih tanggal mulai dan sampai!");
+                if(!payload.startDate || !payload.endDate) return alert("Pilih tanggal mulai dan tanggal sampai terlebih dahulu!");
+            }
+            
+            if (jenis === 'mapel') {
+                let mapelKetik = document.getElementById('inputMapelRekap').value.trim();
+                if (!mapelKetik) return alert("Ketik nama mata pelajaran terlebih dahulu!");
+                payload.mapel_terpilih = mapelKetik;
             }
             
             let btnAsli = btnContext.innerText;
@@ -942,12 +954,12 @@
 
             fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
             .then(() => { 
-                alert("Request Rekap Diproses! File PDF akan segera dikirim ke Telegram."); 
+                alert("Request Rekap Diproses! Laporan PDF akan segera dikirim ke Telegram."); 
                 document.getElementById('modalRekap').style.display = 'none';
                 btnContext.innerText = btnAsli; btnContext.disabled = false;
             })
             .catch(() => { 
-                alert("Request Rekap Diproses! File PDF akan segera dikirim ke Telegram."); 
+                alert("Request Rekap Diproses! Laporan PDF akan segera dikirim ke Telegram."); 
                 document.getElementById('modalRekap').style.display = 'none';
                 btnContext.innerText = btnAsli; btnContext.disabled = false;
             });

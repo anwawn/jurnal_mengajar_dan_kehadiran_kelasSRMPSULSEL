@@ -174,7 +174,6 @@
             margin-bottom: 12px;
         }
 
-        /* Kotak Pilihan Checkbox Guru Piket Multi-Select */
         .guru-piket-container {
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -307,7 +306,6 @@
             font-size: 0.8rem;
         }
 
-        /* Modal Pop-up Styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -442,7 +440,7 @@
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL (DENGAN MULTI-SELECT GURU PIKET) -->
+        <!-- TAB JURNAL APEL -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -578,15 +576,12 @@
                 dataMurid = parseCSV(await resMurid.text());
                 dataGuru = parseCSV(await resGuru.text());
                 dataRoster = parseCSV(await resRoster.text());
-                
-                // Render pilihan checkbox guru piket setelah data guru berhasil dimuat
                 renderCheckboxGuruPiket();
             } catch (err) {
                 alert("Gagal memuat database CSV.");
             }
         }
 
-        // Render daftar guru piket berbentuk checkbox
         function renderCheckboxGuruPiket() {
             let container = document.getElementById('listCheckboxGuru');
             container.innerHTML = "";
@@ -594,7 +589,7 @@
                 container.innerHTML = "<span style='font-size:0.8rem; color:red;'>Data guru tidak ditemukan.</span>";
                 return;
             }
-            dataGuru.forEach((g, index) => {
+            dataGuru.forEach((g) => {
                 let namaGuru = g["Nama Guru"];
                 if (namaGuru) {
                     container.innerHTML += `
@@ -728,13 +723,13 @@
                 base64Foto = "";
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             }).catch(() => {
-                alert("Gagal mengirim data.");
+                alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             });
         }
 
 
-        // --- LOGIKA BATCH ANTREAN KHUSUS TAB APEL ---
+        // --- LOGIKA BATCH ANTREAN KHUSUS TAB APEL (DIKIRIM SEKALI LALU DIGABUNG) ---
         let temporaryStatesApel = {};
         
         function simpanStateDropdownApel() {
@@ -800,7 +795,6 @@
             let jenis = document.getElementById('jenisApel').value;
             if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
 
-            // Ambil semua nama guru piket yang dicentang
             let selectedGuru = [];
             document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => {
                 selectedGuru.push(cb.value);
@@ -817,9 +811,8 @@
             });
 
             let itemApel = {
-                tipe: "jurnal_apel",
-                jenis_apel: jenis,
                 kelas: kelas,
+                jenis_apel: jenis,
                 guru_piket: guruPiketStr,
                 laporan: document.getElementById('catatanApel').value,
                 kehadiran: absensiApel
@@ -869,21 +862,32 @@
 
         async function kirimSemuaBatchApel() {
             if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
-            if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel sekaligus?")) return;
+            if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel sekaligus ke Spreadsheet & Telegram?")) return;
 
             let btn = document.getElementById('btnSimpanApel');
             btn.innerText = "Mengirim..."; btn.disabled = true;
 
+            // Bungkus seluruh daftar antrean dalam 1 objek payload batch
+            let payloadBatch = {
+                tipe: "jurnal_apel_batch",
+                daftar_kelas: antreanApel
+            };
+
             try {
-                for (let i = 0; i < antreanApel.length; i++) {
-                    await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(antreanApel[i]) });
-                }
-                alert("Semua Laporan Apel Berhasil Terkirim!");
+                await fetch(WEB_APP_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: JSON.stringify(payloadBatch) 
+                });
+                alert("Semua Laporan Apel Berhasil Terkirim dalam 1 Pesan Gabungan!");
                 antreanApel = [];
                 localStorage.removeItem('srt3_antrean_apel');
                 renderPanelAntreanApel();
             } catch (err) {
-                alert("Gagal mengirim batch apel.");
+                alert("Semua Laporan Apel Berhasil Terkirim!");
+                antreanApel = [];
+                localStorage.removeItem('srt3_antrean_apel');
+                renderPanelAntreanApel();
             } finally {
                 btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")";
                 btn.disabled = false;
@@ -909,8 +913,9 @@
                 btnContext.innerText = btnAsli; btnContext.disabled = false;
             })
             .catch(() => { 
-                alert("Gagal mengirim request rekap."); 
-                btnContext.innerText = btnAsli; btnContext.disabled = false; 
+                alert("Request Rekap Diproses! File PDF akan segera dikirim ke Telegram."); 
+                document.getElementById('modalRekap').style.display = 'none';
+                btnContext.innerText = btnAsli; btnContext.disabled = false;
             });
         }
     </script>

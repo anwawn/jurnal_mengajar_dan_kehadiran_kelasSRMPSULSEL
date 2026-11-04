@@ -174,7 +174,6 @@
             margin-bottom: 12px;
         }
 
-        /* TAMPILAN CARD RAMAH HP */
         .siswa-list-container {
             display: flex;
             flex-direction: column;
@@ -261,11 +260,9 @@
 
         .btn-queue {
             background-color: #8b5cf6;
-            margin-top: 8px;
         }
         .btn-queue:hover { background-color: #7c3aed; }
 
-        /* Panel Antrean Kelas yang Disimpan Sementara */
         .queue-panel {
             background: #ede9fe;
             border: 1px solid #c4b5fd;
@@ -361,7 +358,7 @@
             <button class="tab-btn" onclick="switchTab('jurnalApel', this)">📋 Jurnal Apel</button>
         </div>
 
-        <!-- TAB JURNAL KELAS -->
+        <!-- TAB JURNAL KELAS (KIRIM LANGSUNG PER KELAS) -->
         <div id="jurnalKelas" class="tab-content active-tab">
             <div class="form-grid">
                 <div class="form-group">
@@ -374,7 +371,7 @@
                 </div>
                 <div class="form-group">
                     <label>Kelas</label>
-                    <select id="pilihKelas" onchange="gantiKelas()">
+                    <select id="pilihKelas" onchange="updateSemua()">
                         <option value="">-- Pilih Kelas --</option>
                         <option value="VII-1">VII-1</option><option value="VII-2">VII-2</option>
                         <option value="VII-3">VII-3</option><option value="VII-4">VII-4</option><option value="VII-5">VII-5</option>
@@ -416,18 +413,10 @@
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
 
-            <!-- Tombol Antre & Panel Antrean -->
-            <button type="button" class="btn-action btn-queue" onclick="tambahAntreanKelas()">➕ Simpan & Antre Kelas Ini</button>
-            
-            <div class="queue-panel" id="panelAntrean" style="display:none;">
-                <div style="font-weight: bold; font-size: 0.85rem; color: #5b21b6; margin-bottom: 6px;">📦 Daftar Kelas Terantre (<span id="jumlahAntre">0</span>):</div>
-                <div id="listAntreanContainer"></div>
-            </div>
-
-            <button id="btnSimpanKelas" class="btn-action" onclick="kirimSemuaBatch()" style="background-color: #10b981; margin-top: 15px;">🚀 Kirim Semua Laporan Kelas (<span id="counterKirim">0</span>)</button>
+            <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL -->
+        <!-- TAB JURNAL APEL (DENGAN SISTEM ANTRE / MULTI-KELAS) -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -514,12 +503,10 @@
                 return;
             }
             await loadCSVData();
-            muatAntreanDariLocalStorage();
+            muatAntreanApelDariLocalStorage();
         };
 
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = "";
-        let temporaryStates = {}; // Menyimpan status dropdown sementara per kelas di memori aktif
-        let antreanKelas = [];    // Array menampung antrean batch jurnal kelas
         let antreanApel = [];     // Array menampung antrean batch jurnal apel
 
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
@@ -575,23 +562,7 @@
             btn.classList.add('active');
         }
 
-        // --- SISTEM MEMORI KELAS SEMENTARA (MENCEGAH HILANG SAAT PINDAH KELAS) ---
-        function simpanStateDropdownAktif() {
-            let kelasAktif = document.getElementById('pilihKelas').value;
-            if (!kelasAktif) return;
-            let states = {};
-            document.querySelectorAll('#tabelSiswa .siswa-card').forEach(card => {
-                let nama = card.querySelector('.nama-siswa').innerText;
-                let status = card.querySelector('.status-kehadiran').value;
-                states[nama] = status;
-            });
-            temporaryStates[kelasAktif] = states;
-        }
-
-        function gantiKelas() {
-            updateRoster();
-            tampilkanSiswa();
-        }
+        function updateSemua() { updateRoster(); tampilkanSiswa(); }
 
         function updateRoster() {
             let hari = document.getElementById('pilihHari').value;
@@ -632,10 +603,7 @@
             }
 
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
-            let savedStates = temporaryStates[kelas] || {};
-
             filterMurid.forEach(m => {
-                let statusAwal = savedStates[m.Nama] || "Hadir";
                 let card = document.createElement('div');
                 card.className = 'siswa-card';
                 card.innerHTML = `
@@ -646,12 +614,12 @@
                             <span class="siswa-lp">Kelamin: ${m["L/P"]}</span>
                         </div>
                     </div>
-                    <select class="status-dropdown status-kehadiran" onchange="simpanStateDropdownAktif()">
-                        <option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option>
-                        <option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option>
-                        <option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option>
-                        <option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option>
-                        <option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option>
+                    <select class="status-dropdown status-kehadiran">
+                        <option value="Hadir">Hadir</option>
+                        <option value="Izin">Izin</option>
+                        <option value="Sakit">Sakit</option>
+                        <option value="Bolos">Bolos</option>
+                        <option value="Keluar">Keluar</option>
                     </select>
                 `;
                 container.appendChild(card);
@@ -660,27 +628,34 @@
 
         function hadirSemua() {
             document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir");
-            simpanStateDropdownAktif();
         }
 
-        // --- SISTEM ANTREAN BATCH (MULTI-KELAS) KELAS ---
-        function tambahAntreanKelas() {
-            let hari = document.getElementById('pilihHari').value;
+        // Simpan Jurnal Kelas Langsung (1 Kelas Satuan)
+        function simpanJurnalKelas() {
             let kelas = document.getElementById('pilihKelas').value;
-            if(!hari || !kelas) return alert("Pilih Hari dan Kelas terlebih dahulu!");
+            if(!kelas) return alert("Pilih kelas terlebih dahulu!");
 
-            simpanStateDropdownAktif();
-            let absensi = [];
-            let savedStates = temporaryStates[kelas] || {};
-            let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
+            if (!base64Foto || base64Foto === "") {
+                if (!confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nKirim laporan tanpa foto?")) return;
+            }
 
-            filterMurid.forEach(m => {
-                absensi.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" });
+            let absensi = []; let nonHadir = [];
+            let cards = document.querySelectorAll('#tabelSiswa .siswa-card');
+            cards.forEach(card => {
+                let nama = card.querySelector('.nama-siswa').innerText;
+                let status = card.querySelector('.status-kehadiran').value;
+                absensi.push({ nama: nama, status: status });
+                if (status !== "Hadir") { nonHadir.push(`- ${nama} (${status})`); }
             });
 
-            let itemJurnal = {
+            let confirmMsg = nonHadir.length > 0 
+                ? "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nKirim data absensi ini?" 
+                : "Semua siswa berstatus HADIR. Kirim data?";
+            if (!confirm(confirmMsg)) return;
+
+            let payload = {
                 tipe: "jurnal_kelas",
-                hari: hari,
+                hari: document.getElementById('pilihHari').value,
                 kelas: kelas,
                 rentang_jp: `${document.getElementById('jamMulai').value} - ${document.getElementById('jamSelesai').value}`,
                 mapel: document.getElementById('infoMapel').dataset.mapel || "-",
@@ -690,99 +665,25 @@
                 kehadiran: absensi
             };
 
-            // Cek apakah kelas ini sudah ada di antrean, jika ada timpa/update
-            let indexCek = antreanKelas.findIndex(item => item.kelas === kelas && item.hari === hari);
-            if (indexCek > -1) {
-                antreanKelas[indexCek] = itemJurnal;
-            } else {
-                antreanKelas.push(itemJurnal);
-            }
+            let btn = document.getElementById('btnSimpanKelas');
+            btn.innerText = "Mengirim..."; btn.disabled = true;
 
-            simpanAntreanKeLocalStorage();
-            renderPanelAntrean();
-            alert("Kelas " + kelas + " berhasil dimasukkan ke antrean! Silakan pilih kelas berikutnya.");
-            
-            // Reset form input materi & foto untuk kelas berikutnya
-            document.getElementById('deskripsiMateri').value = "";
-            document.getElementById('fotoKelas').value = "";
-            document.getElementById('canvasPreview').style.display = "none";
-            base64Foto = "";
-        }
-
-        function renderPanelAntrean() {
-            let panel = document.getElementById('panelAntrean');
-            let container = document.getElementById('listAntreanContainer');
-            document.getElementById('jumlahAntre').innerText = antreanKelas.length;
-            document.getElementById('counterKirim').innerText = antreanKelas.length;
-            
-            container.innerHTML = "";
-            if (antreanKelas.length === 0) {
-                panel.style.display = 'none';
-                return;
-            }
-            panel.style.display = 'block';
-
-            antreanKelas.forEach((item, idx) => {
-                container.innerHTML += `
-                    <div class="queue-item">
-                        <span><b>${item.kelas}</b> (${item.mapel} - ${item.hari})</span>
-                        <button type="button" onclick="hapusAntreanItem(${idx})" style="background:#ef4444; color:#white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button>
-                    </div>
-                `;
+            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+            .then(() => {
+                alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
+                document.getElementById('deskripsiMateri').value = "";
+                document.getElementById('fotoKelas').value = "";
+                document.getElementById('canvasPreview').style.display = "none";
+                base64Foto = "";
+                btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
+            }).catch(() => {
+                alert("Gagal mengirim data.");
+                btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             });
         }
 
-        function hapusAntreanItem(index) {
-            antreanKelas.splice(index, 1);
-            simpanAntreanKeLocalStorage();
-            renderPanelAntrean();
-        }
 
-        function simpanAntreanKeLocalStorage() {
-            localStorage.setItem('srt3_antrean_kelas', JSON.stringify(antreanKelas));
-        }
-
-        function muatAntreanDariLocalStorage() {
-            let saved = localStorage.getItem('srt3_antrean_kelas');
-            if (saved) {
-                try { antreanKelas = JSON.parse(saved); renderPanelAntrean(); } catch(e){}
-            }
-            let savedApel = localStorage.getItem('srt3_antrean_apel');
-            if (savedApel) {
-                try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){}
-            }
-        }
-
-        // Kirim Semua Batch Jurnal Kelas Sekaligus
-        async function kirimSemuaBatch() {
-            if (antreanKelas.length === 0) return alert("Belum ada kelas di dalam antrean!");
-            if (!confirm("Kirim seluruh " + antreanKelas.length + " laporan kelas yang ada di antrean sekaligus?")) return;
-
-            let btn = document.getElementById('btnSimpanKelas');
-            btn.innerText = "Mengirim Semua Laporan..."; btn.disabled = true;
-
-            try {
-                for (let i = 0; i < antreanKelas.length; i++) {
-                    await fetch(WEB_APP_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        body: JSON.stringify(antreanKelas[i])
-                    });
-                }
-                alert("Semua Laporan Kelas Berhasil Terkirim ke Spreadsheet & Telegram!");
-                antreanKelas = [];
-                localStorage.removeItem('srt3_antrean_kelas');
-                renderPanelAntrean();
-            } catch (err) {
-                alert("Terjadi kendala saat mengirim batch laporan.");
-            } finally {
-                btn.innerText = "🚀 Kirim Semua Laporan Kelas (" + antreanKelas.length + ")";
-                btn.disabled = false;
-            }
-        }
-
-
-        // --- LOGIKA UNTUK TAB APEL (BATERAI MULTI-KELAS APEL) ---
+        // --- LOGIKA BATCH ANTREAN KHUSUS TAB APEL ---
         let temporaryStatesApel = {};
         
         function simpanStateDropdownApel() {
@@ -899,6 +800,13 @@
             antreanApel.splice(index, 1);
             localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel));
             renderPanelAntreanApel();
+        }
+
+        function muatAntreanApelDariLocalStorage() {
+            let savedApel = localStorage.getItem('srt3_antrean_apel');
+            if (savedApel) {
+                try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){}
+            }
         }
 
         async function kirimSemuaBatchApel() {

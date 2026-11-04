@@ -458,7 +458,7 @@
                     </select>
                 </div>
                 <div class="form-group full-width">
-                    <label>Pilih Guru Piket (Bisa centang lebih dari satu)</label>
+                    <label>Pilih Guru Piket (Otomatis tersimpan untuk kelas berikutnya)</label>
                     <div id="listCheckboxGuru" class="guru-piket-container">
                         <span style="font-size:0.8rem; color:var(--text-muted);">Memuat daftar guru...</span>
                     </div>
@@ -582,6 +582,7 @@
             }
         }
 
+        // Render checkbox guru piket dan pulihkan centangan dari localStorage jika ada
         function renderCheckboxGuruPiket() {
             let container = document.getElementById('listCheckboxGuru');
             container.innerHTML = "";
@@ -589,17 +590,30 @@
                 container.innerHTML = "<span style='font-size:0.8rem; color:red;'>Data guru tidak ditemukan.</span>";
                 return;
             }
+
+            let savedGuruPiket = JSON.parse(localStorage.getItem('srt3_pilihan_guru_piket') || "[]");
+
             dataGuru.forEach((g) => {
                 let namaGuru = g["Nama Guru"];
                 if (namaGuru) {
+                    let isChecked = savedGuruPiket.includes(namaGuru) ? "checked" : "";
                     container.innerHTML += `
                         <label class="guru-checkbox-item">
-                            <input type="checkbox" name="pilihGuruPiket" value="${namaGuru}">
+                            <input type="checkbox" name="pilihGuruPiket" value="${namaGuru}" ${isChecked} onchange="simpanPilihanGuruPiket()">
                             <span>${namaGuru}</span>
                         </label>
                     `;
                 }
             });
+        }
+
+        // Simpan pilihan guru piket ke localStorage setiap kali dicentang/dilepas
+        function simpanPilihanGuruPiket() {
+            let selectedGuru = [];
+            document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => {
+                selectedGuru.push(cb.value);
+            });
+            localStorage.setItem('srt3_pilihan_guru_piket', JSON.stringify(selectedGuru));
         }
 
         function switchTab(tabId, btn) {

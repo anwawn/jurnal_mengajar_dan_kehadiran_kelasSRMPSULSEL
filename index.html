@@ -4,79 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jurnal Harian Digital SRT 3 Provinsi Sul-Sel</title>
-    <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --radius: 14px;
-        }
+        :root { --primary: #4f46e5; --primary-hover: #4338ca; --bg-color: #f1f5f9; --card-bg: #ffffff; --text-main: #1e293b; --text-muted: #64748b; --border-color: #e2e8f0; --radius: 14px; }
         * { box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 12px;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: var(--card-bg);
-            padding: 18px;
-            border-radius: var(--radius);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-        }
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #0f172a;
-            margin: 0;
-            line-height: 1.3;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 12px; }
+        .container { max-width: 900px; margin: auto; background: var(--card-bg); padding: 18px; border-radius: var(--radius); box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        h1 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.3; }
         .header-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn-sheet-link, .btn-admin-link, .btn-request {
-            color: white;
-            text-decoration: none;
-            padding: 7px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: none;
-            cursor: pointer;
-        }
+        .btn-sheet-link, .btn-admin-link, .btn-request { color: white; text-decoration: none; padding: 7px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; }
         .btn-sheet-link { background-color: #10b981; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2); }
         .btn-admin-link { background-color: #475569; box-shadow: 0 2px 6px rgba(71, 85, 105, 0.2); }
         .btn-request { background-color: #f59e0b; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2); }
-        .tab-container {
-            display: flex; justify-content: center; gap: 6px;
-            margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: var(--radius);
-        }
-        .tab-btn {
-            flex: 1; padding: 9px; cursor: pointer; border: none; background: transparent;
-            font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 8px;
-            text-align: center; transition: all 0.2s;
-        }
-        .tab-btn.active {
-            background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
+        .tab-container { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: var(--radius); }
+        .tab-btn { flex: 1; padding: 9px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 8px; text-align: center; transition: all 0.2s; }
+        .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
@@ -84,83 +27,37 @@
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .full-width { grid-column: span 2; }
         label { font-weight: 600; font-size: 0.8rem; color: #334155; }
-        select, input[type="text"], input[type="date"], textarea, input[type="file"] {
-            padding: 9px 10px; font-size: 0.85rem; border: 1px solid var(--border-color);
-            border-radius: 8px; background: #fff; width: 100%; font-family: 'Inter', sans-serif;
-        }
-        select:focus, input:focus, textarea:focus {
-            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-        }
-        #infoMapel {
-            background: #f8fafc; border: 1px dashed var(--border-color); padding: 10px;
-            border-radius: 8px; font-size: 0.85rem; text-align: center; color: #334155;
-        }
-        .btn-hadir {
-            background-color: #0ea5e9; color: white; border: none; padding: 10px;
-            font-size: 0.85rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 12px;
-        }
-        .guru-piket-container {
-            border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;
-            max-height: 150px; overflow-y: auto; background: #fff;
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;
-        }
+        select, input[type="text"], input[type="date"], textarea, input[type="file"] { padding: 9px 10px; font-size: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; width: 100%; font-family: 'Inter', sans-serif; }
+        select:focus, input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        #infoMapel { background: #f8fafc; border: 1px dashed var(--border-color); padding: 10px; border-radius: 8px; font-size: 0.85rem; text-align: center; color: #334155; }
+        .btn-hadir { background-color: #0ea5e9; color: white; border: none; padding: 10px; font-size: 0.85rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 12px; }
+        .guru-piket-container { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; max-height: 150px; overflow-y: auto; background: #fff; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
         .guru-checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; }
         .guru-checkbox-item input { cursor: pointer; width: 16px; height: 16px; }
-        .siswa-list-container {
-            display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;
-            max-height: 450px; overflow-y: auto; padding-right: 2px;
-        }
-        .siswa-card {
-            display: flex; justify-content: space-between; align-items: center;
-            background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 10px; gap: 10px;
-        }
+        .siswa-list-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; max-height: 450px; overflow-y: auto; padding-right: 2px; }
+        .siswa-card { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 10px; gap: 10px; }
         .siswa-info { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; }
         .siswa-no { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); min-width: 20px; }
         .siswa-nama-lp { display: flex; flex-direction: column; overflow: hidden; }
         .siswa-nama { font-size: 0.85rem; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .siswa-lp { font-size: 0.7rem; color: var(--text-muted); }
-        .status-dropdown {
-            padding: 7px 10px; font-size: 0.8rem; border: 1px solid var(--border-color);
-            border-radius: 8px; background: #fff; font-weight: 600; color: var(--primary); width: 105px; flex-shrink: 0;
-        }
-        .btn-action {
-            background-color: var(--primary); color: white; border: none; padding: 12px;
-            font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s;
-        }
+        .status-dropdown { padding: 7px 10px; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; font-weight: 600; color: var(--primary); width: 105px; flex-shrink: 0; }
+        .btn-action { background-color: var(--primary); color: white; border: none; padding: 12px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
         .btn-action:hover { background-color: var(--primary-hover); }
         .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; }
         .btn-queue { background-color: #8b5cf6; }
         .btn-queue:hover { background-color: #7c3aed; }
-        .queue-panel {
-            background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px;
-        }
-        .queue-item {
-            display: flex; justify-content: space-between; align-items: center; background: #fff;
-            padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 0.8rem;
-        }
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: #fff; padding: 20px; border-radius: 14px; width: 90%; max-width: 360px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
+        .queue-panel { background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px; }
+        .queue-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 0.8rem; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #fff; padding: 20px; border-radius: 14px; width: 90%; max-width: 360px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .btn-rekap {
-            background: #6366f1; color: white; padding: 10px; border: none; border-radius: 8px;
-            width: 100%; margin-bottom: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
-        }
+        .btn-rekap { background: #6366f1; color: white; padding: 10px; border: none; border-radius: 8px; width: 100%; margin-bottom: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .btn-rekap:hover { background: #4f46e5; }
         .btn-rekap-custom { background: #0ea5e9; }
         .btn-rekap-custom:hover { background: #0284c7; }
         .footer-credit { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
-        @media (max-width: 480px) {
-            body { padding: 6px; }
-            .container { padding: 12px; }
-            .form-grid { grid-template-columns: 1fr; gap: 10px; }
-            .full-width { grid-column: span 1; }
-            .guru-piket-container { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 480px) { body { padding: 6px; } .container { padding: 12px; } .form-grid { grid-template-columns: 1fr; gap: 10px; } .full-width { grid-column: span 1; } .guru-piket-container { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -170,12 +67,8 @@
             <h1>Jurnal Harian Digital SRT 3</h1>
             <div class="header-buttons">
                 <a href="admin.html" class="btn-admin-link">⚙️ Admin</a>
-                <button class="btn-request" onclick="document.getElementById('modalRekap').style.display='flex'">
-                    📄 Request Rekap
-                </button>
-                <a href="https://docs.google.com/spreadsheets/d/1lC0IUTgLyI-mlk_Ft-poQVM8b3gnv8tjXox7op7MG9k/edit" target="_blank" class="btn-sheet-link">
-                    📊 Sheet
-                </a>
+                <button class="btn-request" onclick="document.getElementById('modalRekap').style.display='flex'">📄 Request Rekap</button>
+                <a href="https://docs.google.com/spreadsheets/d/1lC0IUTgLyI-mlk_Ft-poQVM8b3gnv8tjXox7op7MG9k/edit" target="_blank" class="btn-sheet-link">📊 Sheet</a>
             </div>
         </div>
         
@@ -220,25 +113,20 @@
                     </select>
                 </div>
                 <div id="infoMapel" class="full-width">Mata Pelajaran & Guru akan muncul otomatis</div>
-                
                 <div class="form-group full-width">
                     <label>Deskripsi Materi (Kompetensi Dasar)</label>
                     <textarea id="deskripsiMateri" rows="2" placeholder="Ketik materi yang diajarkan..."></textarea>
                 </div>
-                
                 <div class="form-group full-width">
                     <label>Ambil Bukti Foto Kelas</label>
                     <input type="file" id="fotoKelas" accept="image/*">
                     <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
                 </div>
             </div>
-
             <button class="btn-hadir" onclick="hadirSemua()">⚡ Set Semua Hadir</button>
-            
             <div class="siswa-list-container" id="tabelSiswa">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
-
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
@@ -270,26 +158,18 @@
                     <textarea id="catatanApel" rows="2" placeholder="Ketik laporan kehadiran apel..."></textarea>
                 </div>
             </div>
-
             <button class="btn-hadir" onclick="hadirSemuaApel()">⚡ Set Semua Hadir (Apel)</button>
-            
             <div class="siswa-list-container" id="tabelSiswaApel">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
-
             <button type="button" class="btn-action btn-queue" onclick="tambahAntreanApel()">➕ Simpan & Antre Apel Kelas Ini</button>
-            
             <div class="queue-panel" id="panelAntreanApel" style="display:none;">
                 <div style="font-weight: bold; font-size: 0.85rem; color: #5b21b6; margin-bottom: 6px;">📦 Daftar Apel Terantre (<span id="jumlahAntreApel">0</span>):</div>
                 <div id="listAntreanApelContainer"></div>
             </div>
-
             <button id="btnSimpanApel" class="btn-action" onclick="kirimSemuaBatchApel()" style="background-color: #10b981; margin-top: 15px;">🚀 Kirim Semua Laporan Apel (<span id="counterKirimApel">0</span>)</button>
         </div>
-
-        <div class="footer-credit">
-            Developer : Nur Darmawansyah | NIP 199709012026211033
-        </div>
+        <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033</div>
     </div>
 
     <!-- MODAL REKAP -->
@@ -301,10 +181,8 @@
             </div>
             <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">1. Rekap Kelas Hari Ini</button>
             <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">2. Rekap Apel Hari Ini</button>
-            
             <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
             <p style="font-size:0.8rem; font-weight:bold; margin-bottom:8px; color:#334155;">Rekap Custom Periode (Pilih Tanggal):</p>
-            
             <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <div style="flex:1;">
                     <label style="font-size:0.7rem;">Mulai:</label>
@@ -315,18 +193,13 @@
                     <input type="date" id="tglSampai" style="padding:6px; font-size:0.8rem;">
                 </div>
             </div>
-            
             <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('kelas', 'custom', this)">3. Rekap Custom Kelas</button>
             <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('apel', 'custom', this)">4. Rekap Custom Apel</button>
-            
             <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
             <p style="font-size:0.8rem; font-weight:bold; margin-bottom:6px; color:#334155;">Rekap Custom per Mapel Spesifik:</p>
-            
-            <!-- DROPDOWN MATA PELAJARAN -->
             <select id="inputMapelRekap" style="width:100%; padding:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:8px;">
                 <option value="">-- Memuat Mata Pelajaran... --</option>
             </select>
-            
             <button class="btn-rekap" style="background:#8b5cf6;" onclick="kirimRequestRekap('mapel', 'custom', this)">5. Rekap Custom Mapel</button>
         </div>
     </div>
@@ -336,35 +209,23 @@
 
         window.onload = async function() {
             let kode = prompt("Masukkan Kode Akses:");
-            
-            if (kode === "ADMINSRT3") {
-                window.location.href = "admin.html";
-                return;
-            } else if (kode === "SRMPSULSEL") {
-                await loadCSVData();
-                muatAntreanApelDariLocalStorage();
-            } else {
-                document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top:100px; font-family:Inter;'>Akses Ditolak. Kode Salah.</h2>";
-                return;
-            }
+            if (kode === "ADMINSRT3") { window.location.href = "admin.html"; return; } 
+            else if (kode === "SRMPSULSEL") { await loadCSVData(); muatAntreanApelDariLocalStorage(); } 
+            else { document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top:100px; font-family:Inter;'>Akses Ditolak. Kode Salah.</h2>"; return; }
         };
 
-        let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = "";
-        let antreanApel = [];     
+        let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let antreanApel = [];     
 
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
-            let file = event.target.files[0];
-            if(!file) return;
+            let file = event.target.files[0]; if(!file) return;
             let reader = new FileReader();
             reader.onload = function(e) {
                 let img = new Image();
                 img.onload = function() {
                     let canvas = document.getElementById('canvasPreview');
                     let ctx = canvas.getContext('2d');
-                    let MAX_WIDTH = 800;
-                    let scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
+                    let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     base64Foto = canvas.toDataURL('image/jpeg', 0.6);
                     canvas.style.display = "block";
@@ -375,13 +236,10 @@
         });
 
         function parseCSV(text) {
-            let lines = text.trim().split('\n');
-            let headers = lines[0].trim().split(',');
+            let lines = text.trim().split('\n'); let headers = lines[0].trim().split(',');
             return lines.slice(1).map(line => {
-                let values = line.split(',');
-                let obj = {};
-                headers.forEach((h, i) => obj[h.trim()] = values[i] ? values[i].trim() : "");
-                return obj;
+                let values = line.split(','); let obj = {};
+                headers.forEach((h, i) => obj[h.trim()] = values[i] ? values[i].trim() : ""); return obj;
             });
         }
 
@@ -390,180 +248,93 @@
                 const [resMurid, resGuru, resRoster] = await Promise.all([
                     fetch('murid.csv'), fetch('guru.csv'), fetch('roster.csv')
                 ]);
-                dataMurid = parseCSV(await resMurid.text());
-                dataGuru = parseCSV(await resGuru.text());
-                dataRoster = parseCSV(await resRoster.text());
-                
-                renderCheckboxGuruPiket();
-                populateMapelDropdown(); // Panggil pengisian dropdown Mapel Rekap
-            } catch (err) {
-                alert("Gagal memuat database CSV.");
-            }
+                dataMurid = parseCSV(await resMurid.text()); dataGuru = parseCSV(await resGuru.text()); dataRoster = parseCSV(await resRoster.text());
+                renderCheckboxGuruPiket(); populateMapelDropdown();
+            } catch (err) { alert("Gagal memuat database CSV."); }
         }
 
         function populateMapelDropdown() {
-            let select = document.getElementById('inputMapelRekap');
-            select.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
-            // Ambil nama mapel unik dari database
+            let select = document.getElementById('inputMapelRekap'); select.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
             let uniqueMapel = [...new Set(dataGuru.map(item => item["Mata Pelajaran"]).filter(m => m))];
-            uniqueMapel.sort().forEach(m => {
-                let opt = document.createElement('option');
-                opt.value = m;
-                opt.text = m;
-                select.appendChild(opt);
-            });
+            uniqueMapel.sort().forEach(m => { let opt = document.createElement('option'); opt.value = m; opt.text = m; select.appendChild(opt); });
         }
 
         function renderCheckboxGuruPiket() {
-            let container = document.getElementById('listCheckboxGuru');
-            container.innerHTML = "";
-            if (dataGuru.length === 0) {
-                container.innerHTML = "<span style='font-size:0.8rem; color:red;'>Data guru tidak ditemukan.</span>";
-                return;
-            }
+            let container = document.getElementById('listCheckboxGuru'); container.innerHTML = "";
+            if (dataGuru.length === 0) { container.innerHTML = "<span style='font-size:0.8rem; color:red;'>Data guru tidak ditemukan.</span>"; return; }
             let savedGuruPiket = JSON.parse(localStorage.getItem('srt3_pilihan_guru_piket') || "[]");
             dataGuru.forEach((g) => {
                 let namaGuru = g["Nama Guru"];
                 if (namaGuru) {
                     let isChecked = savedGuruPiket.includes(namaGuru) ? "checked" : "";
-                    container.innerHTML += `
-                        <label class="guru-checkbox-item">
-                            <input type="checkbox" name="pilihGuruPiket" value="${namaGuru}" ${isChecked} onchange="simpanPilihanGuruPiket()">
-                            <span>${namaGuru}</span>
-                        </label>
-                    `;
+                    container.innerHTML += `<label class="guru-checkbox-item"><input type="checkbox" name="pilihGuruPiket" value="${namaGuru}" ${isChecked} onchange="simpanPilihanGuruPiket()"><span>${namaGuru}</span></label>`;
                 }
             });
         }
 
         function simpanPilihanGuruPiket() {
-            let selectedGuru = [];
-            document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => {
-                selectedGuru.push(cb.value);
-            });
+            let selectedGuru = []; document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
             localStorage.setItem('srt3_pilihan_guru_piket', JSON.stringify(selectedGuru));
         }
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-tab'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active-tab');
-            btn.classList.add('active');
+            document.getElementById(tabId).classList.add('active-tab'); btn.classList.add('active');
         }
 
         function updateSemua() { updateRoster(); tampilkanSiswa(); }
 
         function updateRoster() {
-            let hari = document.getElementById('pilihHari').value;
-            let kelas = document.getElementById('pilihKelas').value;
-            let jam = document.getElementById('jamMulai').value;
-            let infoBox = document.getElementById('infoMapel');
-
-            if(!hari || !kelas || !jam) {
-                infoBox.innerHTML = "Mata Pelajaran & Guru akan muncul otomatis di sini";
-                return;
-            }
-
-            let jadwal = dataRoster.find(r => r.Hari === hari && r.Jam === jam);
-            let kodeMapel = jadwal ? jadwal[kelas] : "";
-
-            if(!kodeMapel) {
-                infoBox.innerHTML = "Tidak ada jadwal pada jam tersebut.";
-                return;
-            }
-
+            let hari = document.getElementById('pilihHari').value; let kelas = document.getElementById('pilihKelas').value; let jam = document.getElementById('jamMulai').value; let infoBox = document.getElementById('infoMapel');
+            if(!hari || !kelas || !jam) { infoBox.innerHTML = "Mata Pelajaran & Guru akan muncul otomatis di sini"; return; }
+            let jadwal = dataRoster.find(r => r.Hari === hari && r.Jam === jam); let kodeMapel = jadwal ? jadwal[kelas] : "";
+            if(!kodeMapel) { infoBox.innerHTML = "Tidak ada jadwal pada jam tersebut."; return; }
             let detail = dataGuru.find(g => g.Kode === kodeMapel);
             if(detail) {
                 let namaGuru = detail["Nama Guru"] || "Kosong/Guru Pengganti";
                 infoBox.innerHTML = `Mapel: <b>${detail["Mata Pelajaran"]}</b> | Guru: <b>${namaGuru}</b>`;
-                infoBox.dataset.mapel = detail["Mata Pelajaran"];
-                infoBox.dataset.guru = namaGuru;
+                infoBox.dataset.mapel = detail["Mata Pelajaran"]; infoBox.dataset.guru = namaGuru;
             }
         }
 
         function tampilkanSiswa() {
-            let kelas = document.getElementById('pilihKelas').value;
-            let container = document.getElementById('tabelSiswa');
-            container.innerHTML = "";
-
-            if (!kelas) {
-                container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>";
-                return;
-            }
-
+            let kelas = document.getElementById('pilihKelas').value; let container = document.getElementById('tabelSiswa'); container.innerHTML = "";
+            if (!kelas) { container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>"; return; }
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
             filterMurid.forEach(m => {
-                let card = document.createElement('div');
-                card.className = 'siswa-card';
-                card.innerHTML = `
-                    <div class="siswa-info">
-                        <span class="siswa-no">${m.No}.</span>
-                        <div class="siswa-nama-lp">
-                            <span class="nama-siswa">${m.Nama}</span>
-                            <span class="siswa-lp">Kelamin: ${m["L/P"]}</span>
-                        </div>
-                    </div>
-                    <select class="status-dropdown status-kehadiran">
-                        <option value="Hadir">Hadir</option>
-                        <option value="Izin">Izin</option>
-                        <option value="Sakit">Sakit</option>
-                        <option value="Bolos">Bolos</option>
-                        <option value="Keluar">Keluar</option>
-                        <option value="Pulang">Pulang</option>
-                    </select>
-                `;
+                let card = document.createElement('div'); card.className = 'siswa-card';
+                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran"><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Sakit">Sakit</option><option value="Bolos">Bolos</option><option value="Keluar">Keluar</option><option value="Pulang">Pulang</option></select>`;
                 container.appendChild(card);
             });
         }
 
-        function hadirSemua() {
-            document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir");
-        }
+        function hadirSemua() { document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir"); }
 
         function simpanJurnalKelas() {
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
-
-            if (!base64Foto || base64Foto === "") {
-                if (!confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nKirim laporan tanpa foto?")) return;
-            }
-
-            let absensi = []; let nonHadir = [];
-            let cards = document.querySelectorAll('#tabelSiswa .siswa-card');
+            if (!base64Foto || base64Foto === "") { if (!confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nKirim laporan tanpa foto?")) return; }
+            let absensi = []; let nonHadir = []; let cards = document.querySelectorAll('#tabelSiswa .siswa-card');
             cards.forEach(card => {
-                let nama = card.querySelector('.nama-siswa').innerText;
-                let status = card.querySelector('.status-kehadiran').value;
-                absensi.push({ nama: nama, status: status });
-                if (status !== "Hadir") { nonHadir.push(`- ${nama} (${status})`); }
+                let nama = card.querySelector('.nama-siswa').innerText; let status = card.querySelector('.status-kehadiran').value;
+                absensi.push({ nama: nama, status: status }); if (status !== "Hadir") { nonHadir.push(`- ${nama} (${status})`); }
             });
-
-            let confirmMsg = nonHadir.length > 0 
-                ? "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nKirim data absensi ini?" 
-                : "Semua siswa berstatus HADIR. Kirim data?";
+            let confirmMsg = nonHadir.length > 0 ? "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nKirim data absensi ini?" : "Semua siswa berstatus HADIR. Kirim data?";
             if (!confirm(confirmMsg)) return;
 
             let payload = {
-                tipe: "jurnal_kelas",
-                hari: document.getElementById('pilihHari').value,
-                kelas: kelas,
+                tipe: "jurnal_kelas", hari: document.getElementById('pilihHari').value, kelas: kelas,
                 rentang_jp: `${document.getElementById('jamMulai').value} - ${document.getElementById('jamSelesai').value}`,
-                mapel: document.getElementById('infoMapel').dataset.mapel || "-",
-                guru: document.getElementById('infoMapel').dataset.guru || "-",
-                materi: document.getElementById('deskripsiMateri').value,
-                fotoBase64: base64Foto,
-                kehadiran: absensi
+                mapel: document.getElementById('infoMapel').dataset.mapel || "-", guru: document.getElementById('infoMapel').dataset.guru || "-",
+                materi: document.getElementById('deskripsiMateri').value, fotoBase64: base64Foto, kehadiran: absensi
             };
 
-            let btn = document.getElementById('btnSimpanKelas');
-            btn.innerText = "Mengirim..."; btn.disabled = true;
-
+            let btn = document.getElementById('btnSimpanKelas'); btn.innerText = "Mengirim..."; btn.disabled = true;
             fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
             .then(() => {
                 alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
-                document.getElementById('deskripsiMateri').value = "";
-                document.getElementById('fotoKelas').value = "";
-                document.getElementById('canvasPreview').style.display = "none";
-                base64Foto = "";
+                document.getElementById('deskripsiMateri').value = ""; document.getElementById('fotoKelas').value = ""; document.getElementById('canvasPreview').style.display = "none"; base64Foto = "";
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             }).catch(() => {
                 alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
@@ -571,18 +342,13 @@
             });
         }
 
-
         // --- LOGIKA BATCH ANTREAN KHUSUS TAB APEL ---
         let temporaryStatesApel = {};
-        
         function simpanStateDropdownApel() {
-            let kelasAktif = document.getElementById('pilihKelasApel').value;
-            if (!kelasAktif) return;
+            let kelasAktif = document.getElementById('pilihKelasApel').value; if (!kelasAktif) return;
             let states = {};
             document.querySelectorAll('#tabelSiswaApel .siswa-card').forEach(card => {
-                let nama = card.querySelector('.nama-siswa-apel').innerText;
-                let status = card.querySelector('.status-kehadiran-apel').value;
-                states[nama] = status;
+                let nama = card.querySelector('.nama-siswa-apel').innerText; let status = card.querySelector('.status-kehadiran-apel').value; states[nama] = status;
             });
             temporaryStatesApel[kelasAktif] = states;
         }
@@ -590,178 +356,81 @@
         function gantiKelasApel() { tampilkanSiswaApel(); }
 
         function tampilkanSiswaApel() {
-            let kelas = document.getElementById('pilihKelasApel').value;
-            let container = document.getElementById('tabelSiswaApel');
-            container.innerHTML = "";
-
-            if (!kelas) {
-                container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>";
-                return;
-            }
-
-            let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
-            let savedStates = temporaryStatesApel[kelas] || {};
-
+            let kelas = document.getElementById('pilihKelasApel').value; let container = document.getElementById('tabelSiswaApel'); container.innerHTML = "";
+            if (!kelas) { container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>"; return; }
+            let filterMurid = dataMurid.filter(m => m.Kelas === kelas); let savedStates = temporaryStatesApel[kelas] || {};
             filterMurid.forEach(m => {
-                let statusAwal = savedStates[m.Nama] || "Hadir";
-                let card = document.createElement('div');
-                card.className = 'siswa-card';
-                card.innerHTML = `
-                    <div class="siswa-info">
-                        <span class="siswa-no">${m.No}.</span>
-                        <div class="siswa-nama-lp">
-                            <span class="nama-siswa nama-siswa-apel">${m.Nama}</span>
-                            <span class="siswa-lp">Kelamin: ${m["L/P"]}</span>
-                        </div>
-                    </div>
-                    <select class="status-dropdown status-kehadiran-apel" onchange="simpanStateDropdownApel()">
-                        <option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option>
-                        <option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option>
-                        <option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option>
-                        <option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option>
-                        <option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option>
-                        <option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option>
-                    </select>
-                `;
+                let statusAwal = savedStates[m.Nama] || "Hadir"; let card = document.createElement('div'); card.className = 'siswa-card';
+                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa nama-siswa-apel">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran-apel" onchange="simpanStateDropdownApel()"><option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option><option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option><option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option><option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option><option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option><option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option></select>`;
                 container.appendChild(card);
             });
         }
 
-        function hadirSemuaApel() {
-            document.querySelectorAll('.status-kehadiran-apel').forEach(el => el.value = "Hadir");
-            simpanStateDropdownApel();
-        }
+        function hadirSemuaApel() { document.querySelectorAll('.status-kehadiran-apel').forEach(el => el.value = "Hadir"); simpanStateDropdownApel(); }
 
         function tambahAntreanApel() {
-            let kelas = document.getElementById('pilihKelasApel').value;
-            let jenis = document.getElementById('jenisApel').value;
+            let kelas = document.getElementById('pilihKelasApel').value; let jenis = document.getElementById('jenisApel').value;
             if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
-
-            let selectedGuru = [];
-            document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
+            let selectedGuru = []; document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
             let guruPiketStr = selectedGuru.length > 0 ? selectedGuru.join(", ") : "-";
-
-            simpanStateDropdownApel();
-            let absensiApel = [];
-            let savedStates = temporaryStatesApel[kelas] || {};
+            simpanStateDropdownApel(); let absensiApel = []; let savedStates = temporaryStatesApel[kelas] || {};
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
-
-            filterMurid.forEach(m => {
-                absensiApel.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" });
-            });
-
-            let itemApel = {
-                kelas: kelas,
-                jenis_apel: jenis,
-                guru_piket: guruPiketStr,
-                laporan: document.getElementById('catatanApel').value,
-                kehadiran: absensiApel
-            };
-
+            filterMurid.forEach(m => { absensiApel.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" }); });
+            let itemApel = { kelas: kelas, jenis_apel: jenis, guru_piket: guruPiketStr, laporan: document.getElementById('catatanApel').value, kehadiran: absensiApel };
             let indexCek = antreanApel.findIndex(item => item.kelas === kelas && item.jenis_apel === jenis);
-            if (indexCek > -1) antreanApel[indexCek] = itemApel;
-            else antreanApel.push(itemApel);
-
-            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel));
-            renderPanelAntreanApel();
-            alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
+            if (indexCek > -1) antreanApel[indexCek] = itemApel; else antreanApel.push(itemApel);
+            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
         }
 
         function renderPanelAntreanApel() {
-            let panel = document.getElementById('panelAntreanApel');
-            let container = document.getElementById('listAntreanApelContainer');
-            document.getElementById('jumlahAntreApel').innerText = antreanApel.length;
-            document.getElementById('counterKirimApel').innerText = antreanApel.length;
-            
-            container.innerHTML = "";
-            if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
+            let panel = document.getElementById('panelAntreanApel'); let container = document.getElementById('listAntreanApelContainer');
+            document.getElementById('jumlahAntreApel').innerText = antreanApel.length; document.getElementById('counterKirimApel').innerText = antreanApel.length;
+            container.innerHTML = ""; if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
             panel.style.display = 'block';
-
             antreanApel.forEach((item, idx) => {
-                container.innerHTML += `
-                    <div class="queue-item">
-                        <span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span>
-                        <button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button>
-                    </div>
-                `;
+                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button></div>`;
             });
         }
 
-        function hapusAntreanItemApel(index) {
-            antreanApel.splice(index, 1);
-            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel));
-            renderPanelAntreanApel();
-        }
+        function hapusAntreanItemApel(index) { antreanApel.splice(index, 1); localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); }
 
-        function muatAntreanApelDariLocalStorage() {
-            let savedApel = localStorage.getItem('srt3_antrean_apel');
-            if (savedApel) {
-                try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){}
-            }
-        }
+        function muatAntreanApelDariLocalStorage() { let savedApel = localStorage.getItem('srt3_antrean_apel'); if (savedApel) { try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){} } }
 
         async function kirimSemuaBatchApel() {
             if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
             if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel sekaligus ke Spreadsheet & Telegram?")) return;
-
-            let btn = document.getElementById('btnSimpanApel');
-            btn.innerText = "Mengirim..."; btn.disabled = true;
-
-            let payloadBatch = {
-                tipe: "jurnal_apel_batch",
-                daftar_kelas: antreanApel
-            };
-
+            let btn = document.getElementById('btnSimpanApel'); btn.innerText = "Mengirim..."; btn.disabled = true;
+            let payloadBatch = { tipe: "jurnal_apel_batch", daftar_kelas: antreanApel };
             try {
-                await fetch(WEB_APP_URL, { 
-                    method: 'POST', 
-                    mode: 'no-cors', 
-                    body: JSON.stringify(payloadBatch) 
-                });
+                await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadBatch) });
                 alert("Semua Laporan Apel Berhasil Terkirim dalam 1 Pesan Gabungan!");
-                antreanApel = [];
-                localStorage.removeItem('srt3_antrean_apel');
-                renderPanelAntreanApel();
+                antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
             } catch (err) {
                 alert("Semua Laporan Apel Berhasil Terkirim!");
-                antreanApel = [];
-                localStorage.removeItem('srt3_antrean_apel');
-                renderPanelAntreanApel();
-            } finally {
-                btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")";
-                btn.disabled = false;
-            }
+                antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
+            } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; btn.disabled = false; }
         }
 
         // FUNGSI REQUEST REKAP PDF
         function kirimRequestRekap(jenis, rentang, btnContext) {
             let payload = { tipe: "request_rekap", jenis: jenis, rentang: rentang };
-            
             if (rentang === 'custom') {
-                payload.startDate = document.getElementById('tglMulai').value;
-                payload.endDate = document.getElementById('tglSampai').value;
+                payload.startDate = document.getElementById('tglMulai').value; payload.endDate = document.getElementById('tglSampai').value;
                 if(!payload.startDate || !payload.endDate) return alert("Pilih tanggal mulai dan tanggal sampai terlebih dahulu!");
             }
-            
             if (jenis === 'mapel') {
                 let mapelKetik = document.getElementById('inputMapelRekap').value;
                 if (!mapelKetik || mapelKetik === "") return alert("Pilih mata pelajaran dari dropdown terlebih dahulu!");
                 payload.mapel_terpilih = mapelKetik;
             }
-            
-            let btnAsli = btnContext.innerText;
-            btnContext.innerText = "Memproses..."; btnContext.disabled = true;
-
+            let btnAsli = btnContext.innerText; btnContext.innerText = "Memproses..."; btnContext.disabled = true;
             fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
             .then(() => { 
-                alert("Request Rekap Diproses! Periksa grup Telegram Anda."); 
-                document.getElementById('modalRekap').style.display = 'none';
-                btnContext.innerText = btnAsli; btnContext.disabled = false;
-            })
-            .catch(() => { 
-                alert("Request Rekap Diproses! Periksa grup Telegram Anda."); 
-                document.getElementById('modalRekap').style.display = 'none';
-                btnContext.innerText = btnAsli; btnContext.disabled = false;
+                alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); 
+                document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false;
+            }).catch(() => { 
+                alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); 
+                document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false;
             });
         }
     </script>

@@ -54,6 +54,11 @@
             line-height: 1.3;
         }
 
+        .header-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
         .btn-sheet-link {
             background-color: #10b981;
             color: white;
@@ -66,6 +71,18 @@
             align-items: center;
             gap: 6px;
             box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-request {
+            background-color: #f59e0b;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
         }
 
         .tab-container {
@@ -118,7 +135,7 @@
 
         label { font-weight: 600; font-size: 0.8rem; color: #334155; }
 
-        select, input[type="text"], textarea, input[type="file"] {
+        select, input[type="text"], input[type="date"], textarea, input[type="file"] {
             padding: 9px 10px;
             font-size: 0.85rem;
             border: 1px solid var(--border-color);
@@ -242,6 +259,46 @@
         .btn-action:hover { background-color: var(--primary-hover); }
         .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; }
 
+        /* Modal Pop-up Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 14px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .btn-rekap {
+            background: #6366f1;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-rekap:hover { background: #4f46e5; }
+        .btn-rekap-custom { background: #0ea5e9; }
+        .btn-rekap-custom:hover { background: #0284c7; }
+
         .footer-credit {
             text-align: center;
             margin-top: 20px;
@@ -263,9 +320,14 @@
     <div class="container">
         <div class="header-top">
             <h1>Jurnal Harian Digital SRT 3</h1>
-            <a href="https://docs.google.com/spreadsheets/d/1lC0IUTgLyI-mlk_Ft-poQVM8b3gnv8tjXox7op7MG9k/edit" target="_blank" class="btn-sheet-link">
-                📊 Spreadsheet
-            </a>
+            <div class="header-buttons">
+                <button class="btn-request" onclick="document.getElementById('modalRekap').style.display='flex'">
+                    📄 Request Rekap
+                </button>
+                <a href="https://docs.google.com/spreadsheets/d/1lC0IUTgLyI-mlk_Ft-poQVM8b3gnv8tjXox7op7MG9k/edit" target="_blank" class="btn-sheet-link">
+                    📊 Spreadsheet
+                </a>
+            </div>
         </div>
         
         <div class="tab-container">
@@ -382,6 +444,35 @@
 
         <div class="footer-credit">
             Developer : Nur Darmawansyah | NIP 199709012026211033
+        </div>
+    </div>
+
+    <!-- MODAL REKAP -->
+    <div class="modal-overlay" id="modalRekap">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="margin:0; font-size:1.1rem; color:#1e293b;">Request Rekap PDF</h3>
+                <span style="cursor:pointer; color:#ef4444; font-weight:bold; font-size:1.2rem; padding:0 5px;" onclick="document.getElementById('modalRekap').style.display='none'">X</span>
+            </div>
+            <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">1. Rekap Kelas Hari Ini</button>
+            <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">2. Rekap Apel Hari Ini</button>
+            
+            <hr style="margin:15px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <p style="font-size:0.8rem; font-weight:bold; margin-bottom:8px; color:#334155;">Rekap Custom (Pilih Tanggal):</p>
+            
+            <div style="display:flex; gap:10px; margin-bottom:12px;">
+                <div style="flex:1;">
+                    <label style="font-size:0.7rem;">Mulai:</label>
+                    <input type="date" id="tglMulai" style="padding:6px; font-size:0.8rem;">
+                </div>
+                <div style="flex:1;">
+                    <label style="font-size:0.7rem;">Sampai:</label>
+                    <input type="date" id="tglSampai" style="padding:6px; font-size:0.8rem;">
+                </div>
+            </div>
+            
+            <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('kelas', 'custom', this)">3. Rekap Custom Kelas</button>
+            <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('apel', 'custom', this)">4. Rekap Custom Apel</button>
         </div>
     </div>
 
@@ -632,7 +723,7 @@
             cards.forEach(card => {
                 let nama = card.querySelector('.nama-siswa-apel').innerText;
                 let status = card.querySelector('.status-kehadiran-apel').value;
-                absensiAppel = { nama: nama, status: status };
+                
                 absensiApel.push({ nama: nama, status: status });
 
                 if (status !== "Hadir") {
@@ -669,6 +760,41 @@
             }).catch(() => {
                 alert("Gagal mengirim data.");
                 btn.innerText = "Simpan Jurnal Apel"; btn.disabled = false;
+            });
+        }
+
+        // --- FUNGSI BARU: REQUEST REKAP PDF ---
+        function kirimRequestRekap(jenis, rentang, btnContext) {
+            let payload = { tipe: "request_rekap", jenis: jenis, rentang: rentang };
+            
+            if (rentang === 'custom') {
+                payload.startDate = document.getElementById('tglMulai').value;
+                payload.endDate = document.getElementById('tglSampai').value;
+                if(!payload.startDate || !payload.endDate) {
+                    alert("Pilih tanggal mulai dan sampai terlebih dahulu!");
+                    return;
+                }
+            }
+            
+            let btnAsli = btnContext.innerText;
+            btnContext.innerText = "Memproses...";
+            btnContext.disabled = true;
+
+            fetch(WEB_APP_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: JSON.stringify(payload) 
+            })
+            .then(() => { 
+                alert("Request Rekap Sedang Diproses Server!\nFile PDF akan segera terkirim ke Telegram."); 
+                document.getElementById('modalRekap').style.display = 'none';
+                btnContext.innerText = btnAsli; 
+                btnContext.disabled = false;
+            })
+            .catch(() => { 
+                alert("Terjadi kesalahan koneksi saat mengirim request."); 
+                btnContext.innerText = btnAsli; 
+                btnContext.disabled = false; 
             });
         }
     </script>

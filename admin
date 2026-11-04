@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Jurnal Harian Digital SRT 3</title>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 12px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0;
+        }
+
+        .btn-back {
+            background-color: #64748b;
+            color: white;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: var(--radius);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .active-tab { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-panel {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+
+        label { font-weight: 600; font-size: 0.8rem; color: #334155; }
+
+        select, input[type="text"] {
+            padding: 9px 10px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #fff;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-action {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-action:hover { background-color: var(--primary-hover); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        th { background-color: #f1f5f9; font-weight: 600; }
+
+        .footer-credit {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-top">
+            <h1>⚙️ Panel Admin - Jurnal SRT 3</h1>
+            <a href="index.html" class="btn-back">⬅️ Kembali ke Beranda Jurnal</a>
+        </div>
+        
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('manajemenSiswa', this)">👥 Data Siswa</button>
+            <button class="tab-btn" onclick="switchTab('manajemenGuru', this)">👨‍🏫 Data Guru & Mapel</button>
+            <button class="tab-btn" onclick="switchTab('manajemenRoster', this)">📅 Roster Pelajaran</button>
+        </div>
+
+        <!-- TAB MANAJEMEN SISWA -->
+        <div id="manajemenSiswa" class="tab-content active-tab">
+            <div class="card-panel">
+                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Tambah / Edit Data Siswa</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Kelas</label>
+                        <select id="admKelasSiswa">
+                            <option value="VII-1">VII-1</option><option value="VII-2">VII-2</option>
+                            <option value="VII-3">VII-3</option><option value="VII-4">VII-4</option><option value="VII-5">VII-5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>No Absen</label>
+                        <input type="text" id="admNoSiswa" placeholder="Contoh: 1">
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Lengkap Siswa</label>
+                        <input type="text" id="admNamaSiswa" placeholder="Masukkan Nama Siswa">
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Kelamin (L/P)</label>
+                        <select id="admJpSiswa">
+                            <option value="L">L</option><option value="P">P</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-action" onclick="alert('Fitur simpan data siswa akan segera dihubungkan ke backend.')">💾 Simpan Data Siswa</button>
+            </div>
+
+            <h4 style="margin-bottom:8px;">Daftar Siswa Tersimpan</h4>
+            <div style="overflow-x:auto;">
+                <table id="tabelAdminSiswa">
+                    <thead>
+                        <tr><th>Kelas</th><th>No</th><th>Nama Siswa</th><th>L/P</th><th>Aksi</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Memuat data siswa dari CSV...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB MANAJEMEN GURU -->
+        <div id="manajemenGuru" class="tab-content">
+            <div class="card-panel">
+                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Tambah Data Guru & Mapel</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Kode Mapel/Guru</label>
+                        <input type="text" id="admKodeGuru" placeholder="Contoh: KODING">
+                    </div>
+                    <div class="form-group">
+                        <label>Mata Pelajaran</label>
+                        <input type="text" id="admMapelGuru" placeholder="Contoh: Koding & AI">
+                    </div>
+                    <div class="form-group full-width" style="grid-column: span 2;">
+                        <label>Nama Guru Pengampu</label>
+                        <input type="text" id="admNamaGuru" placeholder="Contoh: Gr. Nur Darmawansyah, S.Pd">
+                    </div>
+                </div>
+                <button class="btn-action" onclick="alert('Fitur simpan data guru akan segera diaktifkan.')">💾 Simpan Data Guru</button>
+            </div>
+
+            <h4 style="margin-bottom:8px;">Daftar Guru & Mapel Tersimpan</h4>
+            <div style="overflow-x:auto;">
+                <table id="tabelAdminGuru">
+                    <thead>
+                        <tr><th>Kode</th><th>Mata Pelajaran</th><th>Nama Guru</th><th>Aksi</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Memuat data guru dari CSV...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TAB MANAJEMEN ROSTER -->
+        <div id="manajemenRoster" class="tab-content">
+            <div class="card-panel">
+                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Atur Jadwal Roster Pelajaran</h3>
+                <p style="font-size:0.8rem; color:var(--text-muted);">Halaman ini akan mempermudah pengaturan jadwal mengajar per hari dan per jam.</p>
+            </div>
+        </div>
+
+        <div class="footer-credit">
+            Admin Panel Developer : Nur Darmawansyah | NIP 199709012026211033
+        </div>
+    </div>
+
+    <script>
+        window.onload = async function() {
+            let kodeAdmin = prompt("Masukkan Kode Akses Admin:");
+            if (kodeAdmin !== "ADMINSRT3") {
+                alert("Kode Admin Salah!");
+                window.location.href = "index.html";
+                return;
+            }
+            await loadMasterDataForAdmin();
+        };
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active-tab'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active-tab');
+            btn.classList.add('active');
+        }
+
+        async function loadMasterDataForAdmin() {
+            try {
+                // Memuat data siswa & guru untuk ditampilkan di tabel admin
+                let resMurid = await fetch('murid.csv');
+                let textMurid = await resMurid.text();
+                parseAndDisplaySiswa(textMurid);
+
+                let resGuru = await fetch('guru.csv');
+                let textGuru = await resGuru.text();
+                parseAndDisplayGuru(textGuru);
+            } catch (err) {
+                console.log("Gagal memuat file CSV master.");
+            }
+        }
+
+        function parseAndDisplaySiswa(text) {
+            let lines = text.trim().split('\n');
+            let tbody = document.querySelector('#tabelAdminSiswa tbody');
+            tbody.innerHTML = "";
+            for (let i = 1; i < lines.length; i++) {
+                let vals = lines[i].split(',');
+                if (vals.length >= 4) {
+                    tbody.innerHTML += `<tr><td>${vals[0]}</td><td>${vals[1]}</td><td>${vals[2]}</td><td>${vals[3]}</td><td><button style="background:#ef4444; color:#white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="alert('Segera diaktifkan')">Hapus</button></td></tr>`;
+                }
+            }
+        }
+
+        function parseAndDisplayGuru(text) {
+            let lines = text.trim().split('\n');
+            let tbody = document.querySelector('#tabelAdminGuru tbody');
+            tbody.innerHTML = "";
+            for (let i = 1; i < lines.length; i++) {
+                let vals = lines[i].split(',');
+                if (vals.length >= 3) {
+                    tbody.innerHTML += `<tr><td>${vals[0]}</td><td>${vals[1]}</td><td>${vals[2]}</td><td><button style="background:#ef4444; color:#white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="alert('Segera diaktifkan')">Hapus</button></td></tr>`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

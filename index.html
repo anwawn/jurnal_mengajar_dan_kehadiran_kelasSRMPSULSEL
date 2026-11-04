@@ -57,6 +57,7 @@
         .header-buttons {
             display: flex;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .btn-sheet-link {
@@ -71,6 +72,20 @@
             align-items: center;
             gap: 6px;
             box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-admin-link {
+            background-color: #475569;
+            color: white;
+            text-decoration: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 2px 6px rgba(71, 85, 105, 0.2);
         }
 
         .btn-request {
@@ -368,6 +383,7 @@
         <div class="header-top">
             <h1>Jurnal Harian Digital SRT 3</h1>
             <div class="header-buttons">
+                <a href="admin.html" class="btn-admin-link">⚙️ Admin</a>
                 <button class="btn-request" onclick="document.getElementById('modalRekap').style.display='flex'">
                     📄 Request Rekap
                 </button>
@@ -582,7 +598,6 @@
             }
         }
 
-        // Render checkbox guru piket dan pulihkan centangan dari localStorage jika ada
         function renderCheckboxGuruPiket() {
             let container = document.getElementById('listCheckboxGuru');
             container.innerHTML = "";
@@ -607,7 +622,6 @@
             });
         }
 
-        // Simpan pilihan guru piket ke localStorage setiap kali dicentang/dilepas
         function simpanPilihanGuruPiket() {
             let selectedGuru = [];
             document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => {

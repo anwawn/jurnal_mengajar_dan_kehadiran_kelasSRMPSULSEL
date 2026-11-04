@@ -72,6 +72,7 @@
             background: #f1f5f9;
             padding: 5px;
             border-radius: var(--radius);
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -86,6 +87,7 @@
             border-radius: 8px;
             text-align: center;
             transition: all 0.2s;
+            min-width: 120px;
         }
 
         .tab-btn.active {
@@ -144,6 +146,12 @@
         }
         .btn-action:hover { background-color: var(--primary-hover); }
 
+        .btn-edit { background-color: #0ea5e9; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+        .btn-edit:hover { background-color: #0284c7; }
+
+        .btn-delete { background-color: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+        .btn-delete:hover { background-color: #dc2626; }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -179,7 +187,7 @@
         <div class="tab-container">
             <button class="tab-btn active" onclick="switchTab('manajemenSiswa', this)">👥 Data Siswa</button>
             <button class="tab-btn" onclick="switchTab('manajemenGuru', this)">👨‍🏫 Data Guru & Mapel</button>
-            <button class="tab-btn" onclick="switchTab('manajemenRoster', this)">📅 Roster Pelajaran</button>
+            <button class="tab-btn" onclick="switchTab('manajemenRoster', this)">📅 Roster & Mapel</button>
         </div>
 
         <!-- TAB MANAJEMEN SISWA -->
@@ -209,7 +217,7 @@
                         </select>
                     </div>
                 </div>
-                <button class="btn-action" onclick="alert('Fitur simpan data siswa akan segera dihubungkan ke backend.')">💾 Simpan Data Siswa</button>
+                <button class="btn-action" onclick="alert('Simpan data siswa interaktif.')">💾 Simpan Data Siswa</button>
             </div>
 
             <h4 style="margin-bottom:8px;">Daftar Siswa Tersimpan</h4>
@@ -219,7 +227,7 @@
                         <tr><th>Kelas</th><th>No</th><th>Nama Siswa</th><th>L/P</th><th>Aksi</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Memuat data siswa dari CSV...</td></tr>
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Memuat data siswa...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -228,7 +236,7 @@
         <!-- TAB MANAJEMEN GURU -->
         <div id="manajemenGuru" class="tab-content">
             <div class="card-panel">
-                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Tambah Data Guru & Mapel</h3>
+                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Tambah / Edit Data Guru & Mapel</h3>
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Kode Mapel/Guru</label>
@@ -243,7 +251,7 @@
                         <input type="text" id="admNamaGuru" placeholder="Contoh: Gr. Nur Darmawansyah, S.Pd">
                     </div>
                 </div>
-                <button class="btn-action" onclick="alert('Fitur simpan data guru akan segera diaktifkan.')">💾 Simpan Data Guru</button>
+                <button class="btn-action" onclick="alert('Simpan data guru interaktif.')">💾 Simpan Data Guru</button>
             </div>
 
             <h4 style="margin-bottom:8px;">Daftar Guru & Mapel Tersimpan</h4>
@@ -253,17 +261,89 @@
                         <tr><th>Kode</th><th>Mata Pelajaran</th><th>Nama Guru</th><th>Aksi</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Memuat data guru dari CSV...</td></tr>
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Memuat data guru...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- TAB MANAJEMEN ROSTER -->
+        <!-- TAB MANAJEMEN ROSTER & MAPEL -->
         <div id="manajemenRoster" class="tab-content">
+            <!-- Sub-Bagian 1: Data Mapel & Kode -->
             <div class="card-panel">
-                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Atur Jadwal Roster Pelajaran</h3>
-                <p style="font-size:0.8rem; color:var(--text-muted);">Halaman ini akan mempermudah pengaturan jadwal mengajar per hari dan per jam.</p>
+                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Tambah / Edit Master Mapel & Kode</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Kode Mapel</label>
+                        <input type="text" id="admKodeMapelMaster" placeholder="Contoh: MTK">
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Mata Pelajaran</label>
+                        <input type="text" id="admNamaMapelMaster" placeholder="Contoh: Matematika">
+                    </div>
+                </div>
+                <button class="btn-action" onclick="alert('Simpan master mapel interaktif.')">💾 Simpan Master Mapel</button>
+            </div>
+
+            <h4 style="margin-bottom:8px;">Daftar Master Kode Mapel</h4>
+            <div style="overflow-x:auto; margin-bottom: 25px;">
+                <table id="tabelAdminMasterMapel">
+                    <thead>
+                        <tr><th>Kode Mapel</th><th>Nama Mata Pelajaran</th><th>Aksi</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Memuat master mapel...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Sub-Bagian 2: Jadwal Roster Pelajaran -->
+            <div class="card-panel" style="margin-top: 30px;">
+                <h3 style="margin-top:0; font-size:1rem; color:#334155;">Tambah / Edit Jadwal Roster Pelajaran</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Hari</label>
+                        <select id="admRosterHari">
+                            <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
+                            <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jam Ke-</label>
+                        <select id="admRosterJam">
+                            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                            <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>VII-1 (Kode Mapel)</label><input type="text" id="admRosterVII1" placeholder="Kode"></div>
+                    <div class="form-group"><label>VII-2 (Kode Mapel)</label><input type="text" id="admRosterVII2" placeholder="Kode"></div>
+                    <div class="form-group"><label>VII-3 (Kode Mapel)</label><input type="text" id="admRosterVII3" placeholder="Kode"></div>
+                    <div class="form-group"><label>VII-4 (Kode Mapel)</label><input type="text" id="admRosterVII4" placeholder="Kode"></div>
+                    <div class="form-group"><label>VII-5 (Kode Mapel)</label><input type="text" id="admRosterVII5" placeholder="Kode"></div>
+                </div>
+                <button class="btn-action" onclick="alert('Simpan roster interaktif.')">💾 Simpan Jadwal Roster</button>
+            </div>
+
+            <h4 style="margin-bottom:8px;">Daftar Jadwal Roster Aktif</h4>
+            <div style="overflow-x:auto;">
+                <table id="tabelAdminRoster">
+                    <thead>
+                        <tr>
+                            <th>Hari</th>
+                            <th>Jam</th>
+                            <th>VII-1</th>
+                            <th>VII-2</th>
+                            <th>VII-3</th>
+                            <th>VII-4</th>
+                            <th>VII-5</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="8" style="text-align:center; color:var(--text-muted);">Memuat roster pelajaran...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -292,14 +372,21 @@
 
         async function loadMasterDataForAdmin() {
             try {
-                // Memuat data siswa & guru untuk ditampilkan di tabel admin
+                // Load Siswa
                 let resMurid = await fetch('murid.csv');
                 let textMurid = await resMurid.text();
                 parseAndDisplaySiswa(textMurid);
 
+                // Load Guru & Mapel (dari guru.csv)
                 let resGuru = await fetch('guru.csv');
                 let textGuru = await resGuru.text();
                 parseAndDisplayGuru(textGuru);
+                parseAndDisplayMasterMapel(textGuru);
+
+                // Load Roster
+                let resRoster = await fetch('roster.csv');
+                let textRoster = await resRoster.text();
+                parseAndDisplayRoster(textRoster);
             } catch (err) {
                 console.log("Gagal memuat file CSV master.");
             }
@@ -312,7 +399,17 @@
             for (let i = 1; i < lines.length; i++) {
                 let vals = lines[i].split(',');
                 if (vals.length >= 4) {
-                    tbody.innerHTML += `<tr><td>${vals[0]}</td><td>${vals[1]}</td><td>${vals[2]}</td><td>${vals[3]}</td><td><button style="background:#ef4444; color:#white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="alert('Segera diaktifkan')">Hapus</button></td></tr>`;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${vals[0]}</td>
+                            <td>${vals[1]}</td>
+                            <td>${vals[2]}</td>
+                            <td>${vals[3]}</td>
+                            <td>
+                                <button class="btn-edit" onclick="editSiswa('${vals[0]}', '${vals[1]}', '${vals[2]}', '${vals[3]}')">✏️ Edit</button>
+                                <button class="btn-delete" onclick="alert('Fitur hapus siswa')">🗑️ Hapus</button>
+                            </td>
+                        </tr>`;
                 }
             }
         }
@@ -324,9 +421,100 @@
             for (let i = 1; i < lines.length; i++) {
                 let vals = lines[i].split(',');
                 if (vals.length >= 3) {
-                    tbody.innerHTML += `<tr><td>${vals[0]}</td><td>${vals[1]}</td><td>${vals[2]}</td><td><button style="background:#ef4444; color:#white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="alert('Segera diaktifkan')">Hapus</button></td></tr>`;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${vals[0]}</td>
+                            <td>${vals[1]}</td>
+                            <td>${vals[2]}</td>
+                            <td>
+                                <button class="btn-edit" onclick="editGuru('${vals[0]}', '${vals[1]}', '${vals[2]}')">✏️ Edit</button>
+                                <button class="btn-delete" onclick="alert('Fitur hapus guru')">🗑️ Hapus</button>
+                            </td>
+                        </tr>`;
                 }
             }
+        }
+
+        // Master Mapel diambil dari Kode dan Mata Pelajaran di guru.csv
+        function parseAndDisplayMasterMapel(text) {
+            let lines = text.trim().split('\n');
+            let tbody = document.querySelector('#tabelAdminMasterMapel tbody');
+            tbody.innerHTML = "";
+            for (let i = 1; i < lines.length; i++) {
+                let vals = lines[i].split(',');
+                if (vals.length >= 2) {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${vals[0]}</b></td>
+                            <td>${vals[1]}</td>
+                            <td>
+                                <button class="btn-edit" onclick="editMasterMapel('${vals[0]}', '${vals[1]}')">✏️ Edit</button>
+                                <button class="btn-delete" onclick="alert('Fitur hapus master mapel')">🗑️ Hapus</button>
+                            </td>
+                        </tr>`;
+                }
+            }
+        }
+
+        function parseAndDisplayRoster(text) {
+            let lines = text.trim().split('\n');
+            let tbody = document.querySelector('#tabelAdminRoster tbody');
+            tbody.innerHTML = "";
+            for (let i = 1; i < lines.length; i++) {
+                let vals = lines[i].split(',');
+                if (vals.length >= 7) {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${vals[0]}</b></td>
+                            <td>Jam ke-${vals[1]}</td>
+                            <td>${vals[2] || "-"}</td>
+                            <td>${vals[3] || "-"}</td>
+                            <td>${vals[4] || "-"}</td>
+                            <td>${vals[5] || "-"}</td>
+                            <td>${vals[6] || "-"}</td>
+                            <td>
+                                <button class="btn-edit" onclick="editRoster('${vals[0]}', '${vals[1]}', '${vals[2]}', '${vals[3]}', '${vals[4]}', '${vals[5]}', '${vals[6]}')">✏️ Edit</button>
+                                <button class="btn-delete" onclick="alert('Fitur hapus roster')">🗑️ Hapus</button>
+                            </td>
+                        </tr>`;
+                }
+            }
+        }
+
+        function editSiswa(kelas, no, nama, lp) {
+            document.getElementById('admKelasSiswa').value = kelas;
+            document.getElementById('admNoSiswa').value = no;
+            document.getElementById('admNamaSiswa').value = nama;
+            document.getElementById('admJpSiswa').value = lp;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            alert(`Mode Edit Siswa: "${nama}"`);
+        }
+
+        function editGuru(kode, mapel, nama) {
+            document.getElementById('admKodeGuru').value = kode;
+            document.getElementById('admMapelGuru').value = mapel;
+            document.getElementById('admNamaGuru').value = nama;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            alert(`Mode Edit Guru: "${nama}"`);
+        }
+
+        function editMasterMapel(kode, mapel) {
+            document.getElementById('admKodeMapelMaster').value = kode;
+            document.getElementById('admNamaMapelMaster').value = mapel;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            alert(`Mode Edit Master Mapel: "${mapel}" (${kode})`);
+        }
+
+        function editRoster(hari, jam, v1, v2, v3, v4, v5) {
+            document.getElementById('admRosterHari').value = hari;
+            document.getElementById('admRosterJam').value = jam;
+            document.getElementById('admRosterVII1').value = v1;
+            document.getElementById('admRosterVII2').value = v2;
+            document.getElementById('admRosterVII3').value = v3;
+            document.getElementById('admRosterVII4').value = v4;
+            document.getElementById('admRosterVII5').value = v5;
+            window.scrollTo({ top: document.getElementById('manajemenRoster').offsetTop, behavior: 'smooth' });
+            alert(`Mode Edit Roster: Hari ${hari} Jam ke-${jam}`);
         }
     </script>
 </body>

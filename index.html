@@ -667,6 +667,7 @@
                         <option value="Sakit">Sakit</option>
                         <option value="Bolos">Bolos</option>
                         <option value="Keluar">Keluar</option>
+                        <option value="Pulang">Pulang</option>
                     </select>
                 `;
                 container.appendChild(card);
@@ -729,7 +730,7 @@
         }
 
 
-        // --- LOGIKA BATCH ANTREAN KHUSUS TAB APEL (DIKIRIM SEKALI LALU DIGABUNG) ---
+        // --- LOGIKA BATCH ANTREAN KHUSUS TAB APEL ---
         let temporaryStatesApel = {};
         
         function simpanStateDropdownApel() {
@@ -779,6 +780,7 @@
                         <option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option>
                         <option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option>
                         <option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option>
+                        <option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option>
                     </select>
                 `;
                 container.appendChild(card);
@@ -867,7 +869,6 @@
             let btn = document.getElementById('btnSimpanApel');
             btn.innerText = "Mengirim..."; btn.disabled = true;
 
-            // Bungkus seluruh daftar antrean dalam 1 objek payload batch
             let payloadBatch = {
                 tipe: "jurnal_apel_batch",
                 daftar_kelas: antreanApel

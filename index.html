@@ -17,9 +17,7 @@
             --border-color: #e2e8f0;
             --radius: 14px;
         }
-
         * { box-sizing: border-box; }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
@@ -27,7 +25,6 @@
             margin: 0;
             padding: 12px;
         }
-
         .container {
             max-width: 900px;
             margin: auto;
@@ -36,7 +33,6 @@
             border-radius: var(--radius);
             box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
         }
-
         .header-top {
             display: flex;
             justify-content: space-between;
@@ -45,7 +41,6 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-
         h1 {
             font-size: 1.25rem;
             font-weight: 700;
@@ -53,15 +48,8 @@
             margin: 0;
             line-height: 1.3;
         }
-
-        .header-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn-sheet-link {
-            background-color: #10b981;
+        .header-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-sheet-link, .btn-admin-link, .btn-request {
             color: white;
             text-decoration: none;
             padding: 7px 12px;
@@ -71,303 +59,101 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
-        }
-
-        .btn-admin-link {
-            background-color: #475569;
-            color: white;
-            text-decoration: none;
-            padding: 7px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            box-shadow: 0 2px 6px rgba(71, 85, 105, 0.2);
-        }
-
-        .btn-request {
-            background-color: #f59e0b;
-            color: white;
             border: none;
-            padding: 7px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
         }
-
+        .btn-sheet-link { background-color: #10b981; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2); }
+        .btn-admin-link { background-color: #475569; box-shadow: 0 2px 6px rgba(71, 85, 105, 0.2); }
+        .btn-request { background-color: #f59e0b; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2); }
         .tab-container {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 20px;
-            background: #f1f5f9;
-            padding: 5px;
-            border-radius: var(--radius);
+            display: flex; justify-content: center; gap: 6px;
+            margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: var(--radius);
         }
-
         .tab-btn {
-            flex: 1;
-            padding: 9px;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            border-radius: 8px;
-            text-align: center;
-            transition: all 0.2s;
+            flex: 1; padding: 9px; cursor: pointer; border: none; background: transparent;
+            font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 8px;
+            text-align: center; transition: all 0.2s;
         }
-
         .tab-btn.active {
-            background: var(--card-bg);
-            color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
-
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .active-tab { display: block; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .full-width { grid-column: span 2; }
-
         label { font-weight: 600; font-size: 0.8rem; color: #334155; }
-
         select, input[type="text"], input[type="date"], textarea, input[type="file"] {
-            padding: 9px 10px;
-            font-size: 0.85rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: #fff;
-            width: 100%;
-            font-family: 'Inter', sans-serif;
+            padding: 9px 10px; font-size: 0.85rem; border: 1px solid var(--border-color);
+            border-radius: 8px; background: #fff; width: 100%; font-family: 'Inter', sans-serif;
         }
-
         select:focus, input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
-
         #infoMapel {
-            background: #f8fafc;
-            border: 1px dashed var(--border-color);
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            text-align: center;
-            color: #334155;
+            background: #f8fafc; border: 1px dashed var(--border-color); padding: 10px;
+            border-radius: 8px; font-size: 0.85rem; text-align: center; color: #334155;
         }
-
         .btn-hadir {
-            background-color: #0ea5e9;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 12px;
+            background-color: #0ea5e9; color: white; border: none; padding: 10px;
+            font-size: 0.85rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 12px;
         }
-
         .guru-piket-container {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-            background: #fff;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 8px;
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 10px;
+            max-height: 150px; overflow-y: auto; background: #fff;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;
         }
-        .guru-checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-        .guru-checkbox-item input {
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-        }
-
+        .guru-checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; }
+        .guru-checkbox-item input { cursor: pointer; width: 16px; height: 16px; }
         .siswa-list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 16px;
-            max-height: 450px;
-            overflow-y: auto;
-            padding-right: 2px;
+            display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;
+            max-height: 450px; overflow-y: auto; padding-right: 2px;
         }
-
         .siswa-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
-            border: 1px solid var(--border-color);
-            padding: 10px 12px;
-            border-radius: 10px;
-            gap: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 10px; gap: 10px;
         }
-
-        .siswa-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .siswa-no {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            min-width: 20px;
-        }
-
-        .siswa-nama-lp {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .siswa-nama {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1e293b;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .siswa-lp {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
+        .siswa-info { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; }
+        .siswa-no { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); min-width: 20px; }
+        .siswa-nama-lp { display: flex; flex-direction: column; overflow: hidden; }
+        .siswa-nama { font-size: 0.85rem; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .siswa-lp { font-size: 0.7rem; color: var(--text-muted); }
         .status-dropdown {
-            padding: 7px 10px;
-            font-size: 0.8rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: #fff;
-            font-weight: 600;
-            color: var(--primary);
-            width: 105px;
-            flex-shrink: 0;
+            padding: 7px 10px; font-size: 0.8rem; border: 1px solid var(--border-color);
+            border-radius: 8px; background: #fff; font-weight: 600; color: var(--primary); width: 105px; flex-shrink: 0;
         }
-
         .btn-action {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            transition: background 0.2s;
+            background-color: var(--primary); color: white; border: none; padding: 12px;
+            font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s;
         }
         .btn-action:hover { background-color: var(--primary-hover); }
         .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; }
-
-        .btn-queue {
-            background-color: #8b5cf6;
-        }
+        .btn-queue { background-color: #8b5cf6; }
         .btn-queue:hover { background-color: #7c3aed; }
-
         .queue-panel {
-            background: #ede9fe;
-            border: 1px solid #c4b5fd;
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 15px;
+            background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px;
         }
-
         .queue-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fff;
-            padding: 8px 10px;
-            border-radius: 6px;
-            margin-top: 6px;
-            font-size: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center; background: #fff;
+            padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 0.8rem;
         }
-
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;
         }
         .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 14px;
-            width: 90%;
-            max-width: 360px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: #fff; padding: 20px; border-radius: 14px; width: 90%; max-width: 360px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .btn-rekap {
-            background: #6366f1;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            width: 100%;
-            margin-bottom: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
+            background: #6366f1; color: white; padding: 10px; border: none; border-radius: 8px;
+            width: 100%; margin-bottom: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
         }
         .btn-rekap:hover { background: #4f46e5; }
         .btn-rekap-custom { background: #0ea5e9; }
         .btn-rekap-custom:hover { background: #0284c7; }
-
-        .footer-credit {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.7rem;
-            color: #94a3b8;
-            font-style: italic;
-        }
-
+        .footer-credit { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
         @media (max-width: 480px) {
             body { padding: 6px; }
             .container { padding: 12px; }
@@ -535,7 +321,12 @@
             
             <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
             <p style="font-size:0.8rem; font-weight:bold; margin-bottom:6px; color:#334155;">Rekap Custom per Mapel Spesifik:</p>
-            <input type="text" id="inputMapelRekap" placeholder="Ketik nama mapel (misal: Agama)" style="width:100%; padding:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:8px;">
+            
+            <!-- DROPDOWN MATA PELAJARAN -->
+            <select id="inputMapelRekap" style="width:100%; padding:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:8px;">
+                <option value="">-- Memuat Mata Pelajaran... --</option>
+            </select>
+            
             <button class="btn-rekap" style="background:#8b5cf6;" onclick="kirimRequestRekap('mapel', 'custom', this)">5. Rekap Custom Mapel</button>
         </div>
     </div>
@@ -602,10 +393,25 @@
                 dataMurid = parseCSV(await resMurid.text());
                 dataGuru = parseCSV(await resGuru.text());
                 dataRoster = parseCSV(await resRoster.text());
+                
                 renderCheckboxGuruPiket();
+                populateMapelDropdown(); // Panggil pengisian dropdown Mapel Rekap
             } catch (err) {
                 alert("Gagal memuat database CSV.");
             }
+        }
+
+        function populateMapelDropdown() {
+            let select = document.getElementById('inputMapelRekap');
+            select.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+            // Ambil nama mapel unik dari database
+            let uniqueMapel = [...new Set(dataGuru.map(item => item["Mata Pelajaran"]).filter(m => m))];
+            uniqueMapel.sort().forEach(m => {
+                let opt = document.createElement('option');
+                opt.value = m;
+                opt.text = m;
+                select.appendChild(opt);
+            });
         }
 
         function renderCheckboxGuruPiket() {
@@ -615,9 +421,7 @@
                 container.innerHTML = "<span style='font-size:0.8rem; color:red;'>Data guru tidak ditemukan.</span>";
                 return;
             }
-
             let savedGuruPiket = JSON.parse(localStorage.getItem('srt3_pilihan_guru_piket') || "[]");
-
             dataGuru.forEach((g) => {
                 let namaGuru = g["Nama Guru"];
                 if (namaGuru) {
@@ -783,9 +587,7 @@
             temporaryStatesApel[kelasAktif] = states;
         }
 
-        function gantiKelasApel() {
-            tampilkanSiswaApel();
-        }
+        function gantiKelasApel() { tampilkanSiswaApel(); }
 
         function tampilkanSiswaApel() {
             let kelas = document.getElementById('pilihKelasApel').value;
@@ -836,9 +638,7 @@
             if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
 
             let selectedGuru = [];
-            document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => {
-                selectedGuru.push(cb.value);
-            });
+            document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
             let guruPiketStr = selectedGuru.length > 0 ? selectedGuru.join(", ") : "-";
 
             simpanStateDropdownApel();
@@ -881,7 +681,7 @@
                 container.innerHTML += `
                     <div class="queue-item">
                         <span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span>
-                        <button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:#white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button>
+                        <button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button>
                     </div>
                 `;
             });
@@ -944,8 +744,8 @@
             }
             
             if (jenis === 'mapel') {
-                let mapelKetik = document.getElementById('inputMapelRekap').value.trim();
-                if (!mapelKetik) return alert("Ketik nama mata pelajaran terlebih dahulu!");
+                let mapelKetik = document.getElementById('inputMapelRekap').value;
+                if (!mapelKetik || mapelKetik === "") return alert("Pilih mata pelajaran dari dropdown terlebih dahulu!");
                 payload.mapel_terpilih = mapelKetik;
             }
             
@@ -954,12 +754,12 @@
 
             fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
             .then(() => { 
-                alert("Request Rekap Diproses! Laporan PDF akan segera dikirim ke Telegram."); 
+                alert("Request Rekap Diproses! Periksa grup Telegram Anda."); 
                 document.getElementById('modalRekap').style.display = 'none';
                 btnContext.innerText = btnAsli; btnContext.disabled = false;
             })
             .catch(() => { 
-                alert("Request Rekap Diproses! Laporan PDF akan segera dikirim ke Telegram."); 
+                alert("Request Rekap Diproses! Periksa grup Telegram Anda."); 
                 document.getElementById('modalRekap').style.display = 'none';
                 btnContext.innerText = btnAsli; btnContext.disabled = false;
             });

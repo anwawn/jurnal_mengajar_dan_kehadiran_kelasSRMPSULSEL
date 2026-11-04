@@ -174,6 +174,31 @@
             margin-bottom: 12px;
         }
 
+        /* Kotak Pilihan Checkbox Guru Piket Multi-Select */
+        .guru-piket-container {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            background: #fff;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+        }
+        .guru-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .guru-checkbox-item input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
         .siswa-list-container {
             display: flex;
             flex-direction: column;
@@ -335,6 +360,7 @@
             .container { padding: 12px; }
             .form-grid { grid-template-columns: 1fr; gap: 10px; }
             .full-width { grid-column: span 1; }
+            .guru-piket-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -358,7 +384,7 @@
             <button class="tab-btn" onclick="switchTab('jurnalApel', this)">📋 Jurnal Apel</button>
         </div>
 
-        <!-- TAB JURNAL KELAS (KIRIM LANGSUNG PER KELAS) -->
+        <!-- TAB JURNAL KELAS -->
         <div id="jurnalKelas" class="tab-content active-tab">
             <div class="form-grid">
                 <div class="form-group">
@@ -416,7 +442,7 @@
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL (DENGAN SISTEM ANTRE / MULTI-KELAS) -->
+        <!-- TAB JURNAL APEL (DENGAN MULTI-SELECT GURU PIKET) -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -434,8 +460,10 @@
                     </select>
                 </div>
                 <div class="form-group full-width">
-                    <label>Nama Guru Piket</label>
-                    <input type="text" id="guruPiket" placeholder="Masukkan Nama Guru Piket">
+                    <label>Pilih Guru Piket (Bisa centang lebih dari satu)</label>
+                    <div id="listCheckboxGuru" class="guru-piket-container">
+                        <span style="font-size:0.8rem; color:var(--text-muted);">Memuat daftar guru...</span>
+                    </div>
                 </div>
                 <div class="form-group full-width">
                     <label>Laporan / Catatan Apel</label>
@@ -507,7 +535,7 @@
         };
 
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = "";
-        let antreanApel = [];     // Array menampung antrean batch jurnal apel
+        let antreanApel = [];     
 
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
             let file = event.target.files[0];
@@ -550,9 +578,33 @@
                 dataMurid = parseCSV(await resMurid.text());
                 dataGuru = parseCSV(await resGuru.text());
                 dataRoster = parseCSV(await resRoster.text());
+                
+                // Render pilihan checkbox guru piket setelah data guru berhasil dimuat
+                renderCheckboxGuruPiket();
             } catch (err) {
                 alert("Gagal memuat database CSV.");
             }
+        }
+
+        // Render daftar guru piket berbentuk checkbox
+        function renderCheckboxGuruPiket() {
+            let container = document.getElementById('listCheckboxGuru');
+            container.innerHTML = "";
+            if (dataGuru.length === 0) {
+                container.innerHTML = "<span style='font-size:0.8rem; color:red;'>Data guru tidak ditemukan.</span>";
+                return;
+            }
+            dataGuru.forEach((g, index) => {
+                let namaGuru = g["Nama Guru"];
+                if (namaGuru) {
+                    container.innerHTML += `
+                        <label class="guru-checkbox-item">
+                            <input type="checkbox" name="pilihGuruPiket" value="${namaGuru}">
+                            <span>${namaGuru}</span>
+                        </label>
+                    `;
+                }
+            });
         }
 
         function switchTab(tabId, btn) {
@@ -630,7 +682,6 @@
             document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir");
         }
 
-        // Simpan Jurnal Kelas Langsung (1 Kelas Satuan)
         function simpanJurnalKelas() {
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
@@ -749,6 +800,13 @@
             let jenis = document.getElementById('jenisApel').value;
             if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
 
+            // Ambil semua nama guru piket yang dicentang
+            let selectedGuru = [];
+            document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => {
+                selectedGuru.push(cb.value);
+            });
+            let guruPiketStr = selectedGuru.length > 0 ? selectedGuru.join(", ") : "-";
+
             simpanStateDropdownApel();
             let absensiApel = [];
             let savedStates = temporaryStatesApel[kelas] || {};
@@ -762,7 +820,7 @@
                 tipe: "jurnal_apel",
                 jenis_apel: jenis,
                 kelas: kelas,
-                guru_piket: document.getElementById('guruPiket').value,
+                guru_piket: guruPiketStr,
                 laporan: document.getElementById('catatanApel').value,
                 kehadiran: absensiApel
             };
@@ -789,7 +847,7 @@
             antreanApel.forEach((item, idx) => {
                 container.innerHTML += `
                     <div class="queue-item">
-                        <span><b>${item.kelas}</b> (Apel ${item.jenis_apel})</span>
+                        <span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span>
                         <button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:#white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button>
                     </div>
                 `;

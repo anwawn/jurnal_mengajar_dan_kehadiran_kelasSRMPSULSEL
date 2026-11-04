@@ -539,13 +539,18 @@
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykyATd6xpFu55wbcWvvV3aM7JJT2sHhOmW9F-C03X2-OqUoxP0nfyqgJL0F01AIS_j/exec";
 
         window.onload = async function() {
-            let kode = prompt("Masukkan Kode Akses Jurnal:");
-            if (kode !== "SRMPSULSEL") {
+            let kode = prompt("Masukkan Kode Akses:");
+            
+            if (kode === "ADMINSRT3") {
+                window.location.href = "admin.html";
+                return;
+            } else if (kode === "SRMPSULSEL") {
+                await loadCSVData();
+                muatAntreanApelDariLocalStorage();
+            } else {
                 document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top:100px; font-family:Inter;'>Akses Ditolak. Kode Salah.</h2>";
                 return;
             }
-            await loadCSVData();
-            muatAntreanApelDariLocalStorage();
         };
 
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = "";

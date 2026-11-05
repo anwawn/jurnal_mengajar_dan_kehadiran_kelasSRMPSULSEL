@@ -50,9 +50,9 @@
         .queue-panel { background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px; }
         .queue-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 0.8rem; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #fff; padding: 20px; border-radius: 14px; width: 90%; max-width: 360px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-content { background: #fff; padding: 20px; border-radius: 14px; width: 90%; max-width: 380px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .btn-rekap { background: #6366f1; color: white; padding: 10px; border: none; border-radius: 8px; width: 100%; margin-bottom: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .btn-rekap { flex: 1; background: #6366f1; color: white; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; text-align: center; }
         .btn-rekap:hover { background: #4f46e5; }
         .btn-rekap-custom { background: #0ea5e9; }
         .btn-rekap-custom:hover { background: #0284c7; }
@@ -172,7 +172,7 @@
                 <div id="listAntreanApelContainer"></div>
             </div>
 
-            <!-- BAGIAN UPLOAD FOTO APEL DIPINDAHKAN KE BAWAH -->
+            <!-- BAGIAN UPLOAD FOTO APEL (GLOBAL BAWAH) -->
             <div class="form-group full-width" style="margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px;">
                 <label style="color: #059669; font-weight:bold;">📸 Ambil 1 Bukti Foto Apel (Untuk Semua Kelas di Antrean)</label>
                 <input type="file" id="fotoApel" accept="image/*">
@@ -184,35 +184,45 @@
         <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033</div>
     </div>
 
-    <!-- MODAL REKAP -->
+    <!-- MODAL REKAP TAMPILAN BARU YANG LEBIH RAPI -->
     <div class="modal-overlay" id="modalRekap">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 style="margin:0; font-size:1.1rem; color:#1e293b;">Request Rekap PDF</h3>
                 <span style="cursor:pointer; color:#ef4444; font-weight:bold; font-size:1.2rem; padding:0 5px;" onclick="document.getElementById('modalRekap').style.display='none'">X</span>
             </div>
-            <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">1. Rekap Kelas Hari Ini</button>
-            <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">2. Rekap Apel Hari Ini</button>
+            
+            <div style="display:flex; gap:8px; flex-direction:column;">
+                <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">1. Rekap Kelas Global Hari Ini</button>
+                <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">2. Rekap Apel Global Hari Ini</button>
+            </div>
+
+            <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
+            <p style="font-size:0.8rem; font-weight:bold; margin-bottom:6px; color:#334155;">Rekap per Mata Pelajaran:</p>
+            <select id="inputMapelRekap" style="width:100%; padding:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:8px;">
+                <option value="">-- Memuat Mata Pelajaran... --</option>
+            </select>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-rekap" style="background:#10b981; font-size: 0.8rem;" onclick="kirimRequestRekap('mapel', 'hari_ini', this)">3. Mapel Hari Ini</button>
+                <button class="btn-rekap" style="background:#8b5cf6; font-size: 0.8rem;" onclick="kirimRequestRekap('mapel', 'custom', this)">4. Mapel Custom</button>
+            </div>
+
             <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
             <p style="font-size:0.8rem; font-weight:bold; margin-bottom:8px; color:#334155;">Rekap Custom Periode (Pilih Tanggal):</p>
             <div style="display:flex; gap:10px; margin-bottom:10px;">
                 <div style="flex:1;">
                     <label style="font-size:0.7rem;">Mulai:</label>
-                    <input type="date" id="tglMulai" style="padding:6px; font-size:0.8rem;">
+                    <input type="date" id="tglMulai" style="padding:6px; font-size:0.8rem; width:100%; box-sizing:border-box;">
                 </div>
                 <div style="flex:1;">
                     <label style="font-size:0.7rem;">Sampai:</label>
-                    <input type="date" id="tglSampai" style="padding:6px; font-size:0.8rem;">
+                    <input type="date" id="tglSampai" style="padding:6px; font-size:0.8rem; width:100%; box-sizing:border-box;">
                 </div>
             </div>
-            <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('kelas', 'custom', this)">3. Rekap Custom Kelas</button>
-            <button class="btn-rekap btn-rekap-custom" onclick="kirimRequestRekap('apel', 'custom', this)">4. Rekap Custom Apel</button>
-            <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
-            <p style="font-size:0.8rem; font-weight:bold; margin-bottom:6px; color:#334155;">Rekap Custom per Mapel Spesifik:</p>
-            <select id="inputMapelRekap" style="width:100%; padding:8px; margin-bottom:8px; font-size:0.85rem; border:1px solid var(--border-color); border-radius:8px;">
-                <option value="">-- Memuat Mata Pelajaran... --</option>
-            </select>
-            <button class="btn-rekap" style="background:#8b5cf6;" onclick="kirimRequestRekap('mapel', 'custom', this)">5. Rekap Custom Mapel</button>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-rekap btn-rekap-custom" style="font-size: 0.8rem;" onclick="kirimRequestRekap('kelas', 'custom', this)">5. Custom KBM</button>
+                <button class="btn-rekap btn-rekap-custom" style="font-size: 0.8rem;" onclick="kirimRequestRekap('apel', 'custom', this)">6. Custom Apel</button>
+            </div>
         </div>
     </div>
 
@@ -401,9 +411,6 @@
         function tambahAntreanApel() {
             let kelas = document.getElementById('pilihKelasApel').value; let jenis = document.getElementById('jenisApel').value;
             if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
-            
-            // Catatan: Pengecekan bukti foto apel DIHAPUS dari fungsi antrean ini 
-            // karena foto sekarang bersifat global di akhir (saat klik kirim batch)
 
             let selectedGuru = []; document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
             let guruPiketStr = selectedGuru.length > 0 ? selectedGuru.join(", ") : "-";
@@ -411,7 +418,6 @@
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
             filterMurid.forEach(m => { absensiApel.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" }); });
             
-            // Properti fotoBase64 DIHAPUS dari item per kelas karena akan dimasukkan di payload global
             let itemApel = { kelas: kelas, jenis_apel: jenis, guru_piket: guruPiketStr, laporan: document.getElementById('catatanApel').value, kehadiran: absensiApel };
             
             let indexCek = antreanApel.findIndex(item => item.kelas === kelas && item.jenis_apel === jenis);
@@ -427,7 +433,6 @@
             container.innerHTML = ""; if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
             panel.style.display = 'block';
             antreanApel.forEach((item, idx) => {
-                // Hapus indikator logo kamera dari list karena fotonya satu untuk semua
                 container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button></div>`;
             });
         }
@@ -439,7 +444,6 @@
         async function kirimSemuaBatchApel() {
             if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
             
-            // Pengecekan foto apel dipindahkan ke mari (berlaku untuk 1 foto batch keseluruhan)
             if (!base64FotoApel || base64FotoApel === "") { 
                 if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN!\n\nKirim laporan apel tanpa foto?")) return; 
             } else {
@@ -448,7 +452,6 @@
 
             let btn = document.getElementById('btnSimpanApel'); btn.innerText = "Mengirim..."; btn.disabled = true;
             
-            // Masukkan variabel base64FotoApel ke payload utama
             let payloadBatch = { tipe: "jurnal_apel_batch", daftar_kelas: antreanApel, fotoBase64: base64FotoApel };
             
             try {
@@ -461,7 +464,6 @@
             } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (0)"; btn.disabled = false; }
         }
 
-        // Fungsi khusus untuk mereset antrean apel dan menghapus cache foto apel secara global
         function resetFormApel() {
             antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
             document.getElementById('fotoApel').value = "";

@@ -157,6 +157,12 @@
                     <label>Laporan / Catatan Apel</label>
                     <textarea id="catatanApel" rows="2" placeholder="Ketik laporan kehadiran apel..."></textarea>
                 </div>
+                <!-- BAGIAN UPLOAD FOTO APEL -->
+                <div class="form-group full-width">
+                    <label>Ambil Bukti Foto Apel (Per Kelas)</label>
+                    <input type="file" id="fotoApel" accept="image/*">
+                    <canvas id="canvasPreviewApel" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
+                </div>
             </div>
             <button class="btn-hadir" onclick="hadirSemuaApel()">⚡ Set Semua Hadir (Apel)</button>
             <div class="siswa-list-container" id="tabelSiswaApel">
@@ -214,20 +220,39 @@
             else { document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top:100px; font-family:Inter;'>Akses Ditolak. Kode Salah.</h2>"; return; }
         };
 
-        let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let antreanApel = [];     
+        let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let base64FotoApel = ""; let antreanApel = [];     
 
+        // LOGIKA CONVERT FOTO KBM
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
             let reader = new FileReader();
             reader.onload = function(e) {
                 let img = new Image();
                 img.onload = function() {
-                    let canvas = document.getElementById('canvasPreview');
-                    let ctx = canvas.getContext('2d');
+                    let canvas = document.getElementById('canvasPreview'); let ctx = canvas.getContext('2d');
                     let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
                     canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     base64Foto = canvas.toDataURL('image/jpeg', 0.6);
+                    canvas.style.display = "block";
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // LOGIKA CONVERT FOTO APEL
+        document.getElementById('fotoApel').addEventListener('change', function(event) {
+            let file = event.target.files[0]; if(!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let img = new Image();
+                img.onload = function() {
+                    let canvas = document.getElementById('canvasPreviewApel'); let ctx = canvas.getContext('2d');
+                    let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    base64FotoApel = canvas.toDataURL('image/jpeg', 0.6);
                     canvas.style.display = "block";
                 }
                 img.src = e.target.result;
@@ -342,7 +367,6 @@
             });
         }
 
-        // --- LOGIKA BATCH ANTREAN KHUSUS TAB APEL ---
         let temporaryStatesApel = {};
         function simpanStateDropdownApel() {
             let kelasAktif = document.getElementById('pilihKelasApel').value; if (!kelasAktif) return;
@@ -371,15 +395,29 @@
         function tambahAntreanApel() {
             let kelas = document.getElementById('pilihKelasApel').value; let jenis = document.getElementById('jenisApel').value;
             if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
+            
+            if (!base64FotoApel || base64FotoApel === "") { 
+                if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN!\n\nMasukkan ke antrean tanpa foto?")) return; 
+            }
+
             let selectedGuru = []; document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
             let guruPiketStr = selectedGuru.length > 0 ? selectedGuru.join(", ") : "-";
             simpanStateDropdownApel(); let absensiApel = []; let savedStates = temporaryStatesApel[kelas] || {};
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
             filterMurid.forEach(m => { absensiApel.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" }); });
-            let itemApel = { kelas: kelas, jenis_apel: jenis, guru_piket: guruPiketStr, laporan: document.getElementById('catatanApel').value, kehadiran: absensiApel };
+            
+            let itemApel = { kelas: kelas, jenis_apel: jenis, guru_piket: guruPiketStr, laporan: document.getElementById('catatanApel').value, kehadiran: absensiApel, fotoBase64: base64FotoApel };
+            
             let indexCek = antreanApel.findIndex(item => item.kelas === kelas && item.jenis_apel === jenis);
             if (indexCek > -1) antreanApel[indexCek] = itemApel; else antreanApel.push(itemApel);
-            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
+            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); 
+            
+            alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
+            
+            // Bersihkan form foto Apel setelah masuk antrean agar siap untuk kelas berikutnya
+            document.getElementById('fotoApel').value = "";
+            document.getElementById('canvasPreviewApel').style.display = "none";
+            base64FotoApel = "";
         }
 
         function renderPanelAntreanApel() {
@@ -388,7 +426,8 @@
             container.innerHTML = ""; if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
             panel.style.display = 'block';
             antreanApel.forEach((item, idx) => {
-                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button></div>`;
+                let indikatorFoto = (item.fotoBase64 && item.fotoBase64 !== "") ? "📸" : "";
+                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) ${indikatorFoto} - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button></div>`;
             });
         }
 

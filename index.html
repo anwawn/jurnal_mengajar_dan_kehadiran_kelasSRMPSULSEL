@@ -44,7 +44,7 @@
         .status-dropdown { padding: 7px 10px; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; font-weight: 600; color: var(--primary); width: 105px; flex-shrink: 0; }
         .btn-action { background-color: var(--primary); color: white; border: none; padding: 12px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
         .btn-action:hover { background-color: var(--primary-hover); }
-        .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; }
+        .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.8; }
         .btn-queue { background-color: #8b5cf6; }
         .btn-queue:hover { background-color: #7c3aed; }
         .queue-panel { background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px; }
@@ -57,6 +57,7 @@
         .btn-rekap-custom { background: #0ea5e9; }
         .btn-rekap-custom:hover { background: #0284c7; }
         .footer-credit { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
+        .info-foto { font-size: 0.75rem; color: #d97706; margin-top: 5px; font-weight: 600; display: none; }
         @media (max-width: 480px) { body { padding: 6px; } .container { padding: 12px; } .form-grid { grid-template-columns: 1fr; gap: 10px; } .full-width { grid-column: span 1; } .guru-piket-container { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -120,6 +121,7 @@
                 <div class="form-group full-width">
                     <label>Ambil Bukti Foto Kelas</label>
                     <input type="file" id="fotoKelas" accept="image/*">
+                    <div id="loadingFotoKelas" class="info-foto">⏳ Sedang memproses foto...</div>
                     <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
                 </div>
             </div>
@@ -130,7 +132,7 @@
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL (DIPERBARUI) -->
+        <!-- TAB JURNAL APEL -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -172,10 +174,11 @@
                 <div id="listAntreanApelContainer"></div>
             </div>
 
-            <!-- BAGIAN UPLOAD FOTO APEL (GLOBAL BAWAH) -->
+            <!-- BAGIAN UPLOAD FOTO APEL -->
             <div class="form-group full-width" style="margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px;">
                 <label style="color: #059669; font-weight:bold;">📸 Ambil 1 Bukti Foto Apel (Untuk Semua Kelas di Antrean)</label>
                 <input type="file" id="fotoApel" accept="image/*">
+                <div id="loadingFotoApel" class="info-foto">⏳ Sedang memproses foto...</div>
                 <canvas id="canvasPreviewApel" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
             </div>
 
@@ -184,7 +187,7 @@
         <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033</div>
     </div>
 
-    <!-- MODAL REKAP TAMPILAN BARU YANG LEBIH RAPI -->
+    <!-- MODAL REKAP -->
     <div class="modal-overlay" id="modalRekap">
         <div class="modal-content">
             <div class="modal-header">
@@ -238,38 +241,74 @@
 
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let base64FotoApel = ""; let antreanApel = [];     
 
-        // LOGIKA CONVERT FOTO KBM
+        // LOGIKA BARU: CONVERT FOTO KBM DENGAN PENGAMAN
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
+            
+            let btn = document.getElementById('btnSimpanKelas');
+            let info = document.getElementById('loadingFotoKelas');
+            btn.disabled = true; btn.innerText = "⏳ Memproses Foto..."; info.style.display = "block"; info.innerText = "⏳ Sedang memproses foto...";
+            
             let reader = new FileReader();
             reader.onload = function(e) {
                 let img = new Image();
                 img.onload = function() {
-                    let canvas = document.getElementById('canvasPreview'); let ctx = canvas.getContext('2d');
-                    let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    base64Foto = canvas.toDataURL('image/jpeg', 0.6);
-                    canvas.style.display = "block";
+                    try {
+                        let canvas = document.getElementById('canvasPreview'); let ctx = canvas.getContext('2d');
+                        let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
+                        if(scaleSize > 1) scaleSize = 1; // Jangan perbesar gambar kecil
+                        canvas.width = img.width * scaleSize; canvas.height = img.height * scaleSize;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        base64Foto = canvas.toDataURL('image/jpeg', 0.6);
+                        canvas.style.display = "block";
+                        info.innerText = "✅ Foto siap dikirim!"; info.style.color = "#10b981";
+                    } catch(err) {
+                        alert("⚠️ Gagal memproses foto. Ukuran gambar mungkin terlalu berat. Mohon gunakan aplikasi kamera bawaan HP (Bukan TimeMark).");
+                        info.innerText = "❌ Foto gagal diproses."; info.style.color = "#ef4444";
+                    } finally {
+                        btn.disabled = false; btn.innerText = "Simpan Jurnal Kelas";
+                    }
+                }
+                img.onerror = function() {
+                    alert("⚠️ Gagal membaca format foto ini. Coba foto lain.");
+                    btn.disabled = false; btn.innerText = "Simpan Jurnal Kelas"; info.innerText = "❌ Format foto tidak didukung."; info.style.color = "#ef4444";
                 }
                 img.src = e.target.result;
             }
             reader.readAsDataURL(file);
         });
 
-        // LOGIKA CONVERT FOTO APEL (GLOBAL)
+        // LOGIKA BARU: CONVERT FOTO APEL DENGAN PENGAMAN
         document.getElementById('fotoApel').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
+            
+            let btn = document.getElementById('btnSimpanApel');
+            let info = document.getElementById('loadingFotoApel');
+            btn.disabled = true; btn.innerText = "⏳ Memproses Foto..."; info.style.display = "block"; info.innerText = "⏳ Sedang memproses foto...";
+            
             let reader = new FileReader();
             reader.onload = function(e) {
                 let img = new Image();
                 img.onload = function() {
-                    let canvas = document.getElementById('canvasPreviewApel'); let ctx = canvas.getContext('2d');
-                    let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH; canvas.height = img.height * scaleSize;
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    base64FotoApel = canvas.toDataURL('image/jpeg', 0.6);
-                    canvas.style.display = "block";
+                    try {
+                        let canvas = document.getElementById('canvasPreviewApel'); let ctx = canvas.getContext('2d');
+                        let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
+                        if(scaleSize > 1) scaleSize = 1; 
+                        canvas.width = img.width * scaleSize; canvas.height = img.height * scaleSize;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        base64FotoApel = canvas.toDataURL('image/jpeg', 0.6);
+                        canvas.style.display = "block";
+                        info.innerText = "✅ Foto siap dikirim!"; info.style.color = "#10b981";
+                    } catch(err) {
+                        alert("⚠️ Gagal memproses foto. Ukuran gambar mungkin terlalu berat. Mohon gunakan aplikasi kamera bawaan HP.");
+                        info.innerText = "❌ Foto gagal diproses."; info.style.color = "#ef4444";
+                    } finally {
+                        btn.disabled = false; btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")";
+                    }
+                }
+                img.onerror = function() {
+                    alert("⚠️ Gagal membaca format foto ini. Coba foto lain.");
+                    btn.disabled = false; btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; info.innerText = "❌ Format foto tidak didukung."; info.style.color = "#ef4444";
                 }
                 img.src = e.target.result;
             }
@@ -376,6 +415,7 @@
             .then(() => {
                 alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
                 document.getElementById('deskripsiMateri').value = ""; document.getElementById('fotoKelas').value = ""; document.getElementById('canvasPreview').style.display = "none"; base64Foto = "";
+                document.getElementById('loadingFotoKelas').style.display = "none";
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             }).catch(() => {
                 alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
@@ -445,7 +485,7 @@
             if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
             
             if (!base64FotoApel || base64FotoApel === "") { 
-                if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN!\n\nKirim laporan apel tanpa foto?")) return; 
+                if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN ATAU MASIH DIPROSES!\n\nKirim laporan apel tanpa foto?")) return; 
             } else {
                 if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel beserta FOTO ke Spreadsheet & Telegram?")) return;
             }
@@ -468,6 +508,7 @@
             antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
             document.getElementById('fotoApel').value = "";
             document.getElementById('canvasPreviewApel').style.display = "none";
+            document.getElementById('loadingFotoApel').style.display = "none";
             base64FotoApel = "";
         }
 

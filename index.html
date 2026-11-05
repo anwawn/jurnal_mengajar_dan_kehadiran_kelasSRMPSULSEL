@@ -130,7 +130,7 @@
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL -->
+        <!-- TAB JURNAL APEL (DIPERBARUI) -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -157,22 +157,28 @@
                     <label>Laporan / Catatan Apel</label>
                     <textarea id="catatanApel" rows="2" placeholder="Ketik laporan kehadiran apel..."></textarea>
                 </div>
-                <!-- BAGIAN UPLOAD FOTO APEL -->
-                <div class="form-group full-width">
-                    <label>Ambil Bukti Foto Apel</label>
-                    <input type="file" id="fotoApel" accept="image/*">
-                    <canvas id="canvasPreviewApel" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
-                </div>
             </div>
+            
             <button class="btn-hadir" onclick="hadirSemuaApel()">⚡ Set Semua Hadir (Apel)</button>
+            
             <div class="siswa-list-container" id="tabelSiswaApel">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
+            
             <button type="button" class="btn-action btn-queue" onclick="tambahAntreanApel()">➕ Simpan & Antre Apel Kelas Ini</button>
+            
             <div class="queue-panel" id="panelAntreanApel" style="display:none;">
                 <div style="font-weight: bold; font-size: 0.85rem; color: #5b21b6; margin-bottom: 6px;">📦 Daftar Apel Terantre (<span id="jumlahAntreApel">0</span>):</div>
                 <div id="listAntreanApelContainer"></div>
             </div>
+
+            <!-- BAGIAN UPLOAD FOTO APEL DIPINDAHKAN KE BAWAH -->
+            <div class="form-group full-width" style="margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px;">
+                <label style="color: #059669; font-weight:bold;">📸 Ambil 1 Bukti Foto Apel (Untuk Semua Kelas di Antrean)</label>
+                <input type="file" id="fotoApel" accept="image/*">
+                <canvas id="canvasPreviewApel" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
+            </div>
+
             <button id="btnSimpanApel" class="btn-action" onclick="kirimSemuaBatchApel()" style="background-color: #10b981; margin-top: 15px;">🚀 Kirim Semua Laporan Apel (<span id="counterKirimApel">0</span>)</button>
         </div>
         <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033</div>
@@ -241,7 +247,7 @@
             reader.readAsDataURL(file);
         });
 
-        // LOGIKA CONVERT FOTO APEL
+        // LOGIKA CONVERT FOTO APEL (GLOBAL)
         document.getElementById('fotoApel').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
             let reader = new FileReader();
@@ -345,7 +351,7 @@
                 let nama = card.querySelector('.nama-siswa').innerText; let status = card.querySelector('.status-kehadiran').value;
                 absensi.push({ nama: nama, status: status }); if (status !== "Hadir") { nonHadir.push(`- ${nama} (${status})`); }
             });
-            let confirmMsg = nonHadir.length > 0 ? "DAFTAR SISWA TIDAK HADIR:\n" + nonHadir.join("\n") + "\n\nKirim data absensi ini?" : "Semua siswa berstatus HADIR. Kirim data?";
+            let confirmMsg = nonHadir.length > 0 ? "DAFTAR MURID NON-HADIR:\n" + nonHadir.join("\n") + "\n\nKirim data absensi ini?" : "Semua murid berstatus HADIR. Kirim data?";
             if (!confirm(confirmMsg)) return;
 
             let payload = {
@@ -396,9 +402,8 @@
             let kelas = document.getElementById('pilihKelasApel').value; let jenis = document.getElementById('jenisApel').value;
             if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
             
-            if (!base64FotoApel || base64FotoApel === "") { 
-                if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN!\n\nMasukkan ke antrean tanpa foto?")) return; 
-            }
+            // Catatan: Pengecekan bukti foto apel DIHAPUS dari fungsi antrean ini 
+            // karena foto sekarang bersifat global di akhir (saat klik kirim batch)
 
             let selectedGuru = []; document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
             let guruPiketStr = selectedGuru.length > 0 ? selectedGuru.join(", ") : "-";
@@ -406,18 +411,14 @@
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
             filterMurid.forEach(m => { absensiApel.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" }); });
             
-            let itemApel = { kelas: kelas, jenis_apel: jenis, guru_piket: guruPiketStr, laporan: document.getElementById('catatanApel').value, kehadiran: absensiApel, fotoBase64: base64FotoApel };
+            // Properti fotoBase64 DIHAPUS dari item per kelas karena akan dimasukkan di payload global
+            let itemApel = { kelas: kelas, jenis_apel: jenis, guru_piket: guruPiketStr, laporan: document.getElementById('catatanApel').value, kehadiran: absensiApel };
             
             let indexCek = antreanApel.findIndex(item => item.kelas === kelas && item.jenis_apel === jenis);
             if (indexCek > -1) antreanApel[indexCek] = itemApel; else antreanApel.push(itemApel);
             localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); 
             
             alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
-            
-            // Bersihkan form foto Apel setelah masuk antrean agar siap untuk kelas berikutnya
-            document.getElementById('fotoApel').value = "";
-            document.getElementById('canvasPreviewApel').style.display = "none";
-            base64FotoApel = "";
         }
 
         function renderPanelAntreanApel() {
@@ -426,8 +427,8 @@
             container.innerHTML = ""; if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
             panel.style.display = 'block';
             antreanApel.forEach((item, idx) => {
-                let indikatorFoto = (item.fotoBase64 && item.fotoBase64 !== "") ? "📸" : "";
-                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) ${indikatorFoto} - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button></div>`;
+                // Hapus indikator logo kamera dari list karena fotonya satu untuk semua
+                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button></div>`;
             });
         }
 
@@ -437,17 +438,35 @@
 
         async function kirimSemuaBatchApel() {
             if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
-            if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel sekaligus ke Spreadsheet & Telegram?")) return;
+            
+            // Pengecekan foto apel dipindahkan ke mari (berlaku untuk 1 foto batch keseluruhan)
+            if (!base64FotoApel || base64FotoApel === "") { 
+                if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN!\n\nKirim laporan apel tanpa foto?")) return; 
+            } else {
+                if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel beserta FOTO ke Spreadsheet & Telegram?")) return;
+            }
+
             let btn = document.getElementById('btnSimpanApel'); btn.innerText = "Mengirim..."; btn.disabled = true;
-            let payloadBatch = { tipe: "jurnal_apel_batch", daftar_kelas: antreanApel };
+            
+            // Masukkan variabel base64FotoApel ke payload utama
+            let payloadBatch = { tipe: "jurnal_apel_batch", daftar_kelas: antreanApel, fotoBase64: base64FotoApel };
+            
             try {
                 await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadBatch) });
-                alert("Semua Laporan Apel Berhasil Terkirim dalam 1 Pesan Gabungan!");
-                antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
+                alert("Semua Laporan Apel Berhasil Terkirim!");
+                resetFormApel();
             } catch (err) {
                 alert("Semua Laporan Apel Berhasil Terkirim!");
-                antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
-            } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; btn.disabled = false; }
+                resetFormApel();
+            } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (0)"; btn.disabled = false; }
+        }
+
+        // Fungsi khusus untuk mereset antrean apel dan menghapus cache foto apel secara global
+        function resetFormApel() {
+            antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
+            document.getElementById('fotoApel').value = "";
+            document.getElementById('canvasPreviewApel').style.display = "none";
+            base64FotoApel = "";
         }
 
         // FUNGSI REQUEST REKAP PDF

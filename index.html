@@ -13,7 +13,8 @@
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
         h1 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.3; }
         .header-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn-sheet-link, .btn-admin-link, .btn-request { color: white; text-decoration: none; padding: 7px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; }
+        .btn-sheet-link, .btn-admin-link, .btn-request { color: white; text-decoration: none; padding: 7px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; transition: transform 0.1s; }
+        .btn-sheet-link:active, .btn-admin-link:active, .btn-request:active { transform: scale(0.95); }
         .btn-sheet-link { background-color: #10b981; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2); }
         .btn-admin-link { background-color: #475569; box-shadow: 0 2px 6px rgba(71, 85, 105, 0.2); }
         .btn-request { background-color: #f59e0b; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2); }
@@ -23,18 +24,25 @@
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .full-width { grid-column: span 2; }
         label { font-weight: 600; font-size: 0.8rem; color: #334155; }
         select, input[type="text"], input[type="date"], textarea, input[type="file"] { padding: 9px 10px; font-size: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; width: 100%; font-family: 'Inter', sans-serif; }
         select:focus, input:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         #infoMapel { background: #f8fafc; border: 1px dashed var(--border-color); padding: 10px; border-radius: 8px; font-size: 0.85rem; text-align: center; color: #334155; }
-        .btn-hadir { background-color: #0ea5e9; color: white; border: none; padding: 10px; font-size: 0.85rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 12px; }
+        
+        /* DESAIN BARU TOMBOL SET HADIR (KECIL & DI PINGGIR) */
+        .action-bar { display: flex; justify-content: space-between; align-items: center; margin: 15px 0 10px 0; padding: 0 4px; }
+        .action-bar span { font-size: 0.85rem; font-weight: 700; color: #334155; }
+        .btn-hadir-compact { background-color: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; padding: 6px 12px; font-size: 0.75rem; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.1s; }
+        .btn-hadir-compact:hover { background-color: #bae6fd; }
+        .btn-hadir-compact:active { transform: scale(0.92); } /* Efek klik responsif */
+        
         .guru-piket-container { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; max-height: 150px; overflow-y: auto; background: #fff; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
         .guru-checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; }
         .guru-checkbox-item input { cursor: pointer; width: 16px; height: 16px; }
-        .siswa-list-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; max-height: 450px; overflow-y: auto; padding-right: 2px; }
+        .siswa-list-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; max-height: 450px; overflow-y: auto; padding-right: 2px; border-top: 1px solid #f1f5f9; padding-top: 8px; }
         .siswa-card { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 10px; gap: 10px; }
         .siswa-info { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; }
         .siswa-no { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); min-width: 20px; }
@@ -42,18 +50,22 @@
         .siswa-nama { font-size: 0.85rem; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .siswa-lp { font-size: 0.7rem; color: var(--text-muted); }
         .status-dropdown { padding: 7px 10px; font-size: 0.8rem; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; font-weight: 600; color: var(--primary); width: 105px; flex-shrink: 0; }
-        .btn-action { background-color: var(--primary); color: white; border: none; padding: 12px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s; }
+        
+        .btn-action { background-color: var(--primary); color: white; border: none; padding: 12px; font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; transition: all 0.1s; }
         .btn-action:hover { background-color: var(--primary-hover); }
-        .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.8; }
+        .btn-action:active { transform: scale(0.97); } /* Efek klik responsif */
+        .btn-action:disabled { background-color: #94a3b8; cursor: not-allowed; opacity: 0.8; transform: none; }
         .btn-queue { background-color: #8b5cf6; }
         .btn-queue:hover { background-color: #7c3aed; }
+        
         .queue-panel { background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px; }
         .queue-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 0.8rem; }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: #fff; padding: 20px; border-radius: 14px; width: 90%; max-width: 380px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .btn-rekap { flex: 1; background: #6366f1; color: white; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; text-align: center; }
+        .btn-rekap { flex: 1; background: #6366f1; color: white; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.1s; text-align: center; }
         .btn-rekap:hover { background: #4f46e5; }
+        .btn-rekap:active { transform: scale(0.95); }
         .btn-rekap-custom { background: #0ea5e9; }
         .btn-rekap-custom:hover { background: #0284c7; }
         .footer-credit { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
@@ -125,7 +137,13 @@
                     <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
                 </div>
             </div>
-            <button class="btn-hadir" onclick="hadirSemua()">⚡ Set Semua Hadir</button>
+            
+            <!-- TATA LETAK BARU TOMBOL SET HADIR (KBM) -->
+            <div class="action-bar">
+                <span>Daftar Murid:</span>
+                <button class="btn-hadir-compact" onclick="hadirSemua()">⚡ Set Semua Hadir</button>
+            </div>
+
             <div class="siswa-list-container" id="tabelSiswa">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
@@ -161,7 +179,11 @@
                 </div>
             </div>
             
-            <button class="btn-hadir" onclick="hadirSemuaApel()">⚡ Set Semua Hadir (Apel)</button>
+            <!-- TATA LETAK BARU TOMBOL SET HADIR (APEL) -->
+            <div class="action-bar">
+                <span>Daftar Murid:</span>
+                <button class="btn-hadir-compact" onclick="hadirSemuaApel()">⚡ Set Semua Hadir</button>
+            </div>
             
             <div class="siswa-list-container" id="tabelSiswaApel">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
@@ -174,7 +196,7 @@
                 <div id="listAntreanApelContainer"></div>
             </div>
 
-            <!-- BAGIAN UPLOAD FOTO APEL -->
+            <!-- BAGIAN UPLOAD FOTO APEL (GLOBAL BAWAH) -->
             <div class="form-group full-width" style="margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px;">
                 <label style="color: #059669; font-weight:bold;">📸 Ambil 1 Bukti Foto Apel (Untuk Semua Kelas di Antrean)</label>
                 <input type="file" id="fotoApel" accept="image/*">
@@ -241,7 +263,7 @@
 
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let base64FotoApel = ""; let antreanApel = [];     
 
-        // LOGIKA BARU: CONVERT FOTO KBM DENGAN PENGAMAN
+        // LOGIKA CONVERT FOTO KBM
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
             
@@ -278,7 +300,7 @@
             reader.readAsDataURL(file);
         });
 
-        // LOGIKA BARU: CONVERT FOTO APEL DENGAN PENGAMAN
+        // LOGIKA CONVERT FOTO APEL
         document.getElementById('fotoApel').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
             
@@ -473,7 +495,7 @@
             container.innerHTML = ""; if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
             panel.style.display = 'block';
             antreanApel.forEach((item, idx) => {
-                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Hapus</button></div>`;
+                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer; transition: transform 0.1s;">Hapus</button></div>`;
             });
         }
 

@@ -4,104 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Jurnal Harian Digital SRT 3</title>
-    <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f1f5f9;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --radius: 14px;
+            --primary: #4f46e5; --primary-hover: #4338ca;
+            --bg-color: #f1f5f9; --card-bg: #ffffff;
+            --text-main: #1e293b; --text-muted: #64748b;
+            --border-color: #e2e8f0; --radius: 14px;
         }
-
         * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 12px;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: auto;
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 10px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 12px;
-        }
-
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 12px; }
+        .container { max-width: 950px; margin: auto; background: var(--card-bg); padding: 20px; border-radius: var(--radius); box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid var(--border-color); padding-bottom: 12px; }
         h1 { font-size: 1.25rem; font-weight: 700; color: #0f172a; margin: 0; }
-
-        .btn-back {
-            background-color: #64748b; color: white; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; transition: transform 0.1s;
+        .btn-back { background-color: #64748b; color: white; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
+        
+        .search-box {
+            width: 100%; padding: 12px 16px; font-size: 0.95rem; font-family: 'Inter', sans-serif;
+            border: 2px solid var(--primary); border-radius: 8px; margin-bottom: 20px;
+            background: #f8fafc; transition: all 0.3s;
         }
-        .btn-back:active { transform: scale(0.95); }
+        .search-box:focus { background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
 
-        .alert-info {
-            background-color: #fffbeb; border: 1px solid #fef3c7; color: #b45309; padding: 10px 15px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 20px;
-        }
-
-        .tab-container {
-            display: flex; gap: 8px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: var(--radius); flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            flex: 1; padding: 10px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 8px; text-align: center; transition: all 0.2s; min-width: 120px;
-        }
-
+        .tab-container { display: flex; gap: 8px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: var(--radius); flex-wrap: wrap; }
+        .tab-btn { flex: 1; padding: 10px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 8px; text-align: center; transition: all 0.2s; min-width: 120px; }
         .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
-
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .active-tab { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card-panel {
-            background: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; margin-bottom: 20px;
-        }
-
+        
+        .card-panel { background: #f8fafc; border: 1px solid var(--border-color); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         label { font-weight: 600; font-size: 0.8rem; color: #334155; }
         select, input[type="text"] { padding: 9px 10px; font-size: 0.85rem; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; width: 100%; font-family: 'Inter', sans-serif; }
-
+        
         .btn-action { background-color: var(--primary); color: white; border: none; padding: 10px 16px; font-size: 0.85rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
         .btn-action:hover { background-color: var(--primary-hover); }
-        .btn-download { background-color: #10b981; margin-top: 15px; width: 100%; font-size: 0.95rem; padding: 12px; }
+        
+        .btn-download { background-color: #10b981; color: white; border: none; padding: 8px 14px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; cursor: pointer; float: right; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2); }
         .btn-download:hover { background-color: #059669; }
 
-        .btn-edit { background-color: #0ea5e9; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+        .btn-edit { background-color: #0ea5e9; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
         .btn-edit:hover { background-color: #0284c7; }
-        .btn-delete { background-color: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
+        .btn-delete { background-color: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600; }
         .btn-delete:hover { background-color: #dc2626; }
-
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; background: #fff; }
-        th, td { border: 1px solid var(--border-color); padding: 10px; text-align: left; }
-        th { background-color: #f1f5f9; font-weight: 600; color: #334155; }
-        tr:hover { background-color: #f8fafc; }
-
+        
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+        th, td { border: 1px solid var(--border-color); padding: 8px 10px; text-align: left; }
+        th { background-color: #e2e8f0; font-weight: 600; }
         .footer-credit { text-align: center; margin-top: 25px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+
+        /* MODAL POP-UP STYLE */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6); display: none;
+            justify-content: center; align-items: center; z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+        .modal-box {
+            background: #ffffff; padding: 25px; border-radius: 12px;
+            width: 90%; max-width: 480px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            animation: popIn 0.3s ease-out;
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .change-list {
+            max-height: 220px; overflow-y: auto; background: #f8fafc;
+            padding: 12px 20px; border-radius: 8px; border: 1px solid var(--border-color);
+            margin: 15px 0; font-size: 0.85rem; line-height: 1.6;
+        }
+        .change-list ul { margin: 0; padding-left: 20px; }
+        .change-list li { margin-bottom: 5px; }
     </style>
 </head>
 <body>
+
+    <!-- OVERLAY POP-UP DOWNLOAD -->
+    <div id="modalDownload" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="margin-top:0; color:#1e293b;">📥 Konfirmasi Download CSV</h3>
+            <p style="font-size:0.85rem; color:#64748b; margin-bottom:5px;" id="modalDeskripsi">Berikut adalah riwayat perubahan data yang Anda lakukan:</p>
+            <div id="listPerubahan" class="change-list"></div>
+            <p style="font-size:0.8rem; color:#ef4444; font-style:italic;">*Pastikan untuk meng-upload file yang diunduh ini ke GitHub (Replace/Timpa file lama).</p>
+            <div class="flex-between" style="margin-top: 20px;">
+                <button class="btn-action" style="background:#64748b;" onclick="tutupModal()">Batalkan</button>
+                <button class="btn-action" style="background:#10b981;" onclick="eksekusiDownload()">Lanjut Download</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="header-top">
@@ -109,17 +103,15 @@
             <a href="index.html" class="btn-back">⬅️ Kembali ke Jurnal</a>
         </div>
         
-        <div class="alert-info">
-            <b>💡 Panduan Admin:</b> Website ini bersifat statis. Setelah Anda Selesai Mengedit/Menambah/Menghapus data di bawah, <b>wajib menekan tombol "Download Update CSV"</b> berwarna hijau, lalu upload/replace file CSV tersebut ke repository GitHub Anda agar perubahannya permanen.
-        </div>
+        <input type="text" id="inputPencarian" class="search-box" placeholder="🔍 Cari data (Nama, Kelas, Mapel, dll) di sini..." onkeyup="cariDataTabel()">
 
         <div class="tab-container">
             <button class="tab-btn active" onclick="switchTab('manajemenSiswa', this)">👥 Data Siswa</button>
             <button class="tab-btn" onclick="switchTab('manajemenGuru', this)">👨‍🏫 Data Guru & Mapel</button>
-            <button class="tab-btn" onclick="switchTab('manajemenRoster', this)">📅 Roster & Mapel</button>
+            <button class="tab-btn" onclick="switchTab('manajemenRoster', this)">📅 Roster Pelajaran</button>
         </div>
 
-        <!-- TAB MANAJEMEN SISWA -->
+        <!-- TAB SISWA -->
         <div id="manajemenSiswa" class="tab-content active-tab">
             <div class="card-panel">
                 <h3 style="margin-top:0; font-size:1rem; color:#334155;" id="titleFormSiswa">Tambah Data Siswa</h3>
@@ -133,68 +125,63 @@
                     </div>
                     <div class="form-group"><label>No Absen</label><input type="text" id="admNoSiswa" placeholder="Contoh: 1"></div>
                     <div class="form-group"><label>Nama Lengkap Siswa</label><input type="text" id="admNamaSiswa" placeholder="Masukkan Nama Siswa"></div>
-                    <div class="form-group">
-                        <label>Jenis Kelamin (L/P)</label>
-                        <select id="admJpSiswa"><option value="L">L</option><option value="P">P</option></select>
-                    </div>
+                    <div class="form-group"><label>Jenis Kelamin (L/P)</label><select id="admJpSiswa"><option value="L">L</option><option value="P">P</option></select></div>
                 </div>
                 <button class="btn-action" onclick="simpanSiswa()">💾 Simpan Data Siswa</button>
-                <button class="btn-action" style="background:#64748b; display:none;" id="btnBatalSiswa" onclick="resetFormSiswa()">Batal Edit</button>
+                <button class="btn-action" style="background:#64748b; display:none;" id="btnBatalSiswa" onclick="batalEditSiswa()">Batal Edit</button>
             </div>
 
-            <h4 style="margin-bottom:8px;">Daftar Siswa Tersimpan</h4>
+            <div class="flex-between">
+                <h4 style="margin:0;">Daftar Siswa Tersimpan</h4>
+                <button class="btn-download" onclick="previewDownload('siswa', 'murid.csv', 'Kelas,No,Nama Siswa,L/P', dbSiswa, item => `${item.kelas},${item.no},${item.nama},${item.lp}`)">⬇️ Download Update murid.csv</button>
+            </div>
             <div style="overflow-x:auto;">
                 <table id="tabelAdminSiswa">
                     <thead><tr><th>Kelas</th><th>No</th><th>Nama Siswa</th><th>L/P</th><th>Aksi</th></tr></thead>
-                    <tbody><tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr></tbody>
+                    <tbody><tr><td colspan="5" style="text-align:center;">Memuat data siswa...</td></tr></tbody>
                 </table>
             </div>
-            <button class="btn-action btn-download" onclick="downloadCSV('siswa')">⬇️ Download Update murid.csv</button>
         </div>
 
-        <!-- TAB MANAJEMEN GURU -->
+        <!-- TAB GURU -->
         <div id="manajemenGuru" class="tab-content">
             <div class="card-panel">
                 <h3 style="margin-top:0; font-size:1rem; color:#334155;" id="titleFormGuru">Tambah Data Guru & Mapel</h3>
                 <div class="form-grid">
-                    <div class="form-group"><label>Kode Mapel/Guru</label><input type="text" id="admKodeGuru" placeholder="Contoh: KODING"></div>
-                    <div class="form-group"><label>Mata Pelajaran</label><input type="text" id="admMapelGuru" placeholder="Contoh: Koding & AI"></div>
-                    <div class="form-group full-width" style="grid-column: span 2;">
-                        <label>Nama Guru Pengampu</label><input type="text" id="admNamaGuru" placeholder="Contoh: Gr. Nur Darmawansyah, S.Pd">
-                    </div>
+                    <div class="form-group"><label>Kode Mapel (Singkatan)</label><input type="text" id="admKodeGuru" placeholder="Contoh: KODING"></div>
+                    <div class="form-group"><label>Mata Pelajaran (Lengkap)</label><input type="text" id="admMapelGuru" placeholder="Contoh: Koding & Kecerdasan Artifisial"></div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Nama Guru Pengampu</label><input type="text" id="admNamaGuru" placeholder="Contoh: Gr. Nur Darmawansyah, S.Pd"></div>
                 </div>
                 <button class="btn-action" onclick="simpanGuru()">💾 Simpan Data Guru</button>
-                <button class="btn-action" style="background:#64748b; display:none;" id="btnBatalGuru" onclick="resetFormGuru()">Batal Edit</button>
+                <button class="btn-action" style="background:#64748b; display:none;" id="btnBatalGuru" onclick="batalEditGuru()">Batal Edit</button>
             </div>
 
-            <h4 style="margin-bottom:8px;">Daftar Guru & Mapel Tersimpan</h4>
+            <div class="flex-between">
+                <h4 style="margin:0;">Daftar Guru & Mapel Tersimpan</h4>
+                <button class="btn-download" onclick="previewDownload('guru', 'guru.csv', 'Kode,Mata Pelajaran,Nama Guru', dbGuru, item => `${item.kode},${item.mapel},${item.nama}`)">⬇️ Download Update guru.csv</button>
+            </div>
             <div style="overflow-x:auto;">
                 <table id="tabelAdminGuru">
-                    <thead><tr><th>Kode</th><th>Mata Pelajaran</th><th>Nama Guru</th><th>Aksi</th></tr></thead>
-                    <tbody><tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr></tbody>
+                    <thead><tr><th>Kode Mapel</th><th>Mata Pelajaran</th><th>Nama Guru</th><th>Aksi</th></tr></thead>
+                    <tbody><tr><td colspan="4" style="text-align:center;">Memuat data guru...</td></tr></tbody>
                 </table>
             </div>
-            <button class="btn-action btn-download" onclick="downloadCSV('guru')">⬇️ Download Update guru.csv</button>
         </div>
 
-        <!-- TAB MANAJEMEN ROSTER & MAPEL -->
+        <!-- TAB ROSTER -->
         <div id="manajemenRoster" class="tab-content">
-            <div class="card-panel" style="margin-top: 10px;">
+            <div class="card-panel">
                 <h3 style="margin-top:0; font-size:1rem; color:#334155;" id="titleFormRoster">Tambah Jadwal Roster Pelajaran</h3>
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label>Hari</label>
+                    <div class="form-group"><label>Hari</label>
                         <select id="admRosterHari">
                             <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
                             <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Jam Ke-</label>
+                    <div class="form-group"><label>Jam Mulai Ke-</label>
                         <select id="admRosterJam">
-                            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-                            <option value="4">4</option><option value="5">5</option><option value="6">6</option>
-                            <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option>
                         </select>
                     </div>
                     <div class="form-group"><label>VII-1 (Kode Mapel)</label><input type="text" id="admRosterVII1" placeholder="Kode Mapel"></div>
@@ -204,39 +191,40 @@
                     <div class="form-group"><label>VII-5 (Kode Mapel)</label><input type="text" id="admRosterVII5" placeholder="Kode Mapel"></div>
                 </div>
                 <button class="btn-action" onclick="simpanRoster()">💾 Simpan Jadwal Roster</button>
-                <button class="btn-action" style="background:#64748b; display:none;" id="btnBatalRoster" onclick="resetFormRoster()">Batal Edit</button>
+                <button class="btn-action" style="background:#64748b; display:none;" id="btnBatalRoster" onclick="batalEditRoster()">Batal Edit</button>
             </div>
 
-            <h4 style="margin-bottom:8px;">Daftar Jadwal Roster Aktif</h4>
+            <div class="flex-between">
+                <h4 style="margin:0;">Daftar Jadwal Roster Aktif</h4>
+                <button class="btn-download" onclick="previewDownload('roster', 'roster.csv', 'Hari,Jam,VII-1,VII-2,VII-3,VII-4,VII-5', dbRoster, item => `${item.hari},${item.jam},${item.v1},${item.v2},${item.v3},${item.v4},${item.v5}`)">⬇️ Download Update roster.csv</button>
+            </div>
             <div style="overflow-x:auto;">
                 <table id="tabelAdminRoster">
-                    <thead>
-                        <tr><th>Hari</th><th>Jam</th><th>VII-1</th><th>VII-2</th><th>VII-3</th><th>VII-4</th><th>VII-5</th><th>Aksi</th></tr>
-                    </thead>
+                    <thead><tr><th>Hari</th><th>Jam</th><th>VII-1</th><th>VII-2</th><th>VII-3</th><th>VII-4</th><th>VII-5</th><th>Aksi</th></tr></thead>
                     <tbody><tr><td colspan="8" style="text-align:center;">Memuat roster pelajaran...</td></tr></tbody>
                 </table>
             </div>
-            <button class="btn-action btn-download" onclick="downloadCSV('roster')">⬇️ Download Update roster.csv</button>
         </div>
 
         <div class="footer-credit">Admin Panel Developer : Nur Darmawansyah | NIP 199709012026211033</div>
     </div>
 
     <script>
-        // Database in-memory
-        let dataSiswa = [];
-        let dataGuru = [];
-        let dataRoster = [];
-        
-        // Status Edit
-        let editIndexSiswa = -1;
-        let editIndexGuru = -1;
-        let editIndexRoster = -1;
+        // Database & Log Perubahan
+        let dbSiswa = []; let dbGuru = []; let dbRoster = [];
+        let logPerubahan = { siswa: [], guru: [], roster: [] };
+        let editIdxSiswa = -1; let editIdxGuru = -1; let editIdxRoster = -1;
+        let aksiDownloadTertunda = null; // Menyimpan fungsi eksekusi download sementara
+        let tipeAktifDownload = "";
 
         window.onload = async function() {
             let kodeAdmin = prompt("Masukkan Kode Akses Admin:");
-            if (kodeAdmin !== "ADMINSRT3") { alert("Kode Admin Salah!"); window.location.href = "index.html"; return; }
-            await loadAllData();
+            if (kodeAdmin !== "ADMINSRT3") {
+                alert("Kode Admin Salah!");
+                window.location.href = "index.html";
+                return;
+            }
+            await loadSemuaCSV();
         };
 
         function switchTab(tabId, btn) {
@@ -244,162 +232,197 @@
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active-tab');
             btn.classList.add('active');
+            
+            document.getElementById("inputPencarian").value = "";
+            cariDataTabel();
         }
 
-        async function loadAllData() {
+        function cariDataTabel() {
+            let input = document.getElementById("inputPencarian").value.toLowerCase();
+            let activeTab = document.querySelector(".tab-content.active-tab");
+            if (!activeTab) return;
+            
+            let tables = activeTab.querySelectorAll("table");
+            tables.forEach(table => {
+                let tr = table.querySelectorAll("tbody tr");
+                tr.forEach(row => {
+                    if (row.cells.length === 1) return; 
+                    let textRow = row.innerText.toLowerCase();
+                    row.style.display = textRow.includes(input) ? "" : "none";
+                });
+            });
+        }
+
+        async function loadSemuaCSV() {
             try {
-                let resMurid = await fetch('murid.csv'); dataSiswa = parseCSV(await resMurid.text(), ['kelas', 'no', 'nama', 'lp']);
-                let resGuru = await fetch('guru.csv'); dataGuru = parseCSV(await resGuru.text(), ['kode', 'mapel', 'namaGuru']);
-                let resRoster = await fetch('roster.csv'); dataRoster = parseCSV(await resRoster.text(), ['hari', 'jam', 'v1', 'v2', 'v3', 'v4', 'v5']);
-                renderSiswa(); renderGuru(); renderRoster();
-            } catch (err) { alert("Data CSV sedang kosong atau gagal dimuat."); }
+                let rS = await fetch('murid.csv'); if(rS.ok) parseSiswa(await rS.text());
+                let rG = await fetch('guru.csv'); if(rG.ok) parseGuru(await rG.text());
+                let rR = await fetch('roster.csv'); if(rR.ok) parseRoster(await rR.text());
+            } catch (err) { console.log("Harus di localhost atau GitHub"); }
+            renderSiswa(); renderGuru(); renderRoster();
         }
 
-        function parseCSV(text, keys) {
-            let lines = text.trim().split('\n'); let result = [];
-            for (let i = 1; i < lines.length; i++) {
-                let vals = lines[i].split(',');
-                if (vals.length >= keys.length) {
-                    let obj = {}; keys.forEach((k, idx) => obj[k] = vals[idx] ? vals[idx].trim() : ""); result.push(obj);
-                }
-            }
-            return result;
-        }
+        function parseSiswa(txt) { let lines = txt.trim().split('\n'); for(let i=1; i<lines.length; i++){ let c = lines[i].split(','); if(c.length>=4) dbSiswa.push({kelas:c[0], no:c[1], nama:c[2], lp:c[3]}); } }
+        function parseGuru(txt) { let lines = txt.trim().split('\n'); for(let i=1; i<lines.length; i++){ let c = lines[i].split(','); if(c.length>=3) dbGuru.push({kode:c[0], mapel:c[1], nama:c[2]}); } }
+        function parseRoster(txt) { let lines = txt.trim().split('\n'); for(let i=1; i<lines.length; i++){ let c = lines[i].split(','); if(c.length>=7) dbRoster.push({hari:c[0], jam:c[1], v1:c[2], v2:c[3], v3:c[4], v4:c[5], v5:c[6]}); } }
 
-        // ==================== CRUD SISWA ====================
         function renderSiswa() {
             let tbody = document.querySelector('#tabelAdminSiswa tbody'); tbody.innerHTML = "";
-            if(dataSiswa.length === 0) return tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>Belum ada data siswa</td></tr>";
-            dataSiswa.forEach((d, i) => {
-                tbody.innerHTML += `<tr><td>${d.kelas}</td><td>${d.no}</td><td>${d.nama}</td><td>${d.lp}</td>
-                <td><button class="btn-edit" onclick="editSiswa(${i})">✏️</button><button class="btn-delete" onclick="hapusSiswa(${i})">🗑️</button></td></tr>`;
-            });
+            if(dbSiswa.length === 0) return tbody.innerHTML = `<tr><td colspan="5" align="center">Data kosong</td></tr>`;
+            dbSiswa.forEach((itm, idx) => {
+                tbody.innerHTML += `<tr><td>${itm.kelas}</td><td>${itm.no}</td><td>${itm.nama}</td><td>${itm.lp}</td>
+                <td><button class="btn-edit" onclick="editSiswa(${idx})">✏️</button><button class="btn-delete" onclick="hapusSiswa(${idx})">🗑️</button></td></tr>`;
+            }); cariDataTabel();
         }
-        function simpanSiswa() {
-            let kelas = document.getElementById('admKelasSiswa').value; let no = document.getElementById('admNoSiswa').value;
-            let nama = document.getElementById('admNamaSiswa').value; let lp = document.getElementById('admJpSiswa').value;
-            if(!no || !nama) return alert("Nomor dan Nama Siswa harus diisi!");
-            
-            let obj = { kelas, no, nama, lp };
-            if(editIndexSiswa > -1) { dataSiswa[editIndexSiswa] = obj; alert("Data berhasil diupdate!"); } 
-            else { dataSiswa.push(obj); alert("Data berhasil ditambahkan!"); }
-            resetFormSiswa(); renderSiswa();
-        }
-        function editSiswa(idx) {
-            editIndexSiswa = idx; let d = dataSiswa[idx];
-            document.getElementById('admKelasSiswa').value = d.kelas; document.getElementById('admNoSiswa').value = d.no;
-            document.getElementById('admNamaSiswa').value = d.nama; document.getElementById('admJpSiswa').value = d.lp;
-            document.getElementById('titleFormSiswa').innerText = "Edit Data Siswa (Baris " + (idx+1) + ")";
-            document.getElementById('btnBatalSiswa').style.display = "inline-block";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        function hapusSiswa(idx) {
-            if(confirm("Yakin ingin menghapus siswa: " + dataSiswa[idx].nama + "?")) { dataSiswa.splice(idx, 1); renderSiswa(); }
-        }
-        function resetFormSiswa() {
-            editIndexSiswa = -1; document.getElementById('admNoSiswa').value = ""; document.getElementById('admNamaSiswa').value = "";
-            document.getElementById('titleFormSiswa').innerText = "Tambah Data Siswa"; document.getElementById('btnBatalSiswa').style.display = "none";
-        }
-
-        // ==================== CRUD GURU & MAPEL ====================
         function renderGuru() {
             let tbody = document.querySelector('#tabelAdminGuru tbody'); tbody.innerHTML = "";
-            if(dataGuru.length === 0) return tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Belum ada data guru</td></tr>";
-            dataGuru.forEach((d, i) => {
-                tbody.innerHTML += `<tr><td><b>${d.kode}</b></td><td>${d.mapel}</td><td>${d.namaGuru}</td>
-                <td><button class="btn-edit" onclick="editGuru(${i})">✏️</button><button class="btn-delete" onclick="hapusGuru(${i})">🗑️</button></td></tr>`;
-            });
+            if(dbGuru.length === 0) return tbody.innerHTML = `<tr><td colspan="4" align="center">Data kosong</td></tr>`;
+            dbGuru.forEach((itm, idx) => {
+                tbody.innerHTML += `<tr><td><b>${itm.kode}</b></td><td>${itm.mapel}</td><td>${itm.nama}</td>
+                <td><button class="btn-edit" onclick="editGuru(${idx})">✏️</button><button class="btn-delete" onclick="hapusGuru(${idx})">🗑️</button></td></tr>`;
+            }); cariDataTabel();
         }
-        function simpanGuru() {
-            let kode = document.getElementById('admKodeGuru').value; let mapel = document.getElementById('admMapelGuru').value; let nama = document.getElementById('admNamaGuru').value;
-            if(!kode || !mapel) return alert("Kode dan Mata Pelajaran harus diisi!");
-            
-            let obj = { kode, mapel, namaGuru: nama };
-            if(editIndexGuru > -1) { dataGuru[editIndexGuru] = obj; alert("Data berhasil diupdate!"); } 
-            else { dataGuru.push(obj); alert("Data berhasil ditambahkan!"); }
-            resetFormGuru(); renderGuru();
-        }
-        function editGuru(idx) {
-            editIndexGuru = idx; let d = dataGuru[idx];
-            document.getElementById('admKodeGuru').value = d.kode; document.getElementById('admMapelGuru').value = d.mapel; document.getElementById('admNamaGuru').value = d.namaGuru;
-            document.getElementById('titleFormGuru').innerText = "Edit Data Guru (Kode: " + d.kode + ")";
-            document.getElementById('btnBatalGuru').style.display = "inline-block";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        function hapusGuru(idx) {
-            if(confirm("Yakin ingin menghapus guru/mapel: " + dataGuru[idx].kode + "?")) { dataGuru.splice(idx, 1); renderGuru(); }
-        }
-        function resetFormGuru() {
-            editIndexGuru = -1; document.getElementById('admKodeGuru').value = ""; document.getElementById('admMapelGuru').value = ""; document.getElementById('admNamaGuru').value = "";
-            document.getElementById('titleFormGuru').innerText = "Tambah Data Guru & Mapel"; document.getElementById('btnBatalGuru').style.display = "none";
-        }
-
-        // ==================== CRUD ROSTER ====================
         function renderRoster() {
             let tbody = document.querySelector('#tabelAdminRoster tbody'); tbody.innerHTML = "";
-            if(dataRoster.length === 0) return tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>Belum ada data roster</td></tr>";
-            dataRoster.forEach((d, i) => {
-                tbody.innerHTML += `<tr><td><b>${d.hari}</b></td><td>Jam ${d.jam}</td><td>${d.v1||"-"}</td><td>${d.v2||"-"}</td><td>${d.v3||"-"}</td><td>${d.v4||"-"}</td><td>${d.v5||"-"}</td>
-                <td><button class="btn-edit" onclick="editRoster(${i})">✏️</button><button class="btn-delete" onclick="hapusRoster(${i})">🗑️</button></td></tr>`;
-            });
+            if(dbRoster.length === 0) return tbody.innerHTML = `<tr><td colspan="8" align="center">Data kosong</td></tr>`;
+            dbRoster.forEach((itm, idx) => {
+                tbody.innerHTML += `<tr><td><b>${itm.hari}</b></td><td>Jam Ke-${itm.jam}</td><td>${itm.v1}</td><td>${itm.v2}</td><td>${itm.v3}</td><td>${itm.v4}</td><td>${itm.v5}</td>
+                <td><button class="btn-edit" onclick="editRoster(${idx})">✏️</button><button class="btn-delete" onclick="hapusRoster(${idx})">🗑️</button></td></tr>`;
+            }); cariDataTabel();
         }
-        function simpanRoster() {
-            let hari = document.getElementById('admRosterHari').value; let jam = document.getElementById('admRosterJam').value;
-            let v1 = document.getElementById('admRosterVII1').value; let v2 = document.getElementById('admRosterVII2').value;
-            let v3 = document.getElementById('admRosterVII3').value; let v4 = document.getElementById('admRosterVII4').value; let v5 = document.getElementById('admRosterVII5').value;
+
+        // CRUD SISWA
+        function simpanSiswa() {
+            let k = document.getElementById('admKelasSiswa').value, no = document.getElementById('admNoSiswa').value;
+            let nm = document.getElementById('admNamaSiswa').value, lp = document.getElementById('admJpSiswa').value;
+            if(!no || !nm) return alert("Nomor absen dan Nama harus diisi!");
             
-            let obj = { hari, jam, v1, v2, v3, v4, v5 };
-            if(editIndexRoster > -1) { dataRoster[editIndexRoster] = obj; alert("Roster berhasil diupdate!"); } 
-            else { dataRoster.push(obj); alert("Roster berhasil ditambahkan!"); }
-            resetFormRoster(); renderRoster();
+            if(editIdxSiswa === -1) { 
+                dbSiswa.push({kelas:k, no:no, nama:nm, lp:lp}); 
+                logPerubahan.siswa.push(`➕ <b>Tambah:</b> ${nm} (${k})`);
+            } else { 
+                logPerubahan.siswa.push(`✏️ <b>Edit:</b> Data awal "${dbSiswa[editIdxSiswa].nama}" diubah menjadi "${nm}"`);
+                dbSiswa[editIdxSiswa] = {kelas:k, no:no, nama:nm, lp:lp}; 
+                batalEditSiswa(); 
+            }
+            document.getElementById('admNoSiswa').value = ""; document.getElementById('admNamaSiswa').value = "";
+            renderSiswa(); 
+        }
+        function editSiswa(idx) {
+            editIdxSiswa = idx; let dt = dbSiswa[idx];
+            document.getElementById('admKelasSiswa').value = dt.kelas; document.getElementById('admNoSiswa').value = dt.no;
+            document.getElementById('admNamaSiswa').value = dt.nama; document.getElementById('admJpSiswa').value = dt.lp;
+            document.getElementById('titleFormSiswa').innerText = "✏️ Mode Edit Siswa"; document.getElementById('btnBatalSiswa').style.display = "inline-block";
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+        function batalEditSiswa() { editIdxSiswa = -1; document.getElementById('titleFormSiswa').innerText = "Tambah Data Siswa"; document.getElementById('btnBatalSiswa').style.display = "none"; document.getElementById('admNoSiswa').value = ""; document.getElementById('admNamaSiswa').value = ""; }
+        function hapusSiswa(idx) { 
+            if(confirm("Hapus siswa ini?")) { 
+                logPerubahan.siswa.push(`🗑️ <b>Hapus:</b> ${dbSiswa[idx].nama} (${dbSiswa[idx].kelas})`);
+                dbSiswa.splice(idx, 1); renderSiswa(); 
+            } 
+        }
+
+        // CRUD GURU
+        function simpanGuru() {
+            let kd = document.getElementById('admKodeGuru').value, mp = document.getElementById('admMapelGuru').value, nm = document.getElementById('admNamaGuru').value;
+            if(!kd || !nm) return alert("Kode dan Nama Guru harus diisi!");
+            
+            if(editIdxGuru === -1) { 
+                dbGuru.push({kode:kd, mapel:mp, nama:nm}); 
+                logPerubahan.guru.push(`➕ <b>Tambah:</b> Guru ${nm} (${kd})`);
+            } else { 
+                logPerubahan.guru.push(`✏️ <b>Edit:</b> Data "${dbGuru[editIdxGuru].nama}" diperbarui`);
+                dbGuru[editIdxGuru] = {kode:kd, mapel:mp, nama:nm}; 
+                batalEditGuru(); 
+            }
+            document.getElementById('admKodeGuru').value = ""; document.getElementById('admMapelGuru').value = ""; document.getElementById('admNamaGuru').value = "";
+            renderGuru();
+        }
+        function editGuru(idx) {
+            editIdxGuru = idx; let dt = dbGuru[idx];
+            document.getElementById('admKodeGuru').value = dt.kode; document.getElementById('admMapelGuru').value = dt.mapel; document.getElementById('admNamaGuru').value = dt.nama;
+            document.getElementById('titleFormGuru').innerText = "✏️ Mode Edit Guru"; document.getElementById('btnBatalGuru').style.display = "inline-block";
+            window.scrollTo({top:0, behavior:'smooth'});
+        }
+        function batalEditGuru() { editIdxGuru = -1; document.getElementById('titleFormGuru').innerText = "Tambah Data Guru & Mapel"; document.getElementById('btnBatalGuru').style.display = "none"; document.getElementById('admKodeGuru').value = ""; document.getElementById('admMapelGuru').value = ""; document.getElementById('admNamaGuru').value = ""; }
+        function hapusGuru(idx) { 
+            if(confirm("Hapus data guru ini?")) { 
+                logPerubahan.guru.push(`🗑️ <b>Hapus:</b> Guru ${dbGuru[idx].nama}`);
+                dbGuru.splice(idx, 1); renderGuru(); 
+            } 
+        }
+
+        // CRUD ROSTER
+        function simpanRoster() {
+            let h = document.getElementById('admRosterHari').value, j = document.getElementById('admRosterJam').value;
+            let v1 = document.getElementById('admRosterVII1').value, v2 = document.getElementById('admRosterVII2').value;
+            let v3 = document.getElementById('admRosterVII3').value, v4 = document.getElementById('admRosterVII4').value, v5 = document.getElementById('admRosterVII5').value;
+            
+            if(editIdxRoster === -1) { 
+                dbRoster.push({hari:h, jam:j, v1:v1, v2:v2, v3:v3, v4:v4, v5:v5}); 
+                logPerubahan.roster.push(`➕ <b>Tambah:</b> Jadwal ${h} Jam ke-${j}`);
+            } else { 
+                logPerubahan.roster.push(`✏️ <b>Edit:</b> Jadwal ${h} Jam ke-${j} diperbarui`);
+                dbRoster[editIdxRoster] = {hari:h, jam:j, v1:v1, v2:v2, v3:v3, v4:v4, v5:v5}; 
+                batalEditRoster(); 
+            }
+            document.getElementById('admRosterVII1').value=""; document.getElementById('admRosterVII2').value=""; document.getElementById('admRosterVII3').value=""; document.getElementById('admRosterVII4').value=""; document.getElementById('admRosterVII5').value="";
+            renderRoster();
         }
         function editRoster(idx) {
-            editIndexRoster = idx; let d = dataRoster[idx];
-            document.getElementById('admRosterHari').value = d.hari; document.getElementById('admRosterJam').value = d.jam;
-            document.getElementById('admRosterVII1').value = d.v1; document.getElementById('admRosterVII2').value = d.v2;
-            document.getElementById('admRosterVII3').value = d.v3; document.getElementById('admRosterVII4').value = d.v4; document.getElementById('admRosterVII5').value = d.v5;
-            document.getElementById('titleFormRoster').innerText = "Edit Roster (" + d.hari + " Jam ke-" + d.jam + ")";
-            document.getElementById('btnBatalRoster').style.display = "inline-block";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            editIdxRoster = idx; let dt = dbRoster[idx];
+            document.getElementById('admRosterHari').value = dt.hari; document.getElementById('admRosterJam').value = dt.jam;
+            document.getElementById('admRosterVII1').value = dt.v1; document.getElementById('admRosterVII2').value = dt.v2;
+            document.getElementById('admRosterVII3').value = dt.v3; document.getElementById('admRosterVII4').value = dt.v4; document.getElementById('admRosterVII5').value = dt.v5;
+            document.getElementById('titleFormRoster').innerText = "✏️ Mode Edit Roster"; document.getElementById('btnBatalRoster').style.display = "inline-block";
+            window.scrollTo({top:0, behavior:'smooth'});
         }
-        function hapusRoster(idx) {
-            if(confirm("Yakin ingin menghapus roster " + dataRoster[idx].hari + " Jam ke-" + dataRoster[idx].jam + "?")) { dataRoster.splice(idx, 1); renderRoster(); }
-        }
-        function resetFormRoster() {
-            editIndexRoster = -1; 
-            document.getElementById('admRosterVII1').value = ""; document.getElementById('admRosterVII2').value = ""; document.getElementById('admRosterVII3').value = ""; document.getElementById('admRosterVII4').value = ""; document.getElementById('admRosterVII5').value = "";
-            document.getElementById('titleFormRoster').innerText = "Tambah Jadwal Roster Pelajaran"; document.getElementById('btnBatalRoster').style.display = "none";
+        function batalEditRoster() { editIdxRoster = -1; document.getElementById('titleFormRoster').innerText = "Tambah Jadwal Roster Pelajaran"; document.getElementById('btnBatalRoster').style.display = "none"; document.getElementById('admRosterVII1').value=""; document.getElementById('admRosterVII2').value=""; document.getElementById('admRosterVII3').value=""; document.getElementById('admRosterVII4').value=""; document.getElementById('admRosterVII5').value=""; }
+        function hapusRoster(idx) { 
+            if(confirm("Hapus jadwal ini?")) { 
+                logPerubahan.roster.push(`🗑️ <b>Hapus:</b> Jadwal ${dbRoster[idx].hari} Jam ke-${dbRoster[idx].jam}`);
+                dbRoster.splice(idx, 1); renderRoster(); 
+            } 
         }
 
-        // ==================== FUNGSI DOWNLOAD CSV ====================
-        function downloadCSV(type) {
-            let csvContent = "data:text/csv;charset=utf-8,";
-            let filename = "";
-
-            if (type === 'siswa') {
-                filename = "murid.csv";
-                csvContent += "Kelas,No,Nama,L/P\n";
-                dataSiswa.forEach(row => { csvContent += `${row.kelas},${row.no},${row.nama},${row.lp}\n`; });
-            } else if (type === 'guru') {
-                filename = "guru.csv";
-                csvContent += "Kode,Mata Pelajaran,Nama Guru\n";
-                dataGuru.forEach(row => { csvContent += `${row.kode},${row.mapel},${row.namaGuru}\n`; });
-            } else if (type === 'roster') {
-                filename = "roster.csv";
-                csvContent += "Hari,Jam,VII-1,VII-2,VII-3,VII-4,VII-5\n";
-                dataRoster.forEach(row => { csvContent += `${row.hari},${row.jam},${row.v1},${row.v2},${row.v3},${row.v4},${row.v5}\n`; });
+        // SISTEM POP-UP DAN DOWNLOAD
+        function previewDownload(tipe, filename, headerStr, dataArr, rowMapper) {
+            if(dataArr.length === 0) return alert("Data kosong, tidak ada yang bisa diunduh.");
+            
+            let listHtml = "<ul>";
+            if (logPerubahan[tipe].length === 0) {
+                listHtml += "<li style='color:#64748b;'><i>Belum ada data yang ditambah/diedit/dihapus sejak halaman dimuat. (Akan mengunduh data sesuai aslinya)</i></li>";
+            } else {
+                logPerubahan[tipe].forEach(log => { listHtml += `<li>${log}</li>`; });
             }
+            listHtml += "</ul>";
+            
+            document.getElementById("modalDeskripsi").innerHTML = `Anda akan mengunduh pembaruan untuk file <b>${filename}</b>. Riwayat perubahan yang belum di-download:`;
+            document.getElementById("listPerubahan").innerHTML = listHtml;
+            document.getElementById("modalDownload").style.display = "flex";
+            
+            tipeAktifDownload = tipe;
+            aksiDownloadTertunda = () => {
+                let csvContent = headerStr + "\n";
+                dataArr.forEach(item => { csvContent += rowMapper(item) + "\n"; });
+                let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                let link = document.createElement("a");
+                link.href = URL.createObjectURL(blob); link.download = filename; link.click();
+                
+                // Bersihkan log setelah berhasil didownload
+                logPerubahan[tipeAktifDownload] = [];
+            };
+        }
 
-            // Eksekusi download
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", filename);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        function tutupModal() {
+            document.getElementById("modalDownload").style.display = "none";
+            aksiDownloadTertunda = null;
+        }
 
-            alert(`✅ File ${filename} berhasil diunduh!\n\nSelanjutnya, buka GitHub Anda dan "Upload file" untuk me-replace ${filename} lama dengan yang baru ini.`);
+        function eksekusiDownload() {
+            if (aksiDownloadTertunda) aksiDownloadTertunda();
+            tutupModal();
         }
     </script>
 </body>

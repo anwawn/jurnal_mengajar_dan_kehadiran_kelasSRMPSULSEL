@@ -2,7 +2,13 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- TAG PWA (Progressive Web App) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#4f46e5">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <title>Jurnal Harian Digital SRT 3 Provinsi Sul-Sel</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -41,6 +47,14 @@
         .guru-piket-container { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; max-height: 150px; overflow-y: auto; background: #fff; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
         .guru-checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; }
         .guru-checkbox-item input { cursor: pointer; width: 16px; height: 16px; }
+        
+        /* SEARCH BAR & MODE RINGAN CSS */
+        .search-bar { width: 100%; padding: 10px; font-size: 0.85rem; border: 1px solid var(--primary); border-radius: 8px; margin-bottom: 8px; background: #fff; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1); transition: all 0.2s; }
+        .search-bar:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
+        .toggle-ringan { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: #b45309; background: #fef3c7; padding: 10px; border-radius: 8px; margin-top: 6px; font-weight: 600; cursor: pointer; border: 1px solid #fde68a; transition: background 0.2s; }
+        .toggle-ringan:hover { background: #fde68a; }
+        .toggle-ringan input { width: 16px; height: 16px; margin: 0; cursor: pointer; }
+
         .siswa-list-container { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; max-height: 450px; overflow-y: auto; padding-right: 2px; border-top: 1px solid #f1f5f9; padding-top: 8px; }
         .siswa-card { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 10px; gap: 10px; }
         .siswa-info { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; }
@@ -132,6 +146,10 @@
                 <div class="form-group full-width">
                     <label>Ambil Bukti Foto Kelas</label>
                     <input type="file" id="fotoKelas" accept="image/*">
+                    <label class="toggle-ringan">
+                        <input type="checkbox" id="modeRinganKBM">
+                        <span>⚡ <b>Mode Kamera Ringan</b> (Centang jika HP lambat/error)</span>
+                    </label>
                     <div id="loadingFotoKelas" class="info-foto">⏳ Sedang memproses foto...</div>
                     <canvas id="canvasPreview" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
                 </div>
@@ -141,6 +159,9 @@
                 <span>Daftar Murid:</span>
                 <button class="btn-hadir-compact" onclick="hadirSemua()">⚡ Set Semua Hadir</button>
             </div>
+
+            <!-- SEARCH BAR KBM -->
+            <input type="text" id="cariKBM" class="search-bar" placeholder="🔍 Cari nama siswa (ketik di sini)..." onkeyup="cariNama(this, 'tabelSiswa')">
 
             <div class="siswa-list-container" id="tabelSiswa">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
@@ -182,6 +203,9 @@
                 <button class="btn-hadir-compact" onclick="hadirSemuaApel()">⚡ Set Semua Hadir</button>
             </div>
             
+            <!-- SEARCH BAR APEL -->
+            <input type="text" id="cariApel" class="search-bar" placeholder="🔍 Cari nama siswa (ketik di sini)..." onkeyup="cariNama(this, 'tabelSiswaApel')">
+
             <div class="siswa-list-container" id="tabelSiswaApel">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
             </div>
@@ -193,20 +217,23 @@
                 <div id="listAntreanApelContainer"></div>
             </div>
 
-            <!-- BAGIAN UPLOAD FOTO APEL -->
             <div class="form-group full-width" style="margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px;">
                 <label style="color: #059669; font-weight:bold;">📸 Ambil 1 Bukti Foto Apel (Untuk Semua Kelas di Antrean)</label>
                 <input type="file" id="fotoApel" accept="image/*">
+                <label class="toggle-ringan">
+                    <input type="checkbox" id="modeRinganApel">
+                    <span>⚡ <b>Mode Kamera Ringan</b> (Centang jika HP lambat/error)</span>
+                </label>
                 <div id="loadingFotoApel" class="info-foto">⏳ Sedang memproses foto...</div>
                 <canvas id="canvasPreviewApel" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
             </div>
 
             <button id="btnSimpanApel" class="btn-action" onclick="kirimSemuaBatchApel()" style="background-color: #10b981; margin-top: 15px;">🚀 Kirim Semua Laporan Apel (<span id="counterKirimApel">0</span>)</button>
         </div>
-        <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033</div>
+        <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033<br><span style="font-size: 0.6rem; color:#cbd5e1;">(Fitur PWA, Auto-Save, Low-Res Mode, & Live Search Aktif)</span></div>
     </div>
 
-    <!-- MODAL REKAP TAMPILAN BARU TANPA ANGKA -->
+    <!-- MODAL REKAP -->
     <div class="modal-overlay" id="modalRekap">
         <div class="modal-content">
             <div class="modal-header">
@@ -217,7 +244,7 @@
             <div style="display:flex; gap:8px; flex-direction:column;">
                 <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">Rekap KBM Hari Ini</button>
                 <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">Rekap Apel Hari Ini</button>
-                <button class="btn-rekap" style="background:#0284c7;" onclick="kirimRequestRekap('siswa', 'hari_ini', this)">Kesimpulan Kehadiran Siswa Hari ini</button>
+                <button class="btn-rekap" style="background:#0284c7;" onclick="kirimRequestRekap('siswa', 'hari_ini', this)">Kesimpulan Kehadiran Siswa</button>
             </div>
 
             <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
@@ -262,10 +289,26 @@
         };
 
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let base64FotoApel = ""; let antreanApel = [];     
+        let draftKBM = JSON.parse(localStorage.getItem('srt3_draft_kbm') || "{}"); // AUTO-SAVE KBM
 
-        // LOGIKA CONVERT FOTO KBM
+        // FUNGSI PENCARIAN SISWA (SEARCH BAR)
+        function cariNama(inputEl, listId) {
+            let filter = inputEl.value.toLowerCase();
+            let cards = document.querySelectorAll('#' + listId + ' .siswa-card');
+            cards.forEach(card => {
+                let nama = card.querySelector('.siswa-nama').innerText.toLowerCase();
+                if(nama.includes(filter)) card.style.display = "flex";
+                else card.style.display = "none";
+            });
+        }
+
+        // LOGIKA CONVERT FOTO KBM + MODE RINGAN
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
+            
+            let isRingan = document.getElementById('modeRinganKBM').checked;
+            let targetMaxWidth = isRingan ? 400 : 800; // Mode Ringan sangat hemat memori
+            let targetQuality = isRingan ? 0.3 : 0.6;
             
             let btn = document.getElementById('btnSimpanKelas');
             let info = document.getElementById('loadingFotoKelas');
@@ -277,15 +320,15 @@
                 img.onload = function() {
                     try {
                         let canvas = document.getElementById('canvasPreview'); let ctx = canvas.getContext('2d');
-                        let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
+                        let scaleSize = targetMaxWidth / img.width;
                         if(scaleSize > 1) scaleSize = 1; 
                         canvas.width = img.width * scaleSize; canvas.height = img.height * scaleSize;
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        base64Foto = canvas.toDataURL('image/jpeg', 0.6);
+                        base64Foto = canvas.toDataURL('image/jpeg', targetQuality);
                         canvas.style.display = "block";
                         info.innerText = "✅ Foto siap dikirim!"; info.style.color = "#10b981";
                     } catch(err) {
-                        alert("⚠️ Gagal memproses foto. Ukuran gambar mungkin terlalu berat. Mohon gunakan aplikasi kamera bawaan HP (Bukan TimeMark).");
+                        alert("⚠️ Gagal memproses foto. Ukuran gambar mungkin terlalu berat. Mohon gunakan aplikasi kamera bawaan HP.");
                         info.innerText = "❌ Foto gagal diproses."; info.style.color = "#ef4444";
                     } finally {
                         btn.disabled = false; btn.innerText = "Simpan Jurnal Kelas";
@@ -300,9 +343,13 @@
             reader.readAsDataURL(file);
         });
 
-        // LOGIKA CONVERT FOTO APEL
+        // LOGIKA CONVERT FOTO APEL + MODE RINGAN
         document.getElementById('fotoApel').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
+            
+            let isRingan = document.getElementById('modeRinganApel').checked;
+            let targetMaxWidth = isRingan ? 400 : 800;
+            let targetQuality = isRingan ? 0.3 : 0.6;
             
             let btn = document.getElementById('btnSimpanApel');
             let info = document.getElementById('loadingFotoApel');
@@ -314,11 +361,11 @@
                 img.onload = function() {
                     try {
                         let canvas = document.getElementById('canvasPreviewApel'); let ctx = canvas.getContext('2d');
-                        let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
+                        let scaleSize = targetMaxWidth / img.width;
                         if(scaleSize > 1) scaleSize = 1; 
                         canvas.width = img.width * scaleSize; canvas.height = img.height * scaleSize;
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        base64FotoApel = canvas.toDataURL('image/jpeg', 0.6);
+                        base64FotoApel = canvas.toDataURL('image/jpeg', targetQuality);
                         canvas.style.display = "block";
                         info.innerText = "✅ Foto siap dikirim!"; info.style.color = "#10b981";
                     } catch(err) {
@@ -347,9 +394,7 @@
 
         async function loadCSVData() {
             try {
-                const [resMurid, resGuru, resRoster] = await Promise.all([
-                    fetch('murid.csv'), fetch('guru.csv'), fetch('roster.csv')
-                ]);
+                const [resMurid, resGuru, resRoster] = await Promise.all([ fetch('murid.csv'), fetch('guru.csv'), fetch('roster.csv') ]);
                 dataMurid = parseCSV(await resMurid.text()); dataGuru = parseCSV(await resGuru.text()); dataRoster = parseCSV(await resRoster.text());
                 renderCheckboxGuruPiket(); populateMapelDropdown();
             } catch (err) { alert("Gagal memuat database CSV."); }
@@ -400,18 +445,35 @@
             }
         }
 
+        // FUNGSI AUTO-SAVE (DRAFT) UNTUK KBM
+        function simpanStateDropdownKBM() {
+            let kelasAktif = document.getElementById('pilihKelas').value; if (!kelasAktif) return;
+            let states = {};
+            document.querySelectorAll('#tabelSiswa .siswa-card').forEach(card => {
+                let nama = card.querySelector('.nama-siswa').innerText; 
+                let status = card.querySelector('.status-kehadiran').value; 
+                states[nama] = status;
+            });
+            draftKBM[kelasAktif] = states;
+            localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM));
+        }
+
         function tampilkanSiswa() {
             let kelas = document.getElementById('pilihKelas').value; let container = document.getElementById('tabelSiswa'); container.innerHTML = "";
+            document.getElementById('cariKBM').value = ""; // Reset Search bar
             if (!kelas) { container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>"; return; }
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
+            let savedStates = draftKBM[kelas] || {}; // Muat dari Draft
+            
             filterMurid.forEach(m => {
+                let statusAwal = savedStates[m.Nama] || "Hadir";
                 let card = document.createElement('div'); card.className = 'siswa-card';
-                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran"><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Sakit">Sakit</option><option value="Bolos">Bolos</option><option value="Keluar">Keluar</option><option value="Pulang">Pulang</option></select>`;
+                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran" onchange="simpanStateDropdownKBM()"><option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option><option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option><option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option><option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option><option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option><option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option></select>`;
                 container.appendChild(card);
             });
         }
 
-        function hadirSemua() { document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir"); }
+        function hadirSemua() { document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir"); simpanStateDropdownKBM(); }
 
         function simpanJurnalKelas() {
             let kelas = document.getElementById('pilihKelas').value;
@@ -439,9 +501,14 @@
                 document.getElementById('deskripsiMateri').value = ""; document.getElementById('fotoKelas').value = ""; document.getElementById('canvasPreview').style.display = "none"; base64Foto = "";
                 document.getElementById('loadingFotoKelas').style.display = "none";
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
+                
+                // Hapus Draft setelah berhasil dikirim
+                delete draftKBM[kelas]; localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM));
+                tampilkanSiswa(); // Refresh daftar siswa
             }).catch(() => {
                 alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
+                delete draftKBM[kelas]; localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM)); tampilkanSiswa();
             });
         }
 
@@ -459,6 +526,7 @@
 
         function tampilkanSiswaApel() {
             let kelas = document.getElementById('pilihKelasApel').value; let container = document.getElementById('tabelSiswaApel'); container.innerHTML = "";
+            document.getElementById('cariApel').value = ""; // Reset Search bar
             if (!kelas) { container.innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih kelas terlebih dahulu</div>"; return; }
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas); let savedStates = temporaryStatesApel[kelas] || {};
             filterMurid.forEach(m => {
@@ -489,7 +557,6 @@
             alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
         }
 
-        // LOGIKA BARU: TOMBOL EDIT PADA ANTREAN APEL
         function renderPanelAntreanApel() {
             let panel = document.getElementById('panelAntreanApel'); let container = document.getElementById('listAntreanApelContainer');
             document.getElementById('jumlahAntreApel').innerText = antreanApel.length; document.getElementById('counterKirimApel').innerText = antreanApel.length;
@@ -508,16 +575,9 @@
 
         function editAntreanItemApel(index) {
             let item = antreanApel[index];
-            document.getElementById('jenisApel').value = item.jenis_apel;
-            document.getElementById('pilihKelasApel').value = item.kelas;
-            document.getElementById('catatanApel').value = item.laporan;
-
-            // Masukkan kembali status murid yang terantre ke sistem edit sementara
-            let states = {};
-            item.kehadiran.forEach(k => { states[k.nama] = k.status; });
-            temporaryStatesApel[item.kelas] = states;
-
-            gantiKelasApel(); // Tampilkan tabel berdasarkan status yang di-load
+            document.getElementById('jenisApel').value = item.jenis_apel; document.getElementById('pilihKelasApel').value = item.kelas; document.getElementById('catatanApel').value = item.laporan;
+            let states = {}; item.kehadiran.forEach(k => { states[k.nama] = k.status; }); temporaryStatesApel[item.kelas] = states;
+            gantiKelasApel(); 
             alert(`Data apel kelas ${item.kelas} berhasil dimuat!\n\nSilakan perbaiki data kehadiran murid di bawah, lalu klik tombol "Simpan & Antre Apel Kelas Ini" lagi untuk memperbarui datanya.`);
         }
 
@@ -527,37 +587,26 @@
 
         async function kirimSemuaBatchApel() {
             if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
-            
-            if (!base64FotoApel || base64FotoApel === "") { 
-                if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN ATAU MASIH DIPROSES!\n\nKirim laporan apel tanpa foto?")) return; 
-            } else {
-                if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel beserta FOTO ke Spreadsheet & Telegram?")) return;
-            }
+            if (!base64FotoApel || base64FotoApel === "") { if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN ATAU MASIH DIPROSES!\n\nKirim laporan apel tanpa foto?")) return; } 
+            else { if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel beserta FOTO ke Spreadsheet & Telegram?")) return; }
 
             let btn = document.getElementById('btnSimpanApel'); btn.innerText = "Mengirim..."; btn.disabled = true;
-            
             let payloadBatch = { tipe: "jurnal_apel_batch", daftar_kelas: antreanApel, fotoBase64: base64FotoApel };
             
             try {
                 await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadBatch) });
-                alert("Semua Laporan Apel Berhasil Terkirim!");
-                resetFormApel();
+                alert("Semua Laporan Apel Berhasil Terkirim!"); resetFormApel();
             } catch (err) {
-                alert("Semua Laporan Apel Berhasil Terkirim!");
-                resetFormApel();
+                alert("Semua Laporan Apel Berhasil Terkirim!"); resetFormApel();
             } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (0)"; btn.disabled = false; }
         }
 
         function resetFormApel() {
             antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
-            document.getElementById('fotoApel').value = "";
-            document.getElementById('canvasPreviewApel').style.display = "none";
-            document.getElementById('loadingFotoApel').style.display = "none";
-            base64FotoApel = "";
-            document.getElementById('catatanApel').value = "";
+            document.getElementById('fotoApel').value = ""; document.getElementById('canvasPreviewApel').style.display = "none";
+            document.getElementById('loadingFotoApel').style.display = "none"; base64FotoApel = ""; document.getElementById('catatanApel').value = "";
         }
 
-        // FUNGSI REQUEST REKAP PDF
         function kirimRequestRekap(jenis, rentang, btnContext) {
             let payload = { tipe: "request_rekap", jenis: jenis, rentang: rentang };
             if (rentang === 'custom') {
@@ -571,13 +620,8 @@
             }
             let btnAsli = btnContext.innerText; btnContext.innerText = "Memproses..."; btnContext.disabled = true;
             fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-            .then(() => { 
-                alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); 
-                document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false;
-            }).catch(() => { 
-                alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); 
-                document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false;
-            });
+            .then(() => { alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false; })
+            .catch(() => { alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false; });
         }
     </script>
 </body>

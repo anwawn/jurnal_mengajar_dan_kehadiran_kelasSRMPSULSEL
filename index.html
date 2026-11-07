@@ -291,14 +291,17 @@
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let base64FotoApel = ""; let antreanApel = [];     
         let draftKBM = JSON.parse(localStorage.getItem('srt3_draft_kbm') || "{}"); // AUTO-SAVE KBM
 
-        // FUNGSI PENCARIAN SISWA (SEARCH BAR)
+        // FUNGSI PENCARIAN SISWA (SEARCH BAR) Yg Sudah Diperbaiki
         function cariNama(inputEl, listId) {
             let filter = inputEl.value.toLowerCase();
             let cards = document.querySelectorAll('#' + listId + ' .siswa-card');
             cards.forEach(card => {
-                let nama = card.querySelector('.siswa-nama').innerText.toLowerCase();
-                if(nama.includes(filter)) card.style.display = "flex";
-                else card.style.display = "none";
+                let elementNama = card.querySelector('.nama-siswa');
+                if (elementNama) {
+                    let nama = elementNama.innerText.toLowerCase();
+                    if(nama.includes(filter)) card.style.display = "flex";
+                    else card.style.display = "none";
+                }
             });
         }
 
@@ -450,9 +453,12 @@
             let kelasAktif = document.getElementById('pilihKelas').value; if (!kelasAktif) return;
             let states = {};
             document.querySelectorAll('#tabelSiswa .siswa-card').forEach(card => {
-                let nama = card.querySelector('.nama-siswa').innerText; 
-                let status = card.querySelector('.status-kehadiran').value; 
-                states[nama] = status;
+                let elementNama = card.querySelector('.nama-siswa');
+                if(elementNama){
+                    let nama = elementNama.innerText; 
+                    let status = card.querySelector('.status-kehadiran').value; 
+                    states[nama] = status;
+                }
             });
             draftKBM[kelasAktif] = states;
             localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM));
@@ -481,8 +487,11 @@
             if (!base64Foto || base64Foto === "") { if (!confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nKirim laporan tanpa foto?")) return; }
             let absensi = []; let nonHadir = []; let cards = document.querySelectorAll('#tabelSiswa .siswa-card');
             cards.forEach(card => {
-                let nama = card.querySelector('.nama-siswa').innerText; let status = card.querySelector('.status-kehadiran').value;
-                absensi.push({ nama: nama, status: status }); if (status !== "Hadir") { nonHadir.push(`- ${nama} (${status})`); }
+                let elementNama = card.querySelector('.nama-siswa');
+                if(elementNama){
+                    let nama = elementNama.innerText; let status = card.querySelector('.status-kehadiran').value;
+                    absensi.push({ nama: nama, status: status }); if (status !== "Hadir") { nonHadir.push(`- ${nama} (${status})`); }
+                }
             });
             let confirmMsg = nonHadir.length > 0 ? "DAFTAR MURID NON-HADIR:\n" + nonHadir.join("\n") + "\n\nKirim data absensi ini?" : "Semua murid berstatus HADIR. Kirim data?";
             if (!confirm(confirmMsg)) return;
@@ -517,7 +526,10 @@
             let kelasAktif = document.getElementById('pilihKelasApel').value; if (!kelasAktif) return;
             let states = {};
             document.querySelectorAll('#tabelSiswaApel .siswa-card').forEach(card => {
-                let nama = card.querySelector('.nama-siswa-apel').innerText; let status = card.querySelector('.status-kehadiran-apel').value; states[nama] = status;
+                let elementNama = card.querySelector('.nama-siswa');
+                if(elementNama){
+                    let nama = elementNama.innerText; let status = card.querySelector('.status-kehadiran-apel').value; states[nama] = status;
+                }
             });
             temporaryStatesApel[kelasAktif] = states;
         }
@@ -531,7 +543,7 @@
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas); let savedStates = temporaryStatesApel[kelas] || {};
             filterMurid.forEach(m => {
                 let statusAwal = savedStates[m.Nama] || "Hadir"; let card = document.createElement('div'); card.className = 'siswa-card';
-                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa nama-siswa-apel">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran-apel" onchange="simpanStateDropdownApel()"><option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option><option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option><option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option><option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option><option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option><option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option></select>`;
+                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran-apel" onchange="simpanStateDropdownApel()"><option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option><option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option><option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option><option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option><option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option><option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option></select>`;
                 container.appendChild(card);
             });
         }

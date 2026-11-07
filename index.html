@@ -161,7 +161,7 @@
             </div>
 
             <!-- SEARCH BAR KBM -->
-            <input type="text" id="cariKBM" class="search-bar" placeholder="🔍 Cari nama Murid (ketik di sini)..." onkeyup="cariNama(this, 'tabelSiswa')">
+            <input type="text" id="cariKBM" class="search-bar" placeholder="🔍 Cari nama siswa (ketik di sini)..." onkeyup="cariNama(this, 'tabelSiswa')">
 
             <div class="siswa-list-container" id="tabelSiswa">
                 <div style="text-align:center; color: var(--text-muted); padding: 20px;">Pilih kelas terlebih dahulu</div>
@@ -230,7 +230,7 @@
 
             <button id="btnSimpanApel" class="btn-action" onclick="kirimSemuaBatchApel()" style="background-color: #10b981; margin-top: 15px;">🚀 Kirim Semua Laporan Apel (<span id="counterKirimApel">0</span>)</button>
         </div>
-        <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033<br><span style="font-size: 0.6rem; color:#cbd5e1;">(Fitur PWA, Auto-Save, Low-Res Mode, & Live Search Aktif)</span></div>
+        <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033<br><span style="font-size: 0.6rem; color:#cbd5e1;">(Fitur PWA, Auto-Save, Low-Res Mode, Live Search, & Offline Safe)</span></div>
     </div>
 
     <!-- MODAL REKAP -->
@@ -291,7 +291,7 @@
         let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let base64FotoApel = ""; let antreanApel = [];     
         let draftKBM = JSON.parse(localStorage.getItem('srt3_draft_kbm') || "{}"); // AUTO-SAVE KBM
 
-        // FUNGSI PENCARIAN SISWA (SEARCH BAR) Yg Sudah Diperbaiki
+        // FUNGSI PENCARIAN SISWA (SEARCH BAR)
         function cariNama(inputEl, listId) {
             let filter = inputEl.value.toLowerCase();
             let cards = document.querySelectorAll('#' + listId + ' .siswa-card');
@@ -481,6 +481,7 @@
 
         function hadirSemua() { document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir"); simpanStateDropdownKBM(); }
 
+        // MENGIRIM KBM DENGAN PENGAMAN JARINGAN OFFLINE
         function simpanJurnalKelas() {
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("Pilih kelas terlebih dahulu!");
@@ -504,20 +505,23 @@
             };
 
             let btn = document.getElementById('btnSimpanKelas'); btn.innerText = "Mengirim..."; btn.disabled = true;
+            
             fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
             .then(() => {
-                alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
+                alert("✅ Jurnal Kelas " + kelas + " Berhasil Disimpan!");
                 document.getElementById('deskripsiMateri').value = ""; document.getElementById('fotoKelas').value = ""; document.getElementById('canvasPreview').style.display = "none"; base64Foto = "";
                 document.getElementById('loadingFotoKelas').style.display = "none";
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
                 
-                // Hapus Draft setelah berhasil dikirim
+                // Hapus Draft HANYA setelah berhasil dikirim
                 delete draftKBM[kelas]; localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM));
                 tampilkanSiswa(); // Refresh daftar siswa
-            }).catch(() => {
-                alert("Jurnal Kelas " + kelas + " Berhasil Disimpan!");
+            }).catch((err) => {
+                // LOGIKA BARU: Jika gagal karena jaringan terputus (Error)
+                alert("⚠️ GAGAL MENGIRIM DATA!\n\nKoneksi internet Anda terputus atau tidak stabil. Data laporan dan foto Anda AMAN dan tidak dihapus.\n\nSilakan cari jaringan yang lebih bagus, lalu klik tombol 'Simpan Jurnal Kelas' lagi.");
+                
+                // Kembalikan tombol agar bisa di-klik ulang, TANPA menghapus isi form
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
-                delete draftKBM[kelas]; localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM)); tampilkanSiswa();
             });
         }
 
@@ -543,7 +547,7 @@
             let filterMurid = dataMurid.filter(m => m.Kelas === kelas); let savedStates = temporaryStatesApel[kelas] || {};
             filterMurid.forEach(m => {
                 let statusAwal = savedStates[m.Nama] || "Hadir"; let card = document.createElement('div'); card.className = 'siswa-card';
-                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran-apel" onchange="simpanStateDropdownApel()"><option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option><option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option><option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option><option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option><option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option><option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option></select>`;
+                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa nama-siswa-apel">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran-apel" onchange="simpanStateDropdownApel()"><option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option><option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option><option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option><option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option><option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option><option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option></select>`;
                 container.appendChild(card);
             });
         }
@@ -597,6 +601,7 @@
 
         function muatAntreanApelDariLocalStorage() { let savedApel = localStorage.getItem('srt3_antrean_apel'); if (savedApel) { try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){} } }
 
+        // MENGIRIM APEL DENGAN PENGAMAN JARINGAN OFFLINE
         async function kirimSemuaBatchApel() {
             if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
             if (!base64FotoApel || base64FotoApel === "") { if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN ATAU MASIH DIPROSES!\n\nKirim laporan apel tanpa foto?")) return; } 
@@ -607,10 +612,18 @@
             
             try {
                 await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadBatch) });
-                alert("Semua Laporan Apel Berhasil Terkirim!"); resetFormApel();
+                alert("✅ Semua Laporan Apel Berhasil Terkirim!"); 
+                resetFormApel(); // HANYA reset form kalau berhasil
             } catch (err) {
-                alert("Semua Laporan Apel Berhasil Terkirim!"); resetFormApel();
-            } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (0)"; btn.disabled = false; }
+                // LOGIKA BARU: Jika gagal karena jaringan terputus (Error)
+                alert("⚠️ GAGAL MENGIRIM DATA APEL!\n\nKoneksi internet Anda terputus atau tidak stabil. Data " + antreanApel.length + " antrean kelas dan foto apel Anda AMAN dan tidak dihapus.\n\nSilakan cari jaringan yang lebih bagus, lalu klik tombol 'Kirim Semua Laporan Apel' lagi.");
+                
+                // Form, antrean, dan foto tetap utuh, tidak di-reset.
+            } finally { 
+                // Kembalikan text tombol sesuai sisa antrean (kalau gagal kan tetap utuh)
+                btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; 
+                btn.disabled = false; 
+            }
         }
 
         function resetFormApel() {
@@ -631,9 +644,18 @@
                 payload.mapel_terpilih = mapelKetik;
             }
             let btnAsli = btnContext.innerText; btnContext.innerText = "Memproses..."; btnContext.disabled = true;
+            
+            // PENGAMAN JARINGAN UNTUK REQUEST REKAP PDF
             fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-            .then(() => { alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false; })
-            .catch(() => { alert("Request Rekap Diproses! Silakan periksa grup Telegram Anda."); document.getElementById('modalRekap').style.display = 'none'; btnContext.innerText = btnAsli; btnContext.disabled = false; });
+            .then(() => { 
+                alert("✅ Request Rekap Diproses! Silakan periksa grup Telegram Anda."); 
+                document.getElementById('modalRekap').style.display = 'none'; 
+                btnContext.innerText = btnAsli; btnContext.disabled = false; 
+            })
+            .catch(() => { 
+                alert("⚠️ Gagal mengirim request rekap. Koneksi internet Anda terputus. Silakan periksa jaringan dan coba lagi."); 
+                btnContext.innerText = btnAsli; btnContext.disabled = false; 
+            });
         }
     </script>
 </body>

@@ -30,6 +30,7 @@
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        
         .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
         .form-group { display: flex; flex-direction: column; gap: 5px; }
         .full-width { grid-column: span 2; }
@@ -48,7 +49,6 @@
         .guru-checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; }
         .guru-checkbox-item input { cursor: pointer; width: 16px; height: 16px; }
         
-        /* SEARCH BAR & MODE RINGAN CSS */
         .search-bar { width: 100%; padding: 10px; font-size: 0.85rem; border: 1px solid var(--primary); border-radius: 8px; margin-bottom: 8px; background: #fff; box-shadow: 0 2px 4px rgba(79, 70, 229, 0.1); transition: all 0.2s; }
         .search-bar:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2); }
         .toggle-ringan { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; color: #b45309; background: #fef3c7; padding: 10px; border-radius: 8px; margin-top: 6px; font-weight: 600; cursor: pointer; border: 1px solid #fde68a; transition: background 0.2s; }
@@ -73,40 +73,46 @@
         
         .queue-panel { background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px; }
         .queue-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 0.8rem; }
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: #fff; padding: 20px; border-radius: 14px; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+        .modal-content { background: #ffffff; padding: 22px; border-radius: 12px; width: 90%; max-width: 480px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .footer-credit { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
         .info-foto { font-size: 0.75rem; color: #d97706; margin-top: 5px; font-weight: 600; display: none; }
+        
         @media (max-width: 480px) { body { padding: 6px; } .container { padding: 12px; } .form-grid { grid-template-columns: 1fr; gap: 10px; } .full-width { grid-column: span 1; } .guru-piket-container { grid-template-columns: 1fr; } }
         
-        /* CSS TAMBAHAN UNTUK TAB MODAL & TOMBOL REKAP */
+        /* CSS TAB & REKAP CARD (KINI SERAGAM) */
         .modal-tab-container { display: flex; gap: 6px; margin-bottom: 15px; background: #f1f5f9; padding: 4px; border-radius: 8px; }
-        .modal-tab-btn { flex: 1; padding: 8px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 6px; text-align: center; }
+        .modal-tab-btn { flex: 1; padding: 8px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 6px; text-align: center; transition: all 0.2s; }
         .modal-tab-btn.active { background: #ffffff; color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
         .modal-tab-content { display: none; }
-        .modal-tab-content.active { display: block; }
+        .modal-tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
         
         .rekap-option-card { background: #f8fafc; border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
         .rekap-option-card:hover { border-color: var(--primary); background: #eef2ff; }
-        .rekap-title { font-weight: 600; font-size: 0.85rem; color: var(--primary); }
+        .rekap-title { font-weight: 600; font-size: 0.85rem; color: var(--primary); display: flex; align-items: center; gap: 6px;}
         .rekap-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
+        
+        /* Dropdown khusus di dalam modal */
+        .modal-select { width: 100%; padding: 8px 10px; font-size: 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; background: #fff; margin-top: 8px; outline: none; }
+        .modal-select:focus { border-color: var(--primary); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- HEADER UTAMA SESUAI FILE ASLI -->
+        <!-- HEADER UTAMA -->
         <div class="header-top">
             <h1>Jurnal Harian Digital SRT 3</h1>
             <div class="header-buttons">
                 <a href="admin.html" class="btn-admin-link">⚙️ Admin</a>
-                <button class="btn-request" onclick="document.getElementById('modalRekap').style.display='flex'">📄 Request Rekap</button>
+                <button class="btn-request" onclick="bukaModalRekapUtama()">📄 Request Rekap</button>
                 <a href="https://docs.google.com/spreadsheets/d/1lC0IUTgLyI-mlk_Ft-poQVM8b3gnv8tjXox7op7MG9k/edit" target="_blank" class="btn-sheet-link">📊 Sheet</a>
             </div>
         </div>
         
-        <!-- KONTEN UTAMA APLIKASI (TIDAK ADA PERUBAHAN) -->
+        <!-- KONTEN UTAMA APLIKASI -->
         <div class="tab-container">
             <button class="tab-btn active" onclick="switchTab('jurnalKelas', this)">📚 Jurnal Mengajar</button>
             <button class="tab-btn" onclick="switchTab('jurnalApel', this)">📋 Jurnal Apel</button>
@@ -242,7 +248,7 @@
         <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033<br><span style="font-size: 0.6rem; color:#cbd5e1;">(Fitur PWA, Auto-Save, Low-Res Mode, Live Search, & Offline Safe)</span></div>
     </div>
 
-    <!-- MODAL REKAP BARU (DENGAN 2 TAB & KETERANGAN) -->
+    <!-- MODAL REKAP BARU (UI SERAGAM & DROPDOWN MAPEL AMAN TYPO) -->
     <div class="modal-overlay" id="modalRekap">
         <div class="modal-content">
             <div class="modal-header">
@@ -257,7 +263,7 @@
 
             <!-- TAB 1: REKAP HARI INI -->
             <div id="tabHariIni" class="modal-tab-content active">
-                <p style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">Pilih jenis laporan rekap harian:</p>
+                <p style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">Pilih jenis laporan rekap untuk hari ini:</p>
                 
                 <div class="rekap-option-card" onclick="pilihRekapHariIni('kelas')">
                     <div class="rekap-title">📚 Rekap Mengajar (KBM)</div>
@@ -267,10 +273,17 @@
                     <div class="rekap-title">☀️ Rekap Apel (Sesi)</div>
                     <div class="rekap-desc">Merekap kehadiran apel beserta laporan piket.</div>
                 </div>
-                <div class="rekap-option-card" onclick="pilihRekapHariIni('mapel')">
+                
+                <!-- KARTU MAPEL HARI INI (Langsung ada Dropdown di dalamnya, bukan Prompt) -->
+                <div class="rekap-option-card" style="cursor: default;">
                     <div class="rekap-title">📖 Rekap Berdasarkan Mata Pelajaran</div>
-                    <div class="rekap-desc">Merekap laporan khusus untuk mapel pilihan.</div>
+                    <div class="rekap-desc">Pilih mapel untuk direkap khusus hari ini:</div>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <select id="mapelHariIniDropdown" class="modal-select" style="margin-top:0; flex:1;"></select>
+                        <button class="btn-action" style="margin-top:0; width:auto; padding:8px 12px; border-radius:6px; background:#10b981;" onclick="eksekusiMapelHariIni()">🚀 Proses</button>
+                    </div>
                 </div>
+
                 <div class="rekap-option-card" onclick="pilihRekapHariIni('siswa')">
                     <div class="rekap-title">👥 Kesimpulan Kehadiran Murid</div>
                     <div class="rekap-desc">Merekap rekapitulasi harian absensi murid.</div>
@@ -279,39 +292,42 @@
 
             <!-- TAB 2: REKAP PERIODE -->
             <div id="tabPeriode" class="modal-tab-content">
-                <p style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">Atur rentang tanggal laporan:</p>
+                <p style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">Atur rentang tanggal laporan secara kustom:</p>
                 
-                <div class="form-group">
-                    <label>Pilih Kategori Rekap</label>
-                    <select id="customKategori" onchange="cekKategoriCustom()">
-                        <option value="kelas">Rekap Mengajar (KBM)</option>
-                        <option value="apel">Rekap Apel</option>
-                        <option value="mapel">Rekap Berdasarkan Mata Pelajaran</option>
-                        <option value="siswa">Rekap Kesimpulan Kehadiran Murid</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="groupMapelPeriode" style="display:none;">
-                    <label>Pilih Mata Pelajaran</label>
-                    <select id="inputMapelRekapCustom"></select>
-                </div>
-
-                <div class="form-grid" style="margin-bottom:15px;">
-                    <div class="form-group">
-                        <label>Mulai:</label>
-                        <input type="date" id="tglMulai">
+                <!-- Desain card yang senada dengan tab Hari Ini -->
+                <div class="rekap-option-card" style="cursor: default;">
+                    <div class="rekap-title">⚙️ Konfigurasi Periode Rekap</div>
+                    <div class="rekap-desc" style="margin-bottom: 8px;">Tentukan kategori dan rentang waktu yang diinginkan.</div>
+                    
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <label style="font-size:0.75rem;">1. Pilih Kategori Laporan</label>
+                        <select id="customKategori" class="modal-select" onchange="cekKategoriCustom()">
+                            <option value="kelas">📚 Rekap Mengajar (KBM)</option>
+                            <option value="apel">☀️ Rekap Apel</option>
+                            <option value="mapel">📖 Rekap Berdasarkan Mata Pelajaran</option>
+                            <option value="siswa">👥 Rekap Kesimpulan Kehadiran Murid</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label>Sampai:</label>
-                        <input type="date" id="tglSampai">
+
+                    <div class="form-group" id="groupMapelPeriode" style="display:none; margin-bottom:10px;">
+                        <label style="font-size:0.75rem;">Pilih Mata Pelajaran</label>
+                        <select id="inputMapelRekapCustom" class="modal-select"></select>
+                    </div>
+
+                    <div class="form-grid" style="margin-bottom:10px; gap:8px;">
+                        <div class="form-group">
+                            <label style="font-size:0.75rem;">2. Tanggal Mulai:</label>
+                            <input type="date" id="tglMulai" class="modal-select" style="margin-top:0;">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:0.75rem;">3. Tanggal Sampai:</label>
+                            <input type="date" id="tglSampai" class="modal-select" style="margin-top:0;">
+                        </div>
                     </div>
                 </div>
 
-                <button class="btn-action" style="background:#10b981; margin-top:5px; margin-bottom: 10px;" onclick="konfirmasiRekapPeriode()">🚀 Proses Rekap Periode</button>
+                <button class="btn-action" style="background:#10b981; margin-top:5px; margin-bottom: 5px;" onclick="konfirmasiRekapPeriode()">🚀 Proses Rekap Periode</button>
             </div>
-            
-            <!-- Elemen ini disembunyikan, hanya dipakai untuk menyimpan dropdown mapel asli agar tidak error script lama -->
-            <select id="inputMapelRekap" style="display:none;"></select>
         </div>
     </div>
 
@@ -437,17 +453,23 @@
             try {
                 const [resMurid, resGuru, resRoster] = await Promise.all([ fetch('murid.csv'), fetch('guru.csv'), fetch('roster.csv') ]);
                 dataMurid = parseCSV(await resMurid.text()); dataGuru = parseCSV(await resGuru.text()); dataRoster = parseCSV(await resRoster.text());
-                renderCheckboxGuruPiket(); populateMapelDropdown();
+                renderCheckboxGuruPiket(); populateMapelDropdowns();
             } catch (err) { alert("Gagal memuat database CSV."); }
         }
 
-        function populateMapelDropdown() {
+        // --- FUNGSI MENGISI DUA DROPDOWN MAPEL SEKALIGUS (Hari Ini & Custom) ---
+        function populateMapelDropdowns() {
+            let selectHariIni = document.getElementById('mapelHariIniDropdown'); 
             let selectCustom = document.getElementById('inputMapelRekapCustom'); 
-            selectCustom.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+            
+            let defaultOption = '<option value="">-- Pilih Mata Pelajaran --</option>';
+            selectHariIni.innerHTML = defaultOption;
+            selectCustom.innerHTML = defaultOption;
+            
             let uniqueMapel = [...new Set(dataGuru.map(item => item["Mata Pelajaran"]).filter(m => m))];
             uniqueMapel.sort().forEach(m => { 
-                let opt = document.createElement('option'); opt.value = m; opt.text = m; 
-                selectCustom.appendChild(opt); 
+                selectHariIni.innerHTML += `<option value="${m}">${m}</option>`;
+                selectCustom.innerHTML += `<option value="${m}">${m}</option>`;
             });
         }
 
@@ -652,8 +674,14 @@
             document.getElementById('loadingFotoApel').style.display = "none"; base64FotoApel = ""; document.getElementById('catatanApel').value = "";
         }
 
-        // --- SISTEM MODAL REKAP BARU (2 TAB & KONFIRMASI) ---
-        function tutupModalRekap() { document.getElementById("modalRekap").style.display = "none"; }
+        // --- SISTEM MODAL REKAP BARU (UI SERAGAM & AMAN TYPO) ---
+        function bukaModalRekapUtama() {
+            document.getElementById('modalRekap').style.display = 'flex';
+        }
+
+        function tutupModalRekap() { 
+            document.getElementById("modalRekap").style.display = "none"; 
+        }
 
         function switchModalTab(tabId, btn) {
             document.querySelectorAll('.modal-tab-content').forEach(el => el.classList.remove('active'));
@@ -667,24 +695,32 @@
             document.getElementById('groupMapelPeriode').style.display = (kat === 'mapel') ? 'block' : 'none';
         }
 
+        // Fungsi klik untuk rekap harian selain mapel
         function pilihRekapHariIni(jenis) {
+            if (jenis === 'mapel') return; // Mapel dihandle terpisah oleh eksekusiMapelHariIni()
+            
             let namaKategoriLabel = {
                 'kelas': 'Rekap Mengajar (KBM) Hari Ini',
                 'apel': 'Rekap Apel Hari Ini',
-                'mapel': 'Rekap Mata Pelajaran Hari Ini',
                 'siswa': 'Rekap Kesimpulan Kehadiran Murid Hari Ini'
             }[jenis];
             
-            if (jenis === 'mapel') {
-                let mapelKetik = prompt("Ketik nama Mata Pelajaran yang ingin direkap (misal: Bahasa Indonesia):");
-                if (!mapelKetik || mapelKetik.trim() === "") return alert("Mata pelajaran harus diisi!");
-                pendingRekapPayload = { tipe: 'request_rekap', jenis: jenis, rentang: 'hari_ini', mapel_terpilih: mapelKetik };
-                namaKategoriLabel = `Rekap Mapel (${mapelKetik}) Hari Ini`;
-            } else {
-                pendingRekapPayload = { tipe: 'request_rekap', jenis: jenis, rentang: 'hari_ini' };
-            }
+            pendingRekapPayload = { tipe: 'request_rekap', jenis: jenis, rentang: 'hari_ini' };
             
             document.getElementById("teksKonfirmasi").innerText = `Kirim "${namaKategoriLabel}" ke Telegram sekarang?`;
+            tutupModalRekap();
+            document.getElementById("modalKonfirmasi").style.display = "flex";
+        }
+
+        // Fungsi khusus eksekusi dari dropdown Mapel Harian
+        function eksekusiMapelHariIni() {
+            let mapelTerpilih = document.getElementById('mapelHariIniDropdown').value;
+            if (!mapelTerpilih || mapelTerpilih === "") {
+                return alert("⚠️ Silakan pilih Mata Pelajaran dari dropdown terlebih dahulu.");
+            }
+            
+            pendingRekapPayload = { tipe: 'request_rekap', jenis: 'mapel', rentang: 'hari_ini', mapel_terpilih: mapelTerpilih };
+            document.getElementById("teksKonfirmasi").innerText = `Kirim Rekap Mapel "${mapelTerpilih}" Hari Ini ke Telegram?`;
             tutupModalRekap();
             document.getElementById("modalKonfirmasi").style.display = "flex";
         }
@@ -704,14 +740,22 @@
             }[kat];
 
             pendingRekapPayload = { tipe: 'request_rekap', jenis: kat, rentang: 'custom', startDate: start, endDate: end };
-            if(kat === 'mapel') pendingRekapPayload.mapel_terpilih = document.getElementById('inputMapelRekapCustom').value;
+            
+            if(kat === 'mapel') {
+                let mapelCustom = document.getElementById('inputMapelRekapCustom').value;
+                if (!mapelCustom) return alert("Pilih mata pelajaran terlebih dahulu.");
+                pendingRekapPayload.mapel_terpilih = mapelCustom;
+            }
 
             document.getElementById("teksKonfirmasi").innerText = `Kirim "${namaKatText}" (Periode: ${start} s/d ${end}) ke Telegram?`;
             tutupModalRekap();
             document.getElementById("modalKonfirmasi").style.display = "flex";
         }
 
-        function batalKonfirmasi() { document.getElementById("modalKonfirmasi").style.display = "none"; pendingRekapPayload = null; }
+        function batalKonfirmasi() { 
+            document.getElementById("modalKonfirmasi").style.display = "none"; 
+            pendingRekapPayload = null; 
+        }
 
         function eksekusiKirimRekapFinal() {
             let payloadToSend = pendingRekapPayload;

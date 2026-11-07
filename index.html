@@ -206,7 +206,7 @@
         <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033</div>
     </div>
 
-    <!-- MODAL REKAP TAMPILAN BARU -->
+    <!-- MODAL REKAP TAMPILAN BARU TANPA ANGKA -->
     <div class="modal-overlay" id="modalRekap">
         <div class="modal-content">
             <div class="modal-header">
@@ -215,9 +215,9 @@
             </div>
             
             <div style="display:flex; gap:8px; flex-direction:column;">
-                <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">1. Rekap KBM Hari Ini</button>
-                <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">2. Rekap Apel Hari Ini</button>
-                <button class="btn-rekap" style="background:#0284c7;" onclick="kirimRequestRekap('siswa', 'hari_ini', this)">3. Kesimpulan Kehadiran Siswa</button>
+                <button class="btn-rekap" onclick="kirimRequestRekap('kelas', 'hari_ini', this)">Rekap KBM Hari Ini</button>
+                <button class="btn-rekap" onclick="kirimRequestRekap('apel', 'hari_ini', this)">Rekap Apel Hari Ini</button>
+                <button class="btn-rekap" style="background:#0284c7;" onclick="kirimRequestRekap('siswa', 'hari_ini', this)">Kesimpulan Kehadiran Siswa</button>
             </div>
 
             <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
@@ -226,8 +226,8 @@
                 <option value="">-- Memuat Mata Pelajaran... --</option>
             </select>
             <div style="display:flex; gap:8px;">
-                <button class="btn-rekap" style="background:#10b981; font-size: 0.8rem;" onclick="kirimRequestRekap('mapel', 'hari_ini', this)">4. Mapel Hari Ini</button>
-                <button class="btn-rekap" style="background:#8b5cf6; font-size: 0.8rem;" onclick="kirimRequestRekap('mapel', 'custom', this)">5. Mapel Custom</button>
+                <button class="btn-rekap" style="background:#10b981; font-size: 0.8rem;" onclick="kirimRequestRekap('mapel', 'hari_ini', this)">Mapel Hari Ini</button>
+                <button class="btn-rekap" style="background:#8b5cf6; font-size: 0.8rem;" onclick="kirimRequestRekap('mapel', 'custom', this)">Mapel Custom</button>
             </div>
 
             <hr style="margin:12px 0; border: 0; border-top: 1px solid var(--border-color);">
@@ -244,9 +244,9 @@
             </div>
             
             <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
-                <button class="btn-rekap btn-rekap-custom" style="font-size: 0.75rem; padding: 8px;" onclick="kirimRequestRekap('kelas', 'custom', this)">6. Custom KBM</button>
-                <button class="btn-rekap btn-rekap-custom" style="font-size: 0.75rem; padding: 8px;" onclick="kirimRequestRekap('apel', 'custom', this)">7. Custom Apel</button>
-                <button class="btn-rekap" style="background:#4f46e5; font-size: 0.75rem; padding: 8px;" onclick="kirimRequestRekap('siswa', 'custom', this)">8. Custom Siswa</button>
+                <button class="btn-rekap btn-rekap-custom" style="font-size: 0.75rem; padding: 8px;" onclick="kirimRequestRekap('kelas', 'custom', this)">Custom KBM</button>
+                <button class="btn-rekap btn-rekap-custom" style="font-size: 0.75rem; padding: 8px;" onclick="kirimRequestRekap('apel', 'custom', this)">Custom Apel</button>
+                <button class="btn-rekap" style="background:#4f46e5; font-size: 0.75rem; padding: 8px;" onclick="kirimRequestRekap('siswa', 'custom', this)">Custom Siswa</button>
             </div>
         </div>
     </div>
@@ -278,7 +278,7 @@
                     try {
                         let canvas = document.getElementById('canvasPreview'); let ctx = canvas.getContext('2d');
                         let MAX_WIDTH = 800; let scaleSize = MAX_WIDTH / img.width;
-                        if(scaleSize > 1) scaleSize = 1; // Jangan perbesar gambar kecil
+                        if(scaleSize > 1) scaleSize = 1; 
                         canvas.width = img.width * scaleSize; canvas.height = img.height * scaleSize;
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         base64Foto = canvas.toDataURL('image/jpeg', 0.6);
@@ -489,14 +489,36 @@
             alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
         }
 
+        // LOGIKA BARU: TOMBOL EDIT PADA ANTREAN APEL
         function renderPanelAntreanApel() {
             let panel = document.getElementById('panelAntreanApel'); let container = document.getElementById('listAntreanApelContainer');
             document.getElementById('jumlahAntreApel').innerText = antreanApel.length; document.getElementById('counterKirimApel').innerText = antreanApel.length;
             container.innerHTML = ""; if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
             panel.style.display = 'block';
             antreanApel.forEach((item, idx) => {
-                container.innerHTML += `<div class="queue-item"><span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span><button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer; transition: transform 0.1s;">Hapus</button></div>`;
+                container.innerHTML += `<div class="queue-item">
+                    <span><b>${item.kelas}</b> (Apel ${item.jenis_apel}) - Piket: ${item.guru_piket}</span>
+                    <div style="display:flex; gap:4px;">
+                        <button type="button" onclick="editAntreanItemApel(${idx})" style="background:#f59e0b; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.75rem; transition: transform 0.1s;">Edit</button>
+                        <button type="button" onclick="hapusAntreanItemApel(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.75rem; transition: transform 0.1s;">Hapus</button>
+                    </div>
+                </div>`;
             });
+        }
+
+        function editAntreanItemApel(index) {
+            let item = antreanApel[index];
+            document.getElementById('jenisApel').value = item.jenis_apel;
+            document.getElementById('pilihKelasApel').value = item.kelas;
+            document.getElementById('catatanApel').value = item.laporan;
+
+            // Masukkan kembali status murid yang terantre ke sistem edit sementara
+            let states = {};
+            item.kehadiran.forEach(k => { states[k.nama] = k.status; });
+            temporaryStatesApel[item.kelas] = states;
+
+            gantiKelasApel(); // Tampilkan tabel berdasarkan status yang di-load
+            alert(`Data apel kelas ${item.kelas} berhasil dimuat!\n\nSilakan perbaiki data kehadiran murid di bawah, lalu klik tombol "Simpan & Antre Apel Kelas Ini" lagi untuk memperbarui datanya.`);
         }
 
         function hapusAntreanItemApel(index) { antreanApel.splice(index, 1); localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); }
@@ -532,6 +554,7 @@
             document.getElementById('canvasPreviewApel').style.display = "none";
             document.getElementById('loadingFotoApel').style.display = "none";
             base64FotoApel = "";
+            document.getElementById('catatanApel').value = "";
         }
 
         // FUNGSI REQUEST REKAP PDF

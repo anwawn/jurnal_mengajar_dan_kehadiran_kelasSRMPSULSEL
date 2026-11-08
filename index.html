@@ -82,7 +82,6 @@
         
         @media (max-width: 480px) { body { padding: 6px; } .container { padding: 12px; } .form-grid { grid-template-columns: 1fr; gap: 10px; } .full-width { grid-column: span 1; } .guru-piket-container { grid-template-columns: 1fr; } }
         
-        /* CSS TAB & REKAP CARD (KINI SERAGAM) */
         .modal-tab-container { display: flex; gap: 6px; margin-bottom: 15px; background: #f1f5f9; padding: 4px; border-radius: 8px; }
         .modal-tab-btn { flex: 1; padding: 8px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 6px; text-align: center; transition: all 0.2s; }
         .modal-tab-btn.active { background: #ffffff; color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
@@ -94,7 +93,6 @@
         .rekap-title { font-weight: 600; font-size: 0.85rem; color: var(--primary); display: flex; align-items: center; gap: 6px;}
         .rekap-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; line-height: 1.4; }
         
-        /* Dropdown khusus di dalam modal */
         .modal-select { width: 100%; padding: 8px 10px; font-size: 0.85rem; border: 1px solid var(--border-color); border-radius: 6px; background: #fff; margin-top: 8px; outline: none; }
         .modal-select:focus { border-color: var(--primary); }
     </style>
@@ -175,7 +173,6 @@
                 <button class="btn-hadir-compact" onclick="hadirSemua()">⚡ Set Semua Hadir</button>
             </div>
 
-            <!-- SEARCH BAR KBM -->
             <input type="text" id="cariKBM" class="search-bar" placeholder="🔍 Cari nama murid (ketik di sini)..." onkeyup="cariNama(this, 'tabelSiswa')">
 
             <div class="siswa-list-container" id="tabelSiswa">
@@ -218,7 +215,6 @@
                 <button class="btn-hadir-compact" onclick="hadirSemuaApel()">⚡ Set Semua Hadir</button>
             </div>
             
-            <!-- SEARCH BAR APEL -->
             <input type="text" id="cariApel" class="search-bar" placeholder="🔍 Cari nama murid (ketik di sini)..." onkeyup="cariNama(this, 'tabelSiswaApel')">
 
             <div class="siswa-list-container" id="tabelSiswaApel">
@@ -248,7 +244,7 @@
         <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033<br><span style="font-size: 0.6rem; color:#cbd5e1;">(Fitur PWA, Auto-Save, Low-Res Mode, Live Search, & Offline Safe)</span></div>
     </div>
 
-    <!-- MODAL REKAP BARU (UI SERAGAM & DROPDOWN MAPEL AMAN TYPO) -->
+    <!-- MODAL REKAP -->
     <div class="modal-overlay" id="modalRekap">
         <div class="modal-content">
             <div class="modal-header">
@@ -274,7 +270,6 @@
                     <div class="rekap-desc">Merekap kehadiran apel beserta laporan piket.</div>
                 </div>
                 
-                <!-- KARTU MAPEL HARI INI (Langsung ada Dropdown di dalamnya, bukan Prompt) -->
                 <div class="rekap-option-card" style="cursor: default;">
                     <div class="rekap-title">📖 Rekap Berdasarkan Mata Pelajaran</div>
                     <div class="rekap-desc">Pilih mapel untuk direkap khusus hari ini:</div>
@@ -294,7 +289,6 @@
             <div id="tabPeriode" class="modal-tab-content">
                 <p style="font-size:0.8rem; color:#64748b; margin-bottom:12px;">Atur rentang tanggal laporan secara kustom:</p>
                 
-                <!-- Desain card yang senada dengan tab Hari Ini -->
                 <div class="rekap-option-card" style="cursor: default;">
                     <div class="rekap-title">⚙️ Konfigurasi Periode Rekap</div>
                     <div class="rekap-desc" style="margin-bottom: 8px;">Tentukan kategori dan rentang waktu yang diinginkan.</div>
@@ -393,13 +387,9 @@
                         canvas.style.display = "block";
                         info.innerText = "✅ Foto siap dikirim!"; info.style.color = "#10b981";
                     } catch(err) {
-                        alert("⚠️ Gagal memproses foto. Coba gunakan aplikasi kamera bawaan HP.");
+                        alert("⚠️ Gagal memproses foto.");
                         info.innerText = "❌ Foto gagal diproses."; info.style.color = "#ef4444";
                     } finally { btn.disabled = false; btn.innerText = "Simpan Jurnal Kelas"; }
-                }
-                img.onerror = function() {
-                    alert("⚠️ Gagal membaca format foto ini. Coba foto lain.");
-                    btn.disabled = false; btn.innerText = "Simpan Jurnal Kelas"; info.innerText = "❌ Format foto tidak didukung."; info.style.color = "#ef4444";
                 }
                 img.src = e.target.result;
             }
@@ -428,13 +418,9 @@
                         canvas.style.display = "block";
                         info.innerText = "✅ Foto siap dikirim!"; info.style.color = "#10b981";
                     } catch(err) {
-                        alert("⚠️ Gagal memproses foto. Coba gunakan aplikasi kamera bawaan HP.");
+                        alert("⚠️ Gagal memproses foto.");
                         info.innerText = "❌ Foto gagal diproses."; info.style.color = "#ef4444";
                     } finally { btn.disabled = false; btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; }
-                }
-                img.onerror = function() {
-                    alert("⚠️ Gagal membaca format foto ini.");
-                    btn.disabled = false; btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; info.innerText = "❌ Format foto tidak didukung."; info.style.color = "#ef4444";
                 }
                 img.src = e.target.result;
             }
@@ -457,7 +443,6 @@
             } catch (err) { alert("Gagal memuat database CSV."); }
         }
 
-        // --- FUNGSI MENGISI DUA DROPDOWN MAPEL SEKALIGUS (Hari Ini & Custom) ---
         function populateMapelDropdowns() {
             let selectHariIni = document.getElementById('mapelHariIniDropdown'); 
             let selectCustom = document.getElementById('inputMapelRekapCustom'); 
@@ -575,7 +560,7 @@
                 delete draftKBM[kelas]; localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM));
                 tampilkanSiswa();
             }).catch((err) => {
-                alert("⚠️ GAGAL MENGIRIM DATA!\n\nKoneksi internet terputus. Data AMAN. Silakan klik tombol 'Simpan Jurnal Kelas' lagi jika jaringan sudah bagus.");
+                alert("⚠️ GAGAL MENGIRIM DATA! Koneksi terputus. Data aman, silakan klik simpan lagi.");
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             });
         }
@@ -674,7 +659,7 @@
             document.getElementById('loadingFotoApel').style.display = "none"; base64FotoApel = ""; document.getElementById('catatanApel').value = "";
         }
 
-        // --- SISTEM MODAL REKAP BARU (UI SERAGAM & AMAN TYPO) ---
+        // --- SISTEM MODAL REKAP ---
         function bukaModalRekapUtama() {
             document.getElementById('modalRekap').style.display = 'flex';
         }
@@ -695,9 +680,8 @@
             document.getElementById('groupMapelPeriode').style.display = (kat === 'mapel') ? 'block' : 'none';
         }
 
-        // Fungsi klik untuk rekap harian selain mapel
         function pilihRekapHariIni(jenis) {
-            if (jenis === 'mapel') return; // Mapel dihandle terpisah oleh eksekusiMapelHariIni()
+            if (jenis === 'mapel') return;
             
             let namaKategoriLabel = {
                 'kelas': 'Rekap Mengajar (KBM) Hari Ini',
@@ -712,7 +696,6 @@
             document.getElementById("modalKonfirmasi").style.display = "flex";
         }
 
-        // Fungsi khusus eksekusi dari dropdown Mapel Harian
         function eksekusiMapelHariIni() {
             let mapelTerpilih = document.getElementById('mapelHariIniDropdown').value;
             if (!mapelTerpilih || mapelTerpilih === "") {
@@ -757,6 +740,7 @@
             pendingRekapPayload = null; 
         }
 
+        // FUNGSI UTAMA PENGIRIMAN REQUEST REKAP KE GOOGLE APPS SCRIPT
         function eksekusiKirimRekapFinal() {
             let payloadToSend = pendingRekapPayload;
             document.getElementById("modalKonfirmasi").style.display = "none";
@@ -764,9 +748,19 @@
 
             if(!payloadToSend) return;
             
-            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadToSend) })
-            .then(() => { alert("✅ Permintaan rekap diproses! Silakan periksa Telegram."); })
-            .catch(() => { alert("⚠️ Gagal mengirim request rekap. Koneksi internet terputus."); });
+            // Perbaikan agar request sukses terkirim ke Apps Script backend
+            fetch(WEB_APP_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payloadToSend) 
+            })
+            .then(() => { 
+                alert("✅ Permintaan rekap berhasil diproses! Silakan periksa grup Telegram Anda."); 
+            })
+            .catch((err) => { 
+                alert("⚠️ Gagal mengirim request rekap. Periksa koneksi internet Anda."); 
+            });
         }
     </script>
 </body>

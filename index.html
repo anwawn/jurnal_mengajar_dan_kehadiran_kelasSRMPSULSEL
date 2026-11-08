@@ -153,11 +153,11 @@
                 </div>
                 <div id="infoMapel" class="full-width">Mata Pelajaran & Guru akan muncul otomatis</div>
                 <div class="form-group full-width">
-                    <label>Deskripsi Materi (Kompetensi Dasar)</label>
-                    <textarea id="deskripsiMateri" rows="2" placeholder="Ketik materi yang diajarkan..."></textarea>
+                    <label style="color: #b91c1c;">Deskripsi Materi (Wajib Diisi) *</label>
+                    <textarea id="deskripsiMateri" rows="2" placeholder="Ketik materi atau KD yang diajarkan..."></textarea>
                 </div>
                 <div class="form-group full-width">
-                    <label>Ambil Bukti Foto Kelas</label>
+                    <label style="color: #b91c1c;">Ambil Bukti Foto Kelas (Wajib Diisi) *</label>
                     <input type="file" id="fotoKelas" accept="image/*">
                     <label class="toggle-ringan">
                         <input type="checkbox" id="modeRinganKBM">
@@ -199,14 +199,14 @@
                     </select>
                 </div>
                 <div class="form-group full-width">
-                    <label>Pilih Guru Piket (Otomatis tersimpan untuk kelas berikutnya)</label>
+                    <label style="color: #b91c1c;">Pilih Guru Piket (Wajib Pilih Minimal 1) *</label>
                     <div id="listCheckboxGuru" class="guru-piket-container">
                         <span style="font-size:0.8rem; color:var(--text-muted);">Memuat daftar guru...</span>
                     </div>
                 </div>
                 <div class="form-group full-width">
-                    <label>Laporan / Catatan Apel</label>
-                    <textarea id="catatanApel" rows="2" placeholder="Ketik laporan kehadiran apel..."></textarea>
+                    <label>Laporan / Catatan Apel (Opsional)</label>
+                    <textarea id="catatanApel" rows="2" placeholder="Ketik laporan atau amanat apel (tidak wajib)..."></textarea>
                 </div>
             </div>
             
@@ -527,10 +527,22 @@
 
         function hadirSemua() { document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir"); simpanStateDropdownKBM(); }
 
+        // ----- FUNGSI SIMPAN JURNAL KELAS DENGAN VALIDASI KETAT -----
         function simpanJurnalKelas() {
             let kelas = document.getElementById('pilihKelas').value;
-            if(!kelas) return alert("Pilih kelas terlebih dahulu!");
-            if (!base64Foto || base64Foto === "") { if (!confirm("⚠️ BUKTI FOTO KELAS BELUM DIMASUKKAN!\n\nKirim laporan tanpa foto?")) return; }
+            if(!kelas) return alert("⚠️ Pilih kelas terlebih dahulu!");
+            
+            // VALIDASI WAJIB: Deskripsi Materi
+            let materi = document.getElementById('deskripsiMateri').value.trim();
+            if(!materi) {
+                return alert("⚠️ DESKRIPSI MATERI WAJIB DIISI!\nSilakan ketik materi atau KD yang diajarkan sebelum menyimpan jurnal.");
+            }
+
+            // VALIDASI WAJIB: Bukti Foto
+            if (!base64Foto || base64Foto === "") { 
+                return alert("⚠️ BUKTI FOTO KELAS WAJIB DIMASUKKAN!\nSilakan klik 'Pilih File' untuk melampirkan foto dokumentasi kelas."); 
+            }
+            
             let absensi = []; let nonHadir = []; let cards = document.querySelectorAll('#tabelSiswa .siswa-card');
             cards.forEach(card => {
                 let elementNama = card.querySelector('.nama-siswa');
@@ -546,7 +558,7 @@
                 tipe: "jurnal_kelas", hari: document.getElementById('pilihHari').value, kelas: kelas,
                 rentang_jp: `${document.getElementById('jamMulai').value} - ${document.getElementById('jamSelesai').value}`,
                 mapel: document.getElementById('infoMapel').dataset.mapel || "-", guru: document.getElementById('infoMapel').dataset.guru || "-",
-                materi: document.getElementById('deskripsiMateri').value, fotoBase64: base64Foto, kehadiran: absensi
+                materi: materi, fotoBase64: base64Foto, kehadiran: absensi
             };
 
             let btn = document.getElementById('btnSimpanKelas'); btn.innerText = "Mengirim..."; btn.disabled = true;
@@ -560,7 +572,7 @@
                 delete draftKBM[kelas]; localStorage.setItem('srt3_draft_kbm', JSON.stringify(draftKBM));
                 tampilkanSiswa();
             }).catch((err) => {
-                alert("⚠️ GAGAL MENGIRIM DATA! Koneksi terputus. Data aman, silakan klik simpan lagi.");
+                alert("⚠️ GAGAL MENGIRIM DATA! Koneksi terputus. Data aman, silakan coba klik simpan lagi.");
                 btn.innerText = "Simpan Jurnal Kelas"; btn.disabled = false;
             });
         }
@@ -594,27 +606,64 @@
 
         function hadirSemuaApel() { document.querySelectorAll('.status-kehadiran-apel').forEach(el => el.value = "Hadir"); simpanStateDropdownApel(); }
 
+        // ----- FUNGSI SIMPAN ANTREAN APEL DENGAN VALIDASI & PERBAIKAN BUG -----
         function tambahAntreanApel() {
-            let kelas = document.getElementById('pilihKelasApel').value; let jenis = document.getElementById('jenisApel').value;
-            if(!kelas) return alert("Pilih Kelas terlebih dahulu!");
-            let selectedGuru = []; document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
-            let guruPiketStr = selectedGuru.length > 0 ? selectedGuru.join(", ") : "-";
-            simpanStateDropdownApel(); let absensiApel = []; let savedStates = temporaryStatesApel[kelas] || {};
-            let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
-            filterMurid.forEach(m => { absensiApel.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" }); });
+            let kelas = document.getElementById('pilihKelasApel').value; 
+            let jenis = document.getElementById('jenisApel').value;
             
-            let itemApel = { kelas: kelas, jenis_apel: jenis, guru_piket: guruPiketStr, laporan: document.getElementById('catatanApel').value, kehadiran: absensiApel };
+            if(!kelas) return alert("⚠️ Pilih Kelas terlebih dahulu!");
+            
+            // VALIDASI WAJIB: Guru Piket
+            let selectedGuru = []; 
+            document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
+            if (selectedGuru.length === 0) {
+                return alert("⚠️ GURU PIKET WAJIB DIPILIH!\nCentang minimal 1 nama guru piket yang memimpin apel.");
+            }
+            
+            let guruPiketStr = selectedGuru.join(", ");
+            simpanStateDropdownApel(); 
+            
+            let absensiApel = []; 
+            let savedStates = temporaryStatesApel[kelas] || {};
+            let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
+            
+            filterMurid.forEach(m => { 
+                absensiApel.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" }); 
+            });
+            
+            let itemApel = { 
+                kelas: kelas, 
+                jenis_apel: jenis, 
+                guru_piket: guruPiketStr, 
+                laporan: document.getElementById('catatanApel').value.trim() || "-", // Laporan opsional
+                kehadiran: absensiApel 
+            };
+            
             let indexCek = antreanApel.findIndex(item => item.kelas === kelas && item.jenis_apel === jenis);
-            if (indexCek > -1) antreanApel[indexCek] = itemApel; else antreanApel.push(itemApel);
-            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); 
-            alert("Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
+            if (indexCek > -1) antreanApel[indexCek] = itemApel; 
+            else antreanApel.push(itemApel);
+            
+            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); 
+            renderPanelAntreanApel(); 
+            alert("✅ Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
         }
 
+        // FUNGSI RENDER PANEL ANTREAN APEL (BUGFIX: Dipastikan panel muncul)
         function renderPanelAntreanApel() {
-            let panel = document.getElementById('panelAntreanApel'); let container = document.getElementById('listAntreanApelContainer');
-            document.getElementById('jumlahAntreApel').innerText = antreanApel.length; document.getElementById('counterKirimApel').innerText = antreanApel.length;
-            container.innerHTML = ""; if (antreanApel.length === 0) { panel.style.display = 'none'; return; }
-            panel.style.display = 'block';
+            let panel = document.getElementById('panelAntreanApel'); 
+            let container = document.getElementById('listAntreanApelContainer');
+            
+            document.getElementById('jumlahAntreApel').innerText = antreanApel.length; 
+            document.getElementById('counterKirimApel').innerText = antreanApel.length;
+            container.innerHTML = ""; 
+            
+            if (antreanApel.length === 0) { 
+                panel.style.display = 'none'; 
+                return; 
+            }
+            
+            panel.style.display = 'block'; // Paksa tampil
+            
             antreanApel.forEach((item, idx) => {
                 container.innerHTML += `<div class="queue-item">
                     <span><b>${item.kelas}</b> (Apel ${item.jenis_apel})</span>
@@ -628,19 +677,30 @@
 
         function editAntreanItemApel(index) {
             let item = antreanApel[index];
-            document.getElementById('jenisApel').value = item.jenis_apel; document.getElementById('pilihKelasApel').value = item.kelas; document.getElementById('catatanApel').value = item.laporan;
-            let states = {}; item.kehadiran.forEach(k => { states[k.nama] = k.status; }); temporaryStatesApel[item.kelas] = states;
+            document.getElementById('jenisApel').value = item.jenis_apel; 
+            document.getElementById('pilihKelasApel').value = item.kelas; 
+            document.getElementById('catatanApel').value = item.laporan !== "-" ? item.laporan : "";
+            
+            let states = {}; 
+            item.kehadiran.forEach(k => { states[k.nama] = k.status; }); 
+            temporaryStatesApel[item.kelas] = states;
+            
             gantiKelasApel(); 
-            alert(`Data apel kelas ${item.kelas} dimuat! Silakan perbaiki lalu klik "Simpan & Antre" lagi.`);
+            alert(`✅ Data apel kelas ${item.kelas} dimuat kembali! Silakan perbaiki absensi/catatan di atas lalu klik "Simpan & Antre" lagi untuk menyimpan perubahannya.`);
         }
 
         function hapusAntreanItemApel(index) { antreanApel.splice(index, 1); localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); }
         function muatAntreanApelDariLocalStorage() { let savedApel = localStorage.getItem('srt3_antrean_apel'); if (savedApel) { try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){} } }
 
         async function kirimSemuaBatchApel() {
-            if (antreanApel.length === 0) return alert("Belum ada antrean apel!");
-            if (!base64FotoApel || base64FotoApel === "") { if (!confirm("⚠️ BUKTI FOTO APEL BELUM DIMASUKKAN!\n\nKirim tanpa foto?")) return; } 
-            else { if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel beserta FOTO?")) return; }
+            if (antreanApel.length === 0) return alert("⚠️ Belum ada antrean apel! Silakan antre minimal 1 kelas terlebih dahulu.");
+            
+            // VALIDASI WAJIB: Bukti Foto Apel
+            if (!base64FotoApel || base64FotoApel === "") { 
+                return alert("⚠️ BUKTI FOTO APEL WAJIB DIMASUKKAN!\nSilakan klik 'Pilih File' di bagian paling bawah untuk melampirkan 1 foto apel bersama.");
+            } else { 
+                if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel beserta FOTO?")) return; 
+            }
 
             let btn = document.getElementById('btnSimpanApel'); btn.innerText = "Mengirim..."; btn.disabled = true;
             let payloadBatch = { tipe: "jurnal_apel_batch", daftar_kelas: antreanApel, fotoBase64: base64FotoApel };
@@ -649,7 +709,7 @@
                 await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadBatch) });
                 alert("✅ Semua Laporan Apel Berhasil Terkirim!"); resetFormApel(); 
             } catch (err) {
-                alert("⚠️ GAGAL MENGIRIM! Koneksi terputus. Data AMAN, silakan coba lagi.");
+                alert("⚠️ GAGAL MENGIRIM! Koneksi terputus. Data AMAN di memori, silakan coba kirim lagi.");
             } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; btn.disabled = false; }
         }
 
@@ -740,7 +800,6 @@
             pendingRekapPayload = null; 
         }
 
-        // FUNGSI UTAMA PENGIRIMAN REQUEST REKAP KE GOOGLE APPS SCRIPT
         function eksekusiKirimRekapFinal() {
             let payloadToSend = pendingRekapPayload;
             document.getElementById("modalKonfirmasi").style.display = "none";
@@ -748,7 +807,6 @@
 
             if(!payloadToSend) return;
             
-            // Perbaikan agar request sukses terkirim ke Apps Script backend
             fetch(WEB_APP_URL, { 
                 method: 'POST', 
                 mode: 'no-cors', 

@@ -338,6 +338,21 @@
         </div>
     </div>
 
+    <!-- MODAL KHUSUS KIRIM BATCH APEL -->
+    <div id="modalKonfirmasiApel" class="modal-overlay" style="z-index: 1100;">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 5px;">🚀</div>
+            <h3 style="margin-top:0; color:#10b981; font-size: 1.1rem;">Kirim Jurnal Apel</h3>
+            <p style="font-size:0.85rem; color:#334155; line-height: 1.5;">Anda akan mengirim Jurnal Apel untuk kelas:</p>
+            <p id="teksDaftarKelasApel" style="font-size:0.9rem; color:#1e293b; font-weight: bold; margin: 10px 0; background: #f1f5f9; padding: 10px; border-radius: 8px; word-wrap: break-word;"></p>
+            <p style="font-size:0.75rem; color:#ef4444; font-style: italic;">Pastikan bukti foto apel bersama sudah dilampirkan!</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-action" style="background:#64748b; margin:0;" onclick="document.getElementById('modalKonfirmasiApel').style.display='none'">Batal</button>
+                <button class="btn-action" style="background:#10b981; margin:0;" onclick="eksekusiKirimBatchApel()">Ya, Kirim Sekarang!</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykyATd6xpFu55wbcWvvV3aM7JJT2sHhOmW9F-C03X2-OqUoxP0nfyqgJL0F01AIS_j/exec";
 
@@ -532,13 +547,11 @@
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("⚠️ Pilih kelas terlebih dahulu!");
             
-            // VALIDASI WAJIB: Deskripsi Materi
             let materi = document.getElementById('deskripsiMateri').value.trim();
             if(!materi) {
                 return alert("⚠️ DESKRIPSI MATERI WAJIB DIISI!\nSilakan ketik materi atau KD yang diajarkan sebelum menyimpan jurnal.");
             }
 
-            // VALIDASI WAJIB: Bukti Foto
             if (!base64Foto || base64Foto === "") { 
                 return alert("⚠️ BUKTI FOTO KELAS WAJIB DIMASUKKAN!\nSilakan klik 'Pilih File' untuk melampirkan foto dokumentasi kelas."); 
             }
@@ -606,14 +619,12 @@
 
         function hadirSemuaApel() { document.querySelectorAll('.status-kehadiran-apel').forEach(el => el.value = "Hadir"); simpanStateDropdownApel(); }
 
-        // ----- FUNGSI SIMPAN ANTREAN APEL DENGAN VALIDASI & PERBAIKAN BUG -----
         function tambahAntreanApel() {
             let kelas = document.getElementById('pilihKelasApel').value; 
             let jenis = document.getElementById('jenisApel').value;
             
             if(!kelas) return alert("⚠️ Pilih Kelas terlebih dahulu!");
             
-            // VALIDASI WAJIB: Guru Piket
             let selectedGuru = []; 
             document.querySelectorAll('input[name="pilihGuruPiket"]:checked').forEach(cb => { selectedGuru.push(cb.value); });
             if (selectedGuru.length === 0) {
@@ -635,7 +646,7 @@
                 kelas: kelas, 
                 jenis_apel: jenis, 
                 guru_piket: guruPiketStr, 
-                laporan: document.getElementById('catatanApel').value.trim() || "-", // Laporan opsional
+                laporan: document.getElementById('catatanApel').value.trim() || "-",
                 kehadiran: absensiApel 
             };
             
@@ -648,7 +659,6 @@
             alert("✅ Apel Kelas " + kelas + " berhasil dimasukkan ke antrean!");
         }
 
-        // FUNGSI RENDER PANEL ANTREAN APEL (BUGFIX: Dipastikan panel muncul)
         function renderPanelAntreanApel() {
             let panel = document.getElementById('panelAntreanApel'); 
             let container = document.getElementById('listAntreanApelContainer');
@@ -662,7 +672,7 @@
                 return; 
             }
             
-            panel.style.display = 'block'; // Paksa tampil
+            panel.style.display = 'block';
             
             antreanApel.forEach((item, idx) => {
                 container.innerHTML += `<div class="queue-item">
@@ -675,6 +685,9 @@
             });
         }
 
+        // ==========================================
+        // UPDATE FITUR EDIT: MENGHAPUS DARI ANTREAN
+        // ==========================================
         function editAntreanItemApel(index) {
             let item = antreanApel[index];
             document.getElementById('jenisApel').value = item.jenis_apel; 
@@ -685,32 +698,53 @@
             item.kehadiran.forEach(k => { states[k.nama] = k.status; }); 
             temporaryStatesApel[item.kelas] = states;
             
-            gantiKelasApel(); 
-            alert(`✅ Data apel kelas ${item.kelas} dimuat kembali! Silakan perbaiki absensi/catatan di atas lalu klik "Simpan & Antre" lagi untuk menyimpan perubahannya.`);
+            gantiKelasApel();
+            
+            // Hapus dari antrean agar tidak double saat disimpan ulang
+            antreanApel.splice(index, 1);
+            localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel));
+            renderPanelAntreanApel();
+            
+            alert(`✅ Data apel kelas ${item.kelas} dimuat kembali! Kelas telah ditarik dari antrean. Silakan perbaiki lalu klik "Simpan & Antre" lagi.`);
         }
 
         function hapusAntreanItemApel(index) { antreanApel.splice(index, 1); localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); }
         function muatAntreanApelDariLocalStorage() { let savedApel = localStorage.getItem('srt3_antrean_apel'); if (savedApel) { try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){} } }
 
-        async function kirimSemuaBatchApel() {
-            if (antreanApel.length === 0) return alert("⚠️ Belum ada antrean apel! Silakan antre minimal 1 kelas terlebih dahulu.");
-            
-            // VALIDASI WAJIB: Bukti Foto Apel
+        // ==========================================
+        // UPDATE FITUR KIRIM BATCH APEL DENGAN KONFIRMASI (MODAL)
+        // ==========================================
+        function kirimSemuaBatchApel() {
+            if (antreanApel.length === 0) {
+                return alert("⚠️ Belum ada antrean apel! Silakan antre minimal 1 kelas terlebih dahulu.");
+            }
             if (!base64FotoApel || base64FotoApel === "") { 
                 return alert("⚠️ BUKTI FOTO APEL WAJIB DIMASUKKAN!\nSilakan klik 'Pilih File' di bagian paling bawah untuk melampirkan 1 foto apel bersama.");
-            } else { 
-                if (!confirm("Kirim seluruh " + antreanApel.length + " laporan apel beserta FOTO?")) return; 
             }
+            
+            // Tampilkan modal konfirmasi custom
+            let daftarKelasStr = antreanApel.map(item => item.kelas).join(", ");
+            document.getElementById('teksDaftarKelasApel').innerText = daftarKelasStr;
+            document.getElementById('modalKonfirmasiApel').style.display = 'flex';
+        }
 
+        async function eksekusiKirimBatchApel() {
+            // Tutup modal
+            document.getElementById('modalKonfirmasiApel').style.display = 'none';
+            
             let btn = document.getElementById('btnSimpanApel'); btn.innerText = "Mengirim..."; btn.disabled = true;
             let payloadBatch = { tipe: "jurnal_apel_batch", daftar_kelas: antreanApel, fotoBase64: base64FotoApel };
             
             try {
                 await fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadBatch) });
-                alert("✅ Semua Laporan Apel Berhasil Terkirim!"); resetFormApel(); 
+                alert("✅ Laporan Apel Berhasil Terkirim!"); 
+                resetFormApel(); 
             } catch (err) {
                 alert("⚠️ GAGAL MENGIRIM! Koneksi terputus. Data AMAN di memori, silakan coba kirim lagi.");
-            } finally { btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; btn.disabled = false; }
+            } finally { 
+                btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; 
+                btn.disabled = false; 
+            }
         }
 
         function resetFormApel() {

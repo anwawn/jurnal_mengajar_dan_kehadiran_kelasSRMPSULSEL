@@ -24,9 +24,15 @@
         .btn-sheet-link { background-color: #10b981; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2); }
         .btn-admin-link { background-color: #475569; box-shadow: 0 2px 6px rgba(71, 85, 105, 0.2); }
         .btn-request { background-color: #f59e0b; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2); }
-        .tab-container { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: var(--radius); }
-        .tab-btn { flex: 1; padding: 9px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 8px; text-align: center; transition: all 0.2s; }
+        
+        /* RASIO TAB: 40% Jurnal Mengajar | 35% Jurnal Apel | 25% Keg. Khusus */
+        .tab-container { display: flex; justify-content: space-between; gap: 6px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: var(--radius); }
+        .tab-btn { padding: 9px 6px; cursor: pointer; border: none; background: transparent; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); border-radius: 8px; text-align: center; transition: all 0.2s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tab-btn-kbm { flex: 40; }
+        .tab-btn-apel { flex: 35; }
+        .tab-btn-khusus { flex: 25; }
         .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+        
         .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
@@ -46,6 +52,7 @@
         .btn-hadir-compact:active { transform: scale(0.92); }
         
         .guru-piket-container { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; max-height: 150px; overflow-y: auto; background: #fff; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+        .rombel-checklist-container { border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; background: #f8fafc; display: flex; flex-wrap: wrap; gap: 12px; }
         .guru-checkbox-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; cursor: pointer; }
         .guru-checkbox-item input { cursor: pointer; width: 16px; height: 16px; }
         
@@ -73,6 +80,7 @@
         
         .queue-panel { background: #ede9fe; border: 1px solid #c4b5fd; padding: 12px; border-radius: 10px; margin-top: 15px; }
         .queue-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 10px; border-radius: 6px; margin-top: 6px; font-size: 0.8rem; }
+        .status-belum-antre { font-size: 0.75rem; color: #b45309; background: #fef3c7; border: 1px solid #fde68a; padding: 7px 10px; border-radius: 6px; margin-top: 8px; font-weight: 600; }
         
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal-content { background: #ffffff; padding: 22px; border-radius: 12px; width: 90%; max-width: 480px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); max-height: 90vh; overflow-y: auto; }
@@ -80,7 +88,14 @@
         .footer-credit { text-align: center; margin-top: 20px; font-size: 0.7rem; color: #94a3b8; font-style: italic; }
         .info-foto { font-size: 0.75rem; color: #d97706; margin-top: 5px; font-weight: 600; display: none; }
         
-        @media (max-width: 480px) { body { padding: 6px; } .container { padding: 12px; } .form-grid { grid-template-columns: 1fr; gap: 10px; } .full-width { grid-column: span 1; } .guru-piket-container { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) { 
+            body { padding: 6px; } 
+            .container { padding: 12px; } 
+            .tab-btn { font-size: 0.72rem; padding: 8px 3px; }
+            .form-grid { grid-template-columns: 1fr; gap: 10px; } 
+            .full-width { grid-column: span 1; } 
+            .guru-piket-container { grid-template-columns: 1fr; } 
+        }
         
         .modal-tab-container { display: flex; gap: 6px; margin-bottom: 15px; background: #f1f5f9; padding: 4px; border-radius: 8px; }
         .modal-tab-btn { flex: 1; padding: 8px; cursor: pointer; border: none; background: transparent; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); border-radius: 6px; text-align: center; transition: all 0.2s; }
@@ -110,13 +125,14 @@
             </div>
         </div>
         
-        <!-- KONTEN UTAMA APLIKASI -->
+        <!-- KONTEN UTAMA APLIKASI (RASIO 40% : 35% : 25%) -->
         <div class="tab-container">
-            <button class="tab-btn active" onclick="switchTab('jurnalKelas', this)">📚 Jurnal Mengajar</button>
-            <button class="tab-btn" onclick="switchTab('jurnalApel', this)">📋 Jurnal Apel</button>
+            <button class="tab-btn tab-btn-kbm active" onclick="switchTab('jurnalKelas', this)">📚 Jurnal Mengajar</button>
+            <button class="tab-btn tab-btn-apel" onclick="switchTab('jurnalApel', this)">📋 Jurnal Apel</button>
+            <button class="tab-btn tab-btn-khusus" onclick="switchTab('kegiatanKhusus', this)">🎯 Keg. Khusus</button>
         </div>
 
-        <!-- TAB JURNAL KELAS -->
+        <!-- TAB 1: JURNAL KELAS -->
         <div id="jurnalKelas" class="tab-content active-tab">
             <div class="form-grid">
                 <div class="form-group">
@@ -181,7 +197,7 @@
             <button id="btnSimpanKelas" class="btn-action" onclick="simpanJurnalKelas()">Simpan Jurnal Kelas</button>
         </div>
 
-        <!-- TAB JURNAL APEL -->
+        <!-- TAB 2: JURNAL APEL -->
         <div id="jurnalApel" class="tab-content">
             <div class="form-grid">
                 <div class="form-group">
@@ -241,6 +257,85 @@
 
             <button id="btnSimpanApel" class="btn-action" onclick="kirimSemuaBatchApel()" style="background-color: #10b981; margin-top: 15px;">🚀 Kirim Semua Laporan Apel (<span id="counterKirimApel">0</span>)</button>
         </div>
+
+        <!-- TAB 3: KEGIATAN KHUSUS -->
+        <div id="kegiatanKhusus" class="tab-content">
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label style="color: #b91c1c;">Judul Kegiatan (Wajib Diisi) *</label>
+                    <input type="text" id="judulKegKhusus" placeholder="Contoh: Upacara Bendera, Kerja Bakti, Lomba, Penyuluhan..." oninput="simpanMetaKhusus()">
+                </div>
+                <div class="form-group full-width">
+                    <label style="color: #b91c1c;">Deskripsi Singkat Kegiatan (Wajib Diisi) *</label>
+                    <textarea id="deskripsiKegKhusus" rows="2" placeholder="Ketik ringkasan pelaksanaan kegiatan khusus..." oninput="simpanMetaKhusus()"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Jam Mulai (JP)</label>
+                    <select id="jamMulaiKhusus" onchange="simpanMetaKhusus()">
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jam Selesai (JP)</label>
+                    <select id="jamSelesaiKhusus" onchange="simpanMetaKhusus()">
+                        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                        <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label style="color: #b91c1c;">Pilih Rombel Peserta Kegiatan (Centang Minimal 1) *</label>
+                    <div id="listCheckboxRombelKhusus" class="rombel-checklist-container">
+                        <label class="guru-checkbox-item"><input type="checkbox" name="pilihRombelKhusus" value="VII-1" onchange="onUbahChecklistRombelKhusus()"><span><b>VII-1</b></span></label>
+                        <label class="guru-checkbox-item"><input type="checkbox" name="pilihRombelKhusus" value="VII-2" onchange="onUbahChecklistRombelKhusus()"><span><b>VII-2</b></span></label>
+                        <label class="guru-checkbox-item"><input type="checkbox" name="pilihRombelKhusus" value="VII-3" onchange="onUbahChecklistRombelKhusus()"><span><b>VII-3</b></span></label>
+                        <label class="guru-checkbox-item"><input type="checkbox" name="pilihRombelKhusus" value="VII-4" onchange="onUbahChecklistRombelKhusus()"><span><b>VII-4</b></span></label>
+                        <label class="guru-checkbox-item"><input type="checkbox" name="pilihRombelKhusus" value="VII-5" onchange="onUbahChecklistRombelKhusus()"><span><b>VII-5</b></span></label>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label>Pilih Rombel untuk Diisi Kehadirannya</label>
+                    <select id="pilihKelasKhusus" onchange="gantiKelasKhusus()">
+                        <option value="">-- Centang rombel peserta terlebih dahulu --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="action-bar">
+                <span>Daftar Murid:</span>
+                <button class="btn-hadir-compact" onclick="hadirSemuaKhusus()">⚡ Set Semua Hadir</button>
+            </div>
+
+            <input type="text" id="cariKhusus" class="search-bar" placeholder="🔍 Cari nama murid (ketik di sini)..." onkeyup="cariNama(this, 'tabelSiswaKhusus')">
+
+            <div class="siswa-list-container" id="tabelSiswaKhusus">
+                <div style="text-align:center; color: var(--text-muted); padding: 20px;">Centang rombel peserta & pilih rombel terlebih dahulu</div>
+            </div>
+
+            <button type="button" class="btn-action btn-queue" onclick="tambahAntreanKhusus()">➕ Simpan & Antre Rombel Ini</button>
+
+            <div class="queue-panel" id="panelAntreanKhusus" style="display:none;">
+                <div style="font-weight: bold; font-size: 0.85rem; color: #5b21b6; margin-bottom: 6px;">📦 Daftar Rombel Terantre (<span id="jumlahAntreKhusus">0</span>/<span id="totalRombelDipilihKhusus">0</span>):</div>
+                <div id="listAntreanKhususContainer"></div>
+                <div id="infoRombelBelumAntreKhusus" class="status-belum-antre" style="display:none;"></div>
+            </div>
+
+            <div class="form-group full-width" style="margin-top: 15px; border-top: 1px dashed var(--border-color); padding-top: 15px;">
+                <label style="color: #059669; font-weight:bold;">📸 Ambil 1 Bukti Foto Kegiatan (Wajib Diisi) *</label>
+                <input type="file" id="fotoKhusus" accept="image/*">
+                <label class="toggle-ringan">
+                    <input type="checkbox" id="modeRinganKhusus">
+                    <span>⚡ <b>Mode Kamera Ringan</b> (Centang jika HP lambat/error)</span>
+                </label>
+                <div id="loadingFotoKhusus" class="info-foto">⏳ Sedang memproses foto...</div>
+                <canvas id="canvasPreviewKhusus" style="display:none; max-width: 100%; margin-top: 8px; border-radius:8px;"></canvas>
+            </div>
+
+            <button id="btnSimpanKhusus" class="btn-action" onclick="kirimSemuaBatchKhusus()" style="background-color: #10b981; margin-top: 15px;">🚀 Kirim Laporan Kegiatan Khusus (<span id="counterKirimKhusus">0</span>/<span id="counterTargetKhusus">0</span>)</button>
+        </div>
+
         <div class="footer-credit">Developer : Nur Darmawansyah | NIP 199709012026211033<br><span style="font-size: 0.6rem; color:#cbd5e1;">(Fitur PWA, Auto-Save, Low-Res Mode, Live Search, & Offline Safe)</span></div>
     </div>
 
@@ -268,6 +363,10 @@
                 <div class="rekap-option-card" onclick="pilihRekapHariIni('apel')">
                     <div class="rekap-title">☀️ Rekap Apel (Sesi)</div>
                     <div class="rekap-desc">Merekap kehadiran apel beserta laporan piket.</div>
+                </div>
+                <div class="rekap-option-card" onclick="pilihRekapHariIni('khusus')">
+                    <div class="rekap-title">🎯 Rekap Kegiatan Khusus</div>
+                    <div class="rekap-desc">Merekap kegiatan khusus di luar jam mengajar beserta rombel peserta.</div>
                 </div>
                 
                 <div class="rekap-option-card" style="cursor: default;">
@@ -298,6 +397,7 @@
                         <select id="customKategori" class="modal-select" onchange="cekKategoriCustom()">
                             <option value="kelas">📚 Rekap Mengajar (KBM)</option>
                             <option value="apel">☀️ Rekap Apel</option>
+                            <option value="khusus">🎯 Rekap Kegiatan Khusus</option>
                             <option value="mapel">📖 Rekap Berdasarkan Mata Pelajaran</option>
                             <option value="siswa">👥 Rekap Kesimpulan Kehadiran Murid</option>
                         </select>
@@ -325,7 +425,7 @@
         </div>
     </div>
 
-    <!-- MODAL KONFIRMASI PENGIRIMAN -->
+    <!-- MODAL KONFIRMASI PENGIRIMAN REKAP -->
     <div id="modalKonfirmasi" class="modal-overlay" style="z-index: 1100;">
         <div class="modal-content" style="max-width: 400px; text-align: center;">
             <div style="font-size: 2.5rem; margin-bottom: 5px;">⚠️</div>
@@ -353,17 +453,42 @@
         </div>
     </div>
 
+    <!-- MODAL KHUSUS KIRIM KEGIATAN KHUSUS -->
+    <div id="modalKonfirmasiKhusus" class="modal-overlay" style="z-index: 1100;">
+        <div class="modal-content" style="max-width: 420px; text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 5px;">🎯</div>
+            <h3 style="margin-top:0; color:#10b981; font-size: 1.1rem;">Kirim Laporan Kegiatan Khusus</h3>
+            <div style="text-align: left; font-size: 0.82rem; color: #334155; background: #f8fafc; border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; margin: 10px 0; line-height: 1.5;">
+                <div><b>Kegiatan:</b> <span id="konfJudulKhusus"></span></div>
+                <div><b>Durasi JP:</b> Jam Ke-<span id="konfJpKhusus"></span></div>
+                <div><b>Deskripsi:</b> <span id="konfDeskKhusus"></span></div>
+                <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed #cbd5e1;"><b>Rombel Peserta:</b> <span id="konfRombelKhusus" style="color:#4f46e5; font-weight:700;"></span></div>
+            </div>
+            <p style="font-size:0.75rem; color:#ef4444; font-style: italic;">Pastikan bukti foto kegiatan sudah dilampirkan dengan benar!</p>
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+                <button class="btn-action" style="background:#64748b; margin:0;" onclick="document.getElementById('modalKonfirmasiKhusus').style.display='none'">Batal</button>
+                <button class="btn-action" style="background:#10b981; margin:0;" onclick="eksekusiKirimBatchKhusus()">Ya, Kirim Sekarang!</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbykyATd6xpFu55wbcWvvV3aM7JJT2sHhOmW9F-C03X2-OqUoxP0nfyqgJL0F01AIS_j/exec";
 
         window.onload = async function() {
             let kode = prompt("Masukkan Kode Akses:");
             if (kode === "ADMINSRT3") { window.location.href = "admin.html"; return; } 
-            else if (kode === "SRMPSULSEL") { await loadCSVData(); muatAntreanApelDariLocalStorage(); } 
+            else if (kode === "SRMPSULSEL") { 
+                await loadCSVData(); 
+                muatAntreanApelDariLocalStorage(); 
+                muatDataKhususDariLocalStorage();
+            } 
             else { document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top:100px; font-family:Inter;'>Akses Ditolak. Kode Salah.</h2>"; return; }
         };
 
-        let dataMurid = []; let dataGuru = []; let dataRoster = []; let base64Foto = ""; let base64FotoApel = ""; let antreanApel = [];     
+        let dataMurid = []; let dataGuru = []; let dataRoster = []; 
+        let base64Foto = ""; let base64FotoApel = ""; let base64FotoKhusus = "";
+        let antreanApel = []; let antreanKhusus = [];
         let draftKBM = JSON.parse(localStorage.getItem('srt3_draft_kbm') || "{}");
         let pendingRekapPayload = null;
 
@@ -380,6 +505,7 @@
             });
         }
 
+        // --- HANDLER FOTO KBM ---
         document.getElementById('fotoKelas').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
             let isRingan = document.getElementById('modeRinganKBM').checked;
@@ -411,6 +537,7 @@
             reader.readAsDataURL(file);
         });
 
+        // --- HANDLER FOTO APEL ---
         document.getElementById('fotoApel').addEventListener('change', function(event) {
             let file = event.target.files[0]; if(!file) return;
             let isRingan = document.getElementById('modeRinganApel').checked;
@@ -436,6 +563,42 @@
                         alert("⚠️ Gagal memproses foto.");
                         info.innerText = "❌ Foto gagal diproses."; info.style.color = "#ef4444";
                     } finally { btn.disabled = false; btn.innerText = "🚀 Kirim Semua Laporan Apel (" + antreanApel.length + ")"; }
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        });
+
+        // --- HANDLER FOTO KEGIATAN KHUSUS ---
+        document.getElementById('fotoKhusus').addEventListener('change', function(event) {
+            let file = event.target.files[0]; if(!file) return;
+            let isRingan = document.getElementById('modeRinganKhusus').checked;
+            let targetMaxWidth = isRingan ? 400 : 800; let targetQuality = isRingan ? 0.3 : 0.6;
+            let btn = document.getElementById('btnSimpanKhusus');
+            let info = document.getElementById('loadingFotoKhusus');
+            btn.disabled = true; btn.innerText = "⏳ Memproses Foto..."; info.style.display = "block"; info.innerText = "⏳ Sedang memproses foto...";
+            
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let img = new Image();
+                img.onload = function() {
+                    try {
+                        let canvas = document.getElementById('canvasPreviewKhusus'); let ctx = canvas.getContext('2d');
+                        let scaleSize = targetMaxWidth / img.width;
+                        if(scaleSize > 1) scaleSize = 1; 
+                        canvas.width = img.width * scaleSize; canvas.height = img.height * scaleSize;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        base64FotoKhusus = canvas.toDataURL('image/jpeg', targetQuality);
+                        canvas.style.display = "block";
+                        info.innerText = "✅ Foto siap dikirim!"; info.style.color = "#10b981";
+                    } catch(err) {
+                        alert("⚠️ Gagal memproses foto.");
+                        info.innerText = "❌ Foto gagal diproses."; info.style.color = "#ef4444";
+                    } finally { 
+                        btn.disabled = false; 
+                        let totalTarget = getCheckedRombelKhusus().length;
+                        btn.innerHTML = `🚀 Kirim Laporan Kegiatan Khusus (<span id="counterKirimKhusus">${antreanKhusus.length}</span>/<span id="counterTargetKhusus">${totalTarget}</span>)`;
+                    }
                 }
                 img.src = e.target.result;
             }
@@ -497,6 +660,9 @@
             document.getElementById(tabId).classList.add('active-tab'); btn.classList.add('active');
         }
 
+        // ========================================================
+        // LOGIKA TAB 1: JURNAL MENGAJAR (KBM)
+        // ========================================================
         function updateSemua() { updateRoster(); tampilkanSiswa(); }
 
         function updateRoster() {
@@ -542,7 +708,6 @@
 
         function hadirSemua() { document.querySelectorAll('.status-kehadiran').forEach(el => el.value = "Hadir"); simpanStateDropdownKBM(); }
 
-        // ----- FUNGSI SIMPAN JURNAL KELAS DENGAN VALIDASI KETAT -----
         function simpanJurnalKelas() {
             let kelas = document.getElementById('pilihKelas').value;
             if(!kelas) return alert("⚠️ Pilih kelas terlebih dahulu!");
@@ -590,6 +755,9 @@
             });
         }
 
+        // ========================================================
+        // LOGIKA TAB 2: JURNAL APEL
+        // ========================================================
         let temporaryStatesApel = {};
         function simpanStateDropdownApel() {
             let kelasAktif = document.getElementById('pilihKelasApel').value; if (!kelasAktif) return;
@@ -685,9 +853,6 @@
             });
         }
 
-        // ==========================================
-        // UPDATE FITUR EDIT: MENGHAPUS DARI ANTREAN
-        // ==========================================
         function editAntreanItemApel(index) {
             let item = antreanApel[index];
             document.getElementById('jenisApel').value = item.jenis_apel; 
@@ -700,7 +865,6 @@
             
             gantiKelasApel();
             
-            // Hapus dari antrean agar tidak double saat disimpan ulang
             antreanApel.splice(index, 1);
             localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel));
             renderPanelAntreanApel();
@@ -711,9 +875,6 @@
         function hapusAntreanItemApel(index) { antreanApel.splice(index, 1); localStorage.setItem('srt3_antrean_apel', JSON.stringify(antreanApel)); renderPanelAntreanApel(); }
         function muatAntreanApelDariLocalStorage() { let savedApel = localStorage.getItem('srt3_antrean_apel'); if (savedApel) { try { antreanApel = JSON.parse(savedApel); renderPanelAntreanApel(); } catch(e){} } }
 
-        // ==========================================
-        // UPDATE FITUR KIRIM BATCH APEL DENGAN KONFIRMASI (MODAL)
-        // ==========================================
         function kirimSemuaBatchApel() {
             if (antreanApel.length === 0) {
                 return alert("⚠️ Belum ada antrean apel! Silakan antre minimal 1 kelas terlebih dahulu.");
@@ -722,14 +883,12 @@
                 return alert("⚠️ BUKTI FOTO APEL WAJIB DIMASUKKAN!\nSilakan klik 'Pilih File' di bagian paling bawah untuk melampirkan 1 foto apel bersama.");
             }
             
-            // Tampilkan modal konfirmasi custom
             let daftarKelasStr = antreanApel.map(item => item.kelas).join(", ");
             document.getElementById('teksDaftarKelasApel').innerText = daftarKelasStr;
             document.getElementById('modalKonfirmasiApel').style.display = 'flex';
         }
 
         function eksekusiKirimBatchApel() {
-            // Tutup modal
             document.getElementById('modalKonfirmasiApel').style.display = 'none';
             
             let btn = document.getElementById('btnSimpanApel'); btn.innerText = "Mengirim..."; btn.disabled = true;
@@ -742,9 +901,6 @@
                 btn.innerText = "🚀 Kirim Semua Laporan Apel (0)"; 
                 btn.disabled = false; 
             }).catch((err) => {
-                // Perbaikan Bug: Seringkali di HP koneksi lambat membuat fetch memunculkan error 'network/timeout',
-                // padahal server Google Scripts tetap memproses datanya sampai berhasil. 
-                // Karena datanya masuk, kita langsung anggap sukses & kosongkan antrean agar tidak terjadi duplikasi.
                 alert("✅ Sistem merespon agak lambat, namun Laporan Apel sedang diproses di latar belakang server. Antrean akan dikosongkan untuk mencegah duplikasi.");
                 resetFormApel();
                 btn.innerText = "🚀 Kirim Semua Laporan Apel (0)"; 
@@ -756,6 +912,344 @@
             antreanApel = []; localStorage.removeItem('srt3_antrean_apel'); renderPanelAntreanApel();
             document.getElementById('fotoApel').value = ""; document.getElementById('canvasPreviewApel').style.display = "none";
             document.getElementById('loadingFotoApel').style.display = "none"; base64FotoApel = ""; document.getElementById('catatanApel').value = "";
+        }
+
+        // ========================================================
+        // LOGIKA TAB 3: KEGIATAN KHUSUS
+        // ========================================================
+        let temporaryStatesKhusus = {};
+
+        function getCheckedRombelKhusus() {
+            let checked = [];
+            document.querySelectorAll('input[name="pilihRombelKhusus"]:checked').forEach(cb => checked.push(cb.value));
+            return checked;
+        }
+
+        function simpanMetaKhusus() {
+            let meta = {
+                judul: document.getElementById('judulKegKhusus').value,
+                deskripsi: document.getElementById('deskripsiKegKhusus').value,
+                jamMulai: document.getElementById('jamMulaiKhusus').value,
+                jamSelesai: document.getElementById('jamSelesaiKhusus').value,
+                rombelChecked: getCheckedRombelKhusus()
+            };
+            localStorage.setItem('srt3_meta_khusus', JSON.stringify(meta));
+        }
+
+        function onUbahChecklistRombelKhusus() {
+            simpanMetaKhusus();
+            let checked = getCheckedRombelKhusus();
+
+            // Sinkronkan antrean agar hanya menyimpan rombel yang masih dicentang
+            let sebelum = antreanKhusus.length;
+            antreanKhusus = antreanKhusus.filter(item => checked.includes(item.kelas));
+            if (antreanKhusus.length !== sebelum) {
+                localStorage.setItem('srt3_antrean_khusus', JSON.stringify(antreanKhusus));
+            }
+
+            updateDropdownRombelKhusus();
+            renderPanelAntreanKhusus();
+        }
+
+        function updateDropdownRombelKhusus() {
+            let checked = getCheckedRombelKhusus();
+            let dropdown = document.getElementById('pilihKelasKhusus');
+            let prevSelected = dropdown.value;
+
+            if (checked.length === 0) {
+                dropdown.innerHTML = '<option value="">-- Centang rombel peserta terlebih dahulu --</option>';
+                document.getElementById('tabelSiswaKhusus').innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Centang rombel peserta & pilih rombel terlebih dahulu</div>";
+                return;
+            }
+
+            let html = '<option value="">-- Pilih Rombel Peserta --</option>';
+            checked.forEach(cls => {
+                html += `<option value="${cls}" ${prevSelected === cls ? "selected" : ""}>${cls}</option>`;
+            });
+            dropdown.innerHTML = html;
+
+            if (!checked.includes(prevSelected)) {
+                dropdown.value = "";
+                document.getElementById('tabelSiswaKhusus').innerHTML = "<div style='text-align:center; color: var(--text-muted); padding: 20px;'>Pilih rombel peserta dari dropdown di atas</div>";
+            }
+        }
+
+        function simpanStateDropdownKhusus() {
+            let kelasAktif = document.getElementById('pilihKelasKhusus').value;
+            if (!kelasAktif) return;
+            let states = {};
+            document.querySelectorAll('#tabelSiswaKhusus .siswa-card').forEach(card => {
+                let elementNama = card.querySelector('.nama-siswa');
+                if (elementNama) {
+                    let nama = elementNama.innerText;
+                    let status = card.querySelector('.status-kehadiran-khusus').value;
+                    states[nama] = status;
+                }
+            });
+            temporaryStatesKhusus[kelasAktif] = states;
+        }
+
+        function gantiKelasKhusus() {
+            tampilkanSiswaKhusus();
+        }
+
+        function tampilkanSiswaKhusus() {
+            let kelas = document.getElementById('pilihKelasKhusus').value;
+            let container = document.getElementById('tabelSiswaKhusus');
+            container.innerHTML = "";
+            document.getElementById('cariKhusus').value = "";
+
+            if (!kelas) {
+                let checked = getCheckedRombelKhusus();
+                let msgEmpty = checked.length === 0 ? "Centang rombel peserta & pilih rombel terlebih dahulu" : "Pilih rombel peserta dari dropdown di atas";
+                container.innerHTML = `<div style='text-align:center; color: var(--text-muted); padding: 20px;'>${msgEmpty}</div>`;
+                return;
+            }
+
+            let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
+            let savedStates = temporaryStatesKhusus[kelas] || {};
+
+            filterMurid.forEach(m => {
+                let statusAwal = savedStates[m.Nama] || "Hadir";
+                let card = document.createElement('div');
+                card.className = 'siswa-card';
+                card.innerHTML = `<div class="siswa-info"><span class="siswa-no">${m.No}.</span><div class="siswa-nama-lp"><span class="nama-siswa nama-siswa-khusus">${m.Nama}</span><span class="siswa-lp">Kelamin: ${m["L/P"]}</span></div></div><select class="status-dropdown status-kehadiran-khusus" onchange="simpanStateDropdownKhusus()"><option value="Hadir" ${statusAwal==="Hadir"?"selected":""}>Hadir</option><option value="Izin" ${statusAwal==="Izin"?"selected":""}>Izin</option><option value="Sakit" ${statusAwal==="Sakit"?"selected":""}>Sakit</option><option value="Bolos" ${statusAwal==="Bolos"?"selected":""}>Bolos</option><option value="Keluar" ${statusAwal==="Keluar"?"selected":""}>Keluar</option><option value="Pulang" ${statusAwal==="Pulang"?"selected":""}>Pulang</option></select>`;
+                container.appendChild(card);
+            });
+        }
+
+        function hadirSemuaKhusus() {
+            document.querySelectorAll('.status-kehadiran-khusus').forEach(el => el.value = "Hadir");
+            simpanStateDropdownKhusus();
+        }
+
+        function tambahAntreanKhusus() {
+            let judul = document.getElementById('judulKegKhusus').value.trim();
+            if (!judul) return alert("⚠️ JUDUL KEGIATAN WAJIB DIISI!\nSilakan isi judul kegiatan khusus terlebih dahulu.");
+
+            let deskripsi = document.getElementById('deskripsiKegKhusus').value.trim();
+            if (!deskripsi) return alert("⚠️ DESKRIPSI KEGIATAN WAJIB DIISI!\nSilakan ketik deskripsi singkat kegiatan terlebih dahulu.");
+
+            let checkedRombels = getCheckedRombelKhusus();
+            if (checkedRombels.length === 0) {
+                return alert("⚠️ ROMBEL PESERTA WAJIB DICENTANG!\nSilakan centang minimal 1 rombel yang mengikuti kegiatan.");
+            }
+
+            let kelas = document.getElementById('pilihKelasKhusus').value;
+            if (!kelas) return alert("⚠️ Pilih rombel dari dropdown untuk mengisi & mengantrekan kehadirannya!");
+
+            simpanStateDropdownKhusus();
+
+            let absensiKhusus = [];
+            let savedStates = temporaryStatesKhusus[kelas] || {};
+            let filterMurid = dataMurid.filter(m => m.Kelas === kelas);
+
+            filterMurid.forEach(m => {
+                absensiKhusus.push({ nama: m.Nama, status: savedStates[m.Nama] || "Hadir" });
+            });
+
+            let itemKhusus = {
+                kelas: kelas,
+                kehadiran: absensiKhusus
+            };
+
+            let indexCek = antreanKhusus.findIndex(item => item.kelas === kelas);
+            if (indexCek > -1) antreanKhusus[indexCek] = itemKhusus;
+            else antreanKhusus.push(itemKhusus);
+
+            localStorage.setItem('srt3_antrean_khusus', JSON.stringify(antreanKhusus));
+            simpanMetaKhusus();
+            renderPanelAntreanKhusus();
+            alert("✅ Kehadiran Rombel " + kelas + " berhasil dimasukkan ke antrean Kegiatan Khusus!");
+        }
+
+        function renderPanelAntreanKhusus() {
+            let panel = document.getElementById('panelAntreanKhusus');
+            let container = document.getElementById('listAntreanKhususContainer');
+            let infoBelum = document.getElementById('infoRombelBelumAntreKhusus');
+            let checkedRombels = getCheckedRombelKhusus();
+
+            document.getElementById('jumlahAntreKhusus').innerText = antreanKhusus.length;
+            document.getElementById('totalRombelDipilihKhusus').innerText = checkedRombels.length;
+            document.getElementById('counterKirimKhusus').innerText = antreanKhusus.length;
+            document.getElementById('counterTargetKhusus').innerText = checkedRombels.length;
+
+            container.innerHTML = "";
+
+            if (antreanKhusus.length === 0 && checkedRombels.length === 0) {
+                panel.style.display = 'none';
+                return;
+            }
+
+            panel.style.display = 'block';
+
+            antreanKhusus.forEach((item, idx) => {
+                let nonHadirCount = item.kehadiran.filter(k => k.status !== "Hadir").length;
+                let badgeKet = nonHadirCount > 0 ? `<span style="color:#b91c1c;">(${nonHadirCount} Non-Hadir)</span>` : `<span style="color:#059669;">(Hadir Semua)</span>`;
+                container.innerHTML += `<div class="queue-item">
+                    <span><b>${item.kelas}</b> ${badgeKet}</span>
+                    <div style="display:flex; gap:4px;">
+                        <button type="button" onclick="editAntreanItemKhusus(${idx})" style="background:#f59e0b; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.75rem;">Edit</button>
+                        <button type="button" onclick="hapusAntreanItemKhusus(${idx})" style="background:#ef4444; color:white; border:none; padding:4px 8px; border-radius:6px; cursor:pointer; font-size:0.75rem;">Hapus</button>
+                    </div>
+                </div>`;
+            });
+
+            let queuedClasses = antreanKhusus.map(i => i.kelas);
+            let belumAntre = checkedRombels.filter(cls => !queuedClasses.includes(cls));
+            if (belumAntre.length > 0) {
+                infoBelum.style.display = 'block';
+                infoBelum.innerHTML = `⚠️ Rombel terpilih yang belum diantrekan: <b>${belumAntre.join(", ")}</b>`;
+            } else {
+                infoBelum.style.display = 'none';
+            }
+        }
+
+        function editAntreanItemKhusus(index) {
+            let item = antreanKhusus[index];
+            document.getElementById('pilihKelasKhusus').value = item.kelas;
+
+            let states = {};
+            item.kehadiran.forEach(k => { states[k.nama] = k.status; });
+            temporaryStatesKhusus[item.kelas] = states;
+
+            gantiKelasKhusus();
+
+            antreanKhusus.splice(index, 1);
+            localStorage.setItem('srt3_antrean_khusus', JSON.stringify(antreanKhusus));
+            renderPanelAntreanKhusus();
+
+            alert(`✅ Data kehadiran rombel ${item.kelas} dimuat kembali! Rombel telah ditarik dari antrean. Silakan perbaiki lalu klik "Simpan & Antre Rombel Ini" lagi.`);
+        }
+
+        function hapusAntreanItemKhusus(index) {
+            antreanKhusus.splice(index, 1);
+            localStorage.setItem('srt3_antrean_khusus', JSON.stringify(antreanKhusus));
+            renderPanelAntreanKhusus();
+        }
+
+        function muatDataKhususDariLocalStorage() {
+            try {
+                let savedMeta = JSON.parse(localStorage.getItem('srt3_meta_khusus') || "null");
+                if (savedMeta) {
+                    if (savedMeta.judul) document.getElementById('judulKegKhusus').value = savedMeta.judul;
+                    if (savedMeta.deskripsi) document.getElementById('deskripsiKegKhusus').value = savedMeta.deskripsi;
+                    if (savedMeta.jamMulai) document.getElementById('jamMulaiKhusus').value = savedMeta.jamMulai;
+                    if (savedMeta.jamSelesai) document.getElementById('jamSelesaiKhusus').value = savedMeta.jamSelesai;
+                    if (Array.isArray(savedMeta.rombelChecked)) {
+                        document.querySelectorAll('input[name="pilihRombelKhusus"]').forEach(cb => {
+                            cb.checked = savedMeta.rombelChecked.includes(cb.value);
+                        });
+                    }
+                }
+            } catch (e) {}
+
+            let savedAntrean = localStorage.getItem('srt3_antrean_khusus');
+            if (savedAntrean) {
+                try { antreanKhusus = JSON.parse(savedAntrean); } catch (e) {}
+            }
+
+            updateDropdownRombelKhusus();
+            renderPanelAntreanKhusus();
+        }
+
+        function kirimSemuaBatchKhusus() {
+            let judul = document.getElementById('judulKegKhusus').value.trim();
+            if (!judul) {
+                return alert("⚠️ JUDUL KEGIATAN WAJIB DIISI!\nSilakan isi judul kegiatan khusus terlebih dahulu.");
+            }
+
+            let deskripsi = document.getElementById('deskripsiKegKhusus').value.trim();
+            if (!deskripsi) {
+                return alert("⚠️ DESKRIPSI KEGIATAN WAJIB DIISI!\nSilakan isi deskripsi singkat kegiatan terlebih dahulu.");
+            }
+
+            let jamMulai = parseInt(document.getElementById('jamMulaiKhusus').value, 10);
+            let jamSelesai = parseInt(document.getElementById('jamSelesaiKhusus').value, 10);
+            if (jamSelesai < jamMulai) {
+                return alert("⚠️ RENTANG JP TIDAK VALID!\nJam Selesai (JP) tidak boleh lebih kecil dari Jam Mulai (JP).");
+            }
+
+            let checkedRombels = getCheckedRombelKhusus();
+            if (checkedRombels.length === 0) {
+                return alert("⚠️ ROMBEL PESERTA WAJIB DIPILIH!\nSilakan centang minimal 1 rombel yang mengikuti kegiatan.");
+            }
+
+            let queuedClasses = antreanKhusus.map(i => i.kelas);
+            let belumAntre = checkedRombels.filter(cls => !queuedClasses.includes(cls));
+            if (belumAntre.length > 0) {
+                return alert(`⚠️ BELUM SEMUA ROMBEL DIANTREKAN!\nRombel berikut dicentang ikut kegiatan tetapi belum diisi kehadirannya:\n• ${belumAntre.join(", ")}\n\nSilakan pilih rombel tersebut, isi kehadiran, lalu klik "Simpan & Antre Rombel Ini".`);
+            }
+
+            if (!base64FotoKhusus || base64FotoKhusus === "") {
+                return alert("⚠️ BUKTI FOTO KEGIATAN WAJIB DIMASUKKAN!\nSilakan klik 'Pilih File' untuk melampirkan 1 foto bukti kegiatan.");
+            }
+
+            // Tampilkan Modal Konfirmasi
+            document.getElementById('konfJudulKhusus').innerText = judul;
+            document.getElementById('konfJpKhusus').innerText = `${jamMulai} - ${jamSelesai}`;
+            document.getElementById('konfDeskKhusus').innerText = deskripsi;
+            document.getElementById('konfRombelKhusus').innerText = checkedRombels.join(", ");
+            document.getElementById('modalKonfirmasiKhusus').style.display = 'flex';
+        }
+
+        function eksekusiKirimBatchKhusus() {
+            document.getElementById('modalKonfirmasiKhusus').style.display = 'none';
+
+            let judul = document.getElementById('judulKegKhusus').value.trim();
+            let deskripsi = document.getElementById('deskripsiKegKhusus').value.trim();
+            let jamMulai = document.getElementById('jamMulaiKhusus').value;
+            let jamSelesai = document.getElementById('jamSelesaiKhusus').value;
+            let rentangJp = `${jamMulai} - ${jamSelesai}`;
+
+            let btn = document.getElementById('btnSimpanKhusus');
+            btn.innerText = "Mengirim...";
+            btn.disabled = true;
+
+            let payloadKhusus = {
+                tipe: "jurnal_kegiatan_khusus",
+                judul_kegiatan: judul,
+                deskripsi: deskripsi,
+                rentang_jp: rentangJp,
+                jam_mulai: jamMulai,
+                jam_selesai: jamSelesai,
+                daftar_kelas: antreanKhusus,
+                fotoBase64: base64FotoKhusus
+            };
+
+            fetch(WEB_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payloadKhusus) })
+            .then(() => {
+                alert("✅ Laporan Kegiatan Khusus Berhasil Terkirim!");
+                resetFormKhusus();
+                btn.innerHTML = '🚀 Kirim Laporan Kegiatan Khusus (<span id="counterKirimKhusus">0</span>/<span id="counterTargetKhusus">0</span>)';
+                btn.disabled = false;
+            }).catch((err) => {
+                alert("✅ Sistem merespon agak lambat, namun Laporan Kegiatan Khusus sedang diproses di latar belakang server. Antrean akan dikosongkan untuk mencegah duplikasi.");
+                resetFormKhusus();
+                btn.innerHTML = '🚀 Kirim Laporan Kegiatan Khusus (<span id="counterKirimKhusus">0</span>/<span id="counterTargetKhusus">0</span>)';
+                btn.disabled = false;
+            });
+        }
+
+        function resetFormKhusus() {
+            antreanKhusus = [];
+            temporaryStatesKhusus = {};
+            localStorage.removeItem('srt3_antrean_khusus');
+            localStorage.removeItem('srt3_meta_khusus');
+
+            document.getElementById('judulKegKhusus').value = "";
+            document.getElementById('deskripsiKegKhusus').value = "";
+            document.getElementById('jamMulaiKhusus').value = "1";
+            document.getElementById('jamSelesaiKhusus').value = "1";
+            document.querySelectorAll('input[name="pilihRombelKhusus"]').forEach(cb => cb.checked = false);
+
+            document.getElementById('fotoKhusus').value = "";
+            document.getElementById('canvasPreviewKhusus').style.display = "none";
+            document.getElementById('loadingFotoKhusus').style.display = "none";
+            base64FotoKhusus = "";
+
+            updateDropdownRombelKhusus();
+            renderPanelAntreanKhusus();
         }
 
         // --- SISTEM MODAL REKAP ---
@@ -785,6 +1279,7 @@
             let namaKategoriLabel = {
                 'kelas': 'Rekap Mengajar (KBM) Hari Ini',
                 'apel': 'Rekap Apel Hari Ini',
+                'khusus': 'Rekap Kegiatan Khusus Hari Ini',
                 'siswa': 'Rekap Kesimpulan Kehadiran Murid Hari Ini'
             }[jenis];
             
@@ -817,6 +1312,7 @@
             let namaKatText = {
                 'kelas': 'Rekap Mengajar (KBM)',
                 'apel': 'Rekap Apel',
+                'khusus': 'Rekap Kegiatan Khusus',
                 'mapel': 'Rekap Mata Pelajaran (' + document.getElementById('inputMapelRekapCustom').value + ')',
                 'siswa': 'Rekap Kesimpulan Kehadiran Murid'
             }[kat];
